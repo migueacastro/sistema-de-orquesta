@@ -114,13 +114,8 @@ class Inscripcion(models.Model):
 
 class Tipo_catedra(models.Model):
     nombre = models.CharField(max_length=128)
-    
+
 class Catedra(models.Model):
     nombreCatedra = models.CharField(max_length=128)
     instrumento = models.ForeignKey(Instrumento, blank=True, null=True)
     nombreTipoCatedra = models.ForeignKey(Tipo_catedra, blank=True, null=True)
-
-
-
-
-
