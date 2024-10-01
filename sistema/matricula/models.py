@@ -103,5 +103,24 @@ class Programas(models.Model):
     nombre = models.CharField(max_length=128)
     agrupacion = models.ForeignKey(Agrupacion, blank=True, on_delete=models.CASCADE)
 
+class QuienRetira(models.Model):  
+    alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
+    Representante = models.ForeignKey(Representante, blank=True, null=True)
+
+class Inscripcion(models.Model):
+    alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
+    fecha_inscrpcion = models.DateField(max_length=128)
+    turno = models.ForeignKey(Turno, blank=True, null=True)
+
+class Tipo_catedra(models.Model):
+    nombre = models.CharField(max_length=128)
+    
+class Catedra(models.Model):
+    nombreCatedra = models.CharField(max_length=128)
+    instrumento = models.ForeignKey(Instrumento, blank=True, null=True)
+    nombreTipoCatedra = models.ForeignKey(Tipo_catedra, blank=True, null=True)
+
+
+
 
 
