@@ -9,8 +9,8 @@ class Medicamento(models.Model):
 
 class Tratamiento(models.Model):
     nombre = models.CharField(max_length=512, blank=True, null=True)
-    description = models.TextField(blank=True)
-    medicamentos = models.ManyToManyField(Medicamento, blank=True)
+    description = models.TextField(blank=True, null=True)
+    medicamentos = models.ManyToManyField(Medicamento, blank=True, null=True)
 
 class CondicionEspecial(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
