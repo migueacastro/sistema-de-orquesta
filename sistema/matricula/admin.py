@@ -2,7 +2,9 @@ from django.contrib import admin
 from matricula.models import *
 
 # Register your models here.
-admin.site.register(Alumno)
+class AlumnoAdmin(admin.ModelAdmin):
+    list_display = ['nombre', 'apellido', 'fecha_nacimiento']
+admin.site.register(Alumno, AlumnoAdmin)
 admin.site.register(Alergia)
 admin.site.register(Accesorio)
 admin.site.register(Agrupacion)
@@ -21,3 +23,4 @@ admin.site.register(TipoBeca)
 admin.site.register(TipoCatedra)
 admin.site.register(Tratamiento)
 admin.site.register(Turno)
+admin.site.register(Inscripcion)

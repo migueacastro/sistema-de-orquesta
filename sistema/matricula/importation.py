@@ -184,7 +184,7 @@ def importar_niveles_estudiantiles(tabla):
     return True
 
 
-def importar_tipos_becas():
+def importar_tipos_becas(tabla):
     TipoBeca.objects.get_or_create(nombre="Predeterminado")
 
     return True
@@ -382,9 +382,12 @@ def importar_alumnos(tabla):
 
         for nombre in lista_quien_retira:
             if nombre not in LISTA_NO:
-                nuevo_quien_retira = QuienRetira.objects.get(nombre=nombre)
-                alumno.quien_retiras.add(nuevo_quien_retira)
-
+                try:
+                    nuevo_quien_retira = QuienRetira.objects.get(nombre=nombre)
+                    alumno.quien_retiras.add(nuevo_quien_retira)
+                except Exception as e:
+                    print(e)
+                    continue
     print(Alumno.objects.all().count())
     return Alumno.objects.all().count() > 0
 
@@ -394,12 +397,16 @@ def importar_becados(tabla):
         if row["BECADO"] not in LISTA_NO and row["BECADO"] == "SI":
             alumno = None
             try:
-                alumno = Alumno.objects.get(nombre=row["NOMBRES"])
+                alumno = Alumno.objects.filter(nombre=row["NOMBRES"], apellido=row["APELLIDOS"]).first()
+                continue
             except Exception as e:
                 print(alumno,row["NOMBRES"], e)
             
-            tipo = TipoBeca.objects.get(nombre="Predeterminado")
-
+            try:
+                tipo = TipoBeca.objects.get(nombre="Predeterminado")
+            except Exception as e:
+                print(e)
+                continue 
             Becado.objects.get_or_create(
                 alumno=alumno,
                 tipo=tipo
@@ -411,7 +418,7 @@ def importar_inscripciones(tabla):
     
     for index, row in tabla.iterrows():
         try:
-            alumno = Alumno.objects.get(nombre=row["NOMBRES"])
+            alumno = Alumno.objects.filter(nombre=row["NOMBRES"], apellido=row["APELLIDOS"]).first()
         except Exception:
             alumno = None
 

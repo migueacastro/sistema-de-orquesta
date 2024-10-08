@@ -86,7 +86,7 @@ class QuienRetira(models.Model):
 class Alumno(models.Model):
     nombre = models.CharField(max_length=128) 
     apellido = models.CharField(max_length=128) 
-    cedula = models.CharField(max_length=32) 
+    cedula = models.CharField(max_length=32, null=True) 
     edad = models.IntegerField()
     turno = models.ForeignKey(Turno, blank=True, on_delete=models.DO_NOTHING, null=True) 
     instrumentos = models.ManyToManyField(Instrumento, blank=True) 

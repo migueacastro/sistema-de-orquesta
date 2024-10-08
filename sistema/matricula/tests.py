@@ -50,7 +50,7 @@ class ImportationTestCase(TestCase):
         self.assertTrue(importar_niveles_estudiantiles(self.tabla))
         
     def test_becas(self):
-        self.assertTrue(importar_tipos_becas())
+        self.assertTrue(importar_tipos_becas(self.tabla))
 
     def test_tipos_catedras(self):
         self.assertTrue(importar_tipos_catedras(self.tabla))
