@@ -10,19 +10,17 @@ class Medicamento(models.Model):
 class Tratamiento(models.Model):
     nombre = models.CharField(max_length=512, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
-    medicamentos = models.ManyToManyField(Medicamento, blank=True, null=True)
+    medicamentos = models.ManyToManyField(Medicamento, blank=True)
 
 class CondicionEspecial(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     tratamiento = models.ManyToManyField(Tratamiento, blank=True)
 
-class TipoAlergia(models.Model):
-    nombre = models.CharField(max_length=128, blank=True, null=True)
 
 class Alergia(models.Model):
     nombre = models.CharField(max_length=512)
     descripcion = models.TextField(blank=True)
-    tipo = models.ForeignKey(TipoAlergia, null=True, on_delete=models.CASCADE)
+
 
 class Color(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
@@ -47,7 +45,7 @@ class Instrumento(models.Model):
     modelo = models.ForeignKey(ModeloInstrumento, null=True, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, null=True, on_delete=models.CASCADE)
     accesorio = models.ForeignKey(Accesorio, null=True, blank=True, on_delete=models.CASCADE)
-    asignado = models.CharField(max_length=128, choices=(
+    asignado = models.CharField(max_length=128, blank=True, null=True, choices=(
         ('Asignado', 'asignado'),
         ('Propio', 'propio')
     ))
@@ -69,53 +67,63 @@ class TipoBeca(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
 
 class Representante(models.Model):
+    nombre = models.CharField(max_length=128, blank=True, null=True)
+    cedula = models.CharField(max_length=32, blank=True, null=True)
+    telefono = models.CharField(max_length=128, blank=True, null=True)
+    email = models.EmailField(blank=True, null=True)
+    parentesco = models.CharField(max_length=128, blank=True, null=True)
+
+
+class Programa(models.Model):
     nombre = models.CharField(max_length=128)
-    cedula = models.CharField(max_length=32)
-    telefono = models.CharField(max_length=128)
-    correo = models.EmailField()
-    parentesco = models.CharField(max_length=128)
+    agrupacion = models.ForeignKey(Agrupacion, blank=True, on_delete=models.CASCADE, null=True)
+
+
+class QuienRetira(models.Model):  
+    nombre = models.CharField(blank=True, null=True, max_length=64)
+
 
 class Alumno(models.Model):
-    nombre = models.CharField(max_length=128)
-    ellido = models.CharField(max_length=128)
-    cedula = models.CharField(max_length=32)
+    nombre = models.CharField(max_length=128) 
+    apellido = models.CharField(max_length=128) 
+    cedula = models.CharField(max_length=32) 
     edad = models.IntegerField()
-    turno = models.ForeignKey(Turno, blank=True, on_delete=models.DO_NOTHING, null=True)
-    instrumentos = models.ManyToManyField(Instrumento, blank=True)
-    # TODO para Cris: Agregar choices
-    sexo = models.CharField(max_length=32, choices=(
+    turno = models.ForeignKey(Turno, blank=True, on_delete=models.DO_NOTHING, null=True) 
+    instrumentos = models.ManyToManyField(Instrumento, blank=True) 
+    sexo = models.CharField(max_length=32, choices=( 
         ('Masculino', 'masculino'),
         ('Femenino', 'femenino'),
         ('Otro', 'otro'),
     ))
-    telefono = models.CharField(max_length=128)
-    fecha_nacimiento = models.DateField(max_length=128)
-    direccion = models.CharField(max_length=256)
+    telefono = models.CharField(max_length=128) 
+    fecha_nacimiento = models.DateField(max_length=128, null=True, blank=True) 
+    direccion = models.CharField(max_length=256) 
     nivel_estudiantil = models.ForeignKey(NivelEstudiantil, blank=True, null=True, on_delete=models.DO_NOTHING)
-    nivel_ts = models.ForeignKey(NivelTS, blank=True, on_delete=models.DO_NOTHING, null=True)
-    representantes = models.ManyToManyField(Representante, blank=True, null=True)
+    nivel_ts = models.ForeignKey(NivelTS, blank=True, on_delete=models.DO_NOTHING, null=True) 
+    representantes = models.ManyToManyField(Representante, blank=True) 
+    alergias = models.ManyToManyField(Alergia, blank=True) 
+    tratamientos = models.ManyToManyField(Tratamiento, blank=True) 
+    programa = models.ForeignKey(Programa, on_delete=models.DO_NOTHING, blank=True, null=True) 
+    quien_retiras = models.ManyToManyField(QuienRetira, blank=True) 
+
+
 
 class Becado(models.Model):
     alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
     tipo = models.ForeignKey(TipoBeca, blank=True, null=True, on_delete=models.CASCADE)
 
-class Programas(models.Model):
-    nombre = models.CharField(max_length=128)
-    agrupacion = models.ForeignKey(Agrupacion, blank=True, on_delete=models.CASCADE)
-
-class QuienRetira(models.Model):  
-    alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
-    Representante = models.ForeignKey(Representante, blank=True, null=True)
 
 class Inscripcion(models.Model):
     alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
-    fecha_inscrpcion = models.DateField(max_length=128)
-    turno = models.ForeignKey(Turno, blank=True, null=True)
+    fecha_inscripcion = models.DateField(max_length=128, null=True, blank=True)
+    turno = models.ForeignKey(Turno, blank=True, null=True, on_delete=models.DO_NOTHING)
 
-class Tipo_catedra(models.Model):
+
+class TipoCatedra(models.Model):
     nombre = models.CharField(max_length=128)
 
+
 class Catedra(models.Model):
-    nombreCatedra = models.CharField(max_length=128)
-    instrumento = models.ForeignKey(Instrumento, blank=True, null=True)
-    nombreTipoCatedra = models.ForeignKey(Tipo_catedra, blank=True, null=True)
+    nombre = models.CharField(max_length=128)
+    instrumento = models.ForeignKey(Instrumento, blank=True, null=True, on_delete=models.DO_NOTHING)
+    tipo = models.ForeignKey(TipoCatedra, blank=True, null=True, on_delete=models.DO_NOTHING)
