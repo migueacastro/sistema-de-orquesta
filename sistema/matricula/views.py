@@ -12,40 +12,26 @@ def importar_archivo(request):
             messages.error(request, 'No se seleccionó ningún archivo.')
     return render(request, '.html')
 
+def inicio(request):
+    return render(request, 'administrador/home.html', {'title': "Hola pipipipip"})
+
 def listar_alumnos(request):
     alumnos = Alumno.objects.all()
     return render(request, '.html', {'alumnos': alumnos})
 
 def agregar_alumno(request):
-    if request.method == 'POST':
-        form = AlumnoForm(request.POST)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Alumno agregado con éxito.')
-            return redirect('listar_alumnos')
-    else:
-        form = AlumnoForm()
-    return render(request, '.html', {'form': form})
+
+    return render(request, '.html')
 
 
 def editar_alumno(request, id):
     alumno = get_object_or_404(Alumno, id=id)
-    if request.method == 'POST':
-        form = AlumnoForm(request.POST, instance=alumno)
-        if form.is_valid():
-            form.save()
-            messages.success(request, 'Alumno actualizado con éxito.')
-            return redirect('listar_alumnos')
-    else:
-        form = AlumnoForm(instance=alumno)
-    return render(request, '.html', {'form': form})
+    
+    return render(request, '.html')
 
 def eliminar_alumno(request, id):
     alumno = get_object_or_404(Alumno, id=id)
-    if request.method == 'POST':
-        alumno.delete()
-        messages.success(request, 'Alumno eliminado con éxito.')
-        return redirect('listar_alumnos')
+    
     return render(request, '.html', {'alumno': alumno})
 
 

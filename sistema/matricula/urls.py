@@ -3,4 +3,5 @@ from matricula.views import *
 
 urlpatterns = [
     path('importar-archivo/', importar_archivo, name="importar-archivo"),
+    path('', inicio, name='inicio')
 ]
