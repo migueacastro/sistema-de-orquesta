@@ -1,0 +1,73 @@
+{% extends "administrador/layout.html" %}
+{% load static %}
+
+{% block body %}
+    <div class="text-center">
+        <div class="text-center mb-6">
+            <h2 class="text-4xl font-bold text-gray-500 pt-3">Gestión de Alumnos</h2>
+        </div>
+        <div class="flex flex-row justify-center space-x-4 mb-10 ">
+            <div class="bg-orange-100 shadow-md rounded-lg p-6 text-center">
+                <h3 class="text-lg font-semibold mb-4">
+                    <a href="{% url 'agregar_alumno' %}" class=" text-black hover:underline">Agregar Alumno</a>
+                </h3>
+                <i class="fa-solid fa-user-plus"></i>
+            </div>
+
+            <div class="bg-orange-100 shadow-md rounded-lg p-6 text-center">
+                <h3 class="text-lg font-semibold mb-4">
+                    <a href="{% url 'listar_alumnos' %}" class="text-black hover:underline">Mostrar Alumnos</a>
+                </h3>
+                <i class="fa-solid fa-list"></i>
+            </div>
+        </div>
+
+        <div class="bg-white shadow-md rounded-lg p-6">
+            <h3 class="text-xl font-semibold mb-4">Últimos Alumnos Registrados</h3>
+            <div class="overflow-x-auto">
+                <table class="min-w-full table-auto">
+                    <thead>
+                        <tr class="bg-gray-300 text-gray-600 uppercase text-sm leading-normal">
+                            <th class="py-3 px-6 text-left">Nombre</th>
+                            <th class="py-3 px-6 text-left">Apellido</th>
+                            <th class="py-3 px-6 text-left">Cédula</th>
+                            <th class="py-3 px-6 text-left">Edad</th>
+                            <th class="py-3 px-6 text-left">Teléfono</th>
+                            <th class="py-3 px-6 text-left">Dirección</th>
+                            <th class="py-3 px-6 text-left">Becado</th>
+                            <th class="py-3 px-6 text-left">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="text-gray-600 text-sm font-light">
+                        {% for alumno in alumnos %}
+                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                            <td class="py-3 px-6 text-left">{{ alumno.nombre }}</td>
+                            <td class="py-3 px-6 text-left">{{ alumno.apellido }}</td>
+                            <td class="py-3 px-6 text-left">{{ alumno.cedula }}</td>
+                            <td class="py-3 px-6 text-left">{{ alumno.edad }}</td>
+                            <td class="py-3 px-6 text-left">{{ alumno.telefono }}</td>
+                            <td class="py-3 px-6 text-left">{{ alumno.direccion }}</td>
+                            <td class="py-3 px-6 text-left">
+                                {% if alumno.becado_set.all.count > 0 %}
+                                    Si
+                                {% else %}
+                                    No
+                                {% endif %}
+                            </td>
+                            <td class="py-3 px-6 text-left">
+                                <a href="{% url 'detalles_alumno' alumno.id %}" class="text-blue-500 hover:underline">Ver</a> |
+                                <a href="#" class="text-yellow-500 hover:underline">Editar</a> |
+                                <a href="#" class="text-red-500 hover:underline">Eliminar</a>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="8" class="py-3 px-6 text-center">No hay alumnos registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}
