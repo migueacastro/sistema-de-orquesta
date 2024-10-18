@@ -4,19 +4,19 @@
 {% block body %}
     <div class="text-center">
         <div class="text-center mb-6">
-            <h2 class="text-4xl font-bold text-gray-500 pt-3">Gestión de Alumnos</h2>
+            <h2 class="text-4xl font-bold text-gray-600 pt-3">Gestión de Alumnos</h2>
         </div>
         <div class="flex flex-row justify-center space-x-4 mb-10 ">
-            <div class="bg-orange-100 shadow-md rounded-lg p-6 text-center">
+            <div class="bg-gray-300 shadow-md rounded-lg p-6 text-center">
                 <h3 class="text-lg font-semibold mb-4">
-                    <a href="{% url 'agregar_alumno' %}" class=" text-black hover:underline">Agregar Alumno</a>
+                    <a href="{% url 'agregar_alumno' %}" class=" text-black font-bold hover:text-green-800">Agregar Alumno</a>
                 </h3>
                 <i class="fa-solid fa-user-plus"></i>
             </div>
 
-            <div class="bg-orange-100 shadow-md rounded-lg p-6 text-center">
+            <div class="bg-gray-300 shadow-md rounded-lg p-6 text-center">
                 <h3 class="text-lg font-semibold mb-4">
-                    <a href="{% url 'listar_alumnos' %}" class="text-black hover:underline">Mostrar Alumnos</a>
+                    <a href="{% url 'listar_alumnos' %}" class="text-black font-bold hover:text-green-800">Mostrar Alumnos</a>
                 </h3>
                 <i class="fa-solid fa-list"></i>
             </div>
@@ -27,7 +27,7 @@
             <div class="overflow-x-auto">
                 <table class="min-w-full table-auto">
                     <thead>
-                        <tr class="bg-gray-300 text-gray-600 uppercase text-sm leading-normal">
+                        <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                             <th class="py-3 px-6 text-left">Nombre</th>
                             <th class="py-3 px-6 text-left">Apellido</th>
                             <th class="py-3 px-6 text-left">Cédula</th>
@@ -40,7 +40,7 @@
                     </thead>
                     <tbody class="text-gray-600 text-sm font-light">
                         {% for alumno in alumnos %}
-                        <tr class="border-b border-gray-200 hover:bg-gray-100">
+                        <tr class="border-b border-gray-200 hover:bg-sky-100">
                             <td class="py-3 px-6 text-left">{{ alumno.nombre }}</td>
                             <td class="py-3 px-6 text-left">{{ alumno.apellido }}</td>
                             <td class="py-3 px-6 text-left">{{ alumno.cedula }}</td>
