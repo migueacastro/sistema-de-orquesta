@@ -10,30 +10,25 @@
     <script src="{% static 'tailwind.js' %}"></script>
 </head>
 <body class="flex flex-col relative">
-    <div class="relative w-full bg-white shadow-md" style="height: 5rem;"> <!-- Ajusta el height aquí -->
+    <div class="relative w-full bg-white shadow-md" style="height: 5rem;"> 
         <img src="{% static 'NI-COLOR-H.png' %}" alt="LOGO" class="absolute top-1/2 transform -translate-y-1/2 left-1/2 transform -translate-x-1/2 h-[8rem] w-auto">
     </div>
     
-    <div class="fixed left-0 h-screen bg-orange-100 w-[5%] hover:w-[12%] transition-all duration-200 shadow-lg group p-4">
+    <div class="fixed left-0 h-screen bg-gray-300 w-[5%] hover:w-[12%] transition-all duration-200 shadow-lg group p-4">
         <div class="flex flex-col items-center space-y-20">
             <img src="{% static 'elsistemalogo.png' %}" alt="LOGO" class="h-[3rem] w-auto mx-auto pt-3">
-            <a href="#" class="flex items-center text-gray-600 hover:text-gray-800">
+            <a href="#" class="flex items-center text-gray-700 hover:text-green-800">
                 <i class="fa-solid fa-person-circle-plus"></i>
                 <span class="hidden group-hover:inline-block ml-4">Inscribir Alumno</span>
             </a>
-            <a href="#" class="flex items-center text-gray-600 hover:text-gray-800">
+            <a href="#" class="flex items-center text-gray-700 hover:text-green-800">
                 <i class="fa-solid fa-address-book"></i>
                 <span class="hidden group-hover:inline-block ml-4">Lista de Alumnos</span>
             </a>
-            <a href="#" class="flex items-center text-gray-600 hover:text-gray-800">
-                <i class="fa-solid fa-sign-out-alt"></i>
-                <span class="hidden group-hover:inline-block ml-4">Salir</span>
-            </a>
-            
         </div>
     </div>
 
-    <div class="ml-[5%] bg-gradient-to-r from-blue-100 to-green-100 w-[95%] h-full">
+    <div class="ml-[5%] bg-gradient-to-r from-sky-200 to-sky-400 w-[95%] h-full">
         {% block body %}
         {% endblock %}
     </div>
