@@ -1,41 +1,52 @@
 {% extends "administrador/layout.html" %}
 
 {% block body %}
-<h1 class="text-2xl text-center font-bold mb-4">{{ title }}</h1>
-<table class="bg-white mx-auto w-[70%] table-auto shadow-md rounded-lg p-6">
-    <thead>
+<div class="flex flex-col justify-center h-[10rem]">
+    <h1 class="text-4xl text-center font-bold mb-4 capitalize ">{{ title }}</h1>
+</div>
+
+<div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9">
+    <table class="min-w-full table-auto" id="entry-table">
+        <thead>
             <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                 {% if first_entry %}
                     {% for field_name, field_value in first_entry.items  %}
-                        <td>
-                            {{ field_name }}
-                        </td>
+                        {% if field_name == "id" %}
+                            <th class="py-3 px-6 text-center" width="25">
+                                {{ field_name }}
+                            </th>
+                        {% else %}
+                            <th class="py-3 px-6 text-left">
+                                {{ field_name }}
+                            </th>
+                        {% endif %}
                     {% endfor %}
                 {% else %}
-                    <td>Sin registros</td>
+                    <th>Sin registros</th>
                 {% endif %}
             </tr> 
-    </thead>
-    <tbody>
-        {% for entry in entries %}
-            <tr>
-                
-                {% for field_name, field_value in entry.items %}
-                        <td>
-                            {{ field_value }}
-                        </td>
-                {% empty %}
-                    <td> Sin registros </td>
-                {% endfor %}
-            </tr>
-        {% endfor %}
-    </tbody>
-
-</table>
+        </thead>
+        <tbody class="text-gray-600 text-sm font-light">
+            {% for entry in entries %}
+                <tr class="border-b border-gray-200 hover:bg-sky-100">
+                    
+                    {% for field_name, field_value in entry.items %}
+                            <td class="py-3 px-6 text-left">
+                                {{ field_value }}
+                            </td>
+                    {% empty %}
+                        <td class="py-3 px-6 text-left"> Sin registros </td>
+                    {% endfor %}
+                </tr>
+            {% endfor %}
+        </tbody>
+    
+    </table>    
+</div>
 
 
 <script>
-    let table = new DataTable('#myTable');
+    let table = new DataTable('#entry-table');
 </script>
 
 {% endblock %}
