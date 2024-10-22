@@ -60,7 +60,9 @@ def agregar_alumno(request):
             alumno.representantes.add(representante)
             alumno.save()
         return redirect('alumno_success')
-    return render(request, 'administrador/create.html')
+    return render(request, 'administrador/create.html', {
+        
+    })
 
 
 def editar_alumno(request, id):
