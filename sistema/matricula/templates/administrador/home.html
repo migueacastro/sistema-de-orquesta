@@ -25,7 +25,7 @@
         <div class="bg-white shadow-md rounded-lg p-6">
             <h3 class="text-xl font-semibold mb-4">Últimos Alumnos Registrados</h3>
             <div class="overflow-x-auto">
-                <table class="min-w-full table-auto">
+                <table class="min-w-full table-auto" id="tablita">
                     <thead>
                         <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                             <th class="py-3 px-6 text-left">Nombre</th>
@@ -70,4 +70,7 @@
             </div>
         </div>
     </div>
+    <script>
+        let table = new DataTable('#tablita');
+    </script>
 {% endblock %}

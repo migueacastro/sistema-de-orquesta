@@ -1,0 +1,41 @@
+{% extends "administrador/layout.html" %}
+
+{% block body %}
+<h1 class="text-2xl text-center font-bold mb-4">{{ title }}</h1>
+<table class="bg-white mx-auto w-[70%] table-auto shadow-md rounded-lg p-6">
+    <thead>
+            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                {% if first_entry %}
+                    {% for field_name, field_value in first_entry.items  %}
+                        <td>
+                            {{ field_name }}
+                        </td>
+                    {% endfor %}
+                {% else %}
+                    <td>Sin registros</td>
+                {% endif %}
+            </tr> 
+    </thead>
+    <tbody>
+        {% for entry in entries %}
+            <tr>
+                
+                {% for field_name, field_value in entry.items %}
+                        <td>
+                            {{ field_value }}
+                        </td>
+                {% empty %}
+                    <td> Sin registros </td>
+                {% endfor %}
+            </tr>
+        {% endfor %}
+    </tbody>
+
+</table>
+
+
+<script>
+    let table = new DataTable('#myTable');
+</script>
+
+{% endblock %}
