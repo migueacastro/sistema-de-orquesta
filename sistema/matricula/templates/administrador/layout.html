@@ -27,7 +27,7 @@
         <i id="menuResponsive" class="fa fa-bars text-3xl ml-[1rem] mt-[1.5rem] cursor-pointer"></i>
     </div>
     
-    <div class="hidden lg:block fixed left-0 h-screen bg-gray-300 lg:w-[5%] hover:w-[12%] transition-all duration-200 shadow-lg group p-4">
+    <div class="hidden z-10 lg:block fixed left-0 h-screen bg-gray-300 lg:w-[5%] hover:w-[12%] transition-all duration-200 shadow-lg group p-4">
         <div class="flex flex-col items-center space-y-20">
             <img src="{% static 'elsistemalogo.png' %}" alt="LOGO" class="h-[3rem] w-auto mx-auto pt-3">
             <a href="#" class="flex items-center text-gray-700 hover:text-green-800">
@@ -58,6 +58,7 @@
     </div>
 
     <div class="lg:ml-[5%] bg-gradient-to-r from-sky-200 to-sky-400 lg:w-[95%] w-full h-full">
+        
         {% block body %}
         {% endblock %}
     </div>
