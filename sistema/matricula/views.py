@@ -1,7 +1,8 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
-from .models import Alumno
+from .models import *
 from django.contrib import messages
+from django.forms.models import model_to_dict
 
 def importar_archivo(request):
     if request.method == 'POST':
@@ -79,3 +80,27 @@ def eliminar_alumno(request, id):
 def detalles_alumno(request, id):
     alumno = get_object_or_404(Alumno, id=id)
     return render(request, '.html', {'alumno': alumno})
+
+def alergias(request):
+    title = 'alergias'
+    query = Alergia.objects.all()
+    entries = [model_to_dict(i) for i in query]
+    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0]})
+
+def tratamientos(request):
+    title = 'tratamientos'
+    query = Tratamiento.objects.all()
+    entries = [model_to_dict(i) for i in query]
+    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+
+def accesorios(request):
+    title = 'accesorios'
+    query = Accesorio.objects.all()
+    entries = [model_to_dict(i) for i in query]
+    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+
+def colores(request):
+    title = 'colores'
+    query = Color.objects.all()
+    entries = [model_to_dict(i) for i in query]
+    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
