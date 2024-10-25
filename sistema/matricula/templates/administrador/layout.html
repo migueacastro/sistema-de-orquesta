@@ -7,6 +7,7 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link rel="stylesheet" href="{% static 'all.min.css' %}">
+    <link rel="icon" href="{% static 'elsistemalogo.png' %}" />
     <script src="{% static 'tailwind.js' %}"></script>
 
     <script
@@ -30,7 +31,7 @@
     <div class="hidden z-10 lg:block fixed left-0 h-screen bg-gray-300 lg:w-[5%] hover:w-[12%] transition-all duration-200 shadow-lg group p-4">
         <div class="flex flex-col items-center space-y-20">
             <img src="{% static 'elsistemalogo.png' %}" alt="LOGO" class="h-[3rem] w-auto mx-auto pt-3">
-            <a href="#" class="flex items-center text-gray-700 hover:text-green-800">
+            <a href="{% url 'agregar_alumno' %}" class="flex items-center text-gray-700 hover:text-green-800">
                 <i class="text-3xl fa-solid fa-person-circle-plus"></i>
                 <span class="hidden group-hover:inline-block ml-4">Inscribir Alumno</span>
             </a>
@@ -43,15 +44,15 @@
     <div id="mobileMenu" class="fixed inset-y-0 left-0 hidden transition-transform duration-200 z-50 bg-gray-200 w-[200px] transform -translate-x-full">
         <div class="flex flex-col items-center p-6 space-y-8">
             <img src="{% static 'elsistemalogo.png' %}" alt="LOGO" class="h-[3rem] w-auto">
-            <a href="#" class="flex items-center text-gray-700 hover:text-green-800 text-center"> <!-- Cambios aquí -->
+            <a href="{% url 'agregar_alumno' %}" class="flex items-center text-gray-700 hover:text-green-800 text-center"> 
                 <i class="text-3xl fa-solid fa-person-circle-plus"></i>
                 <span class="ml-4">Inscribir Alumno</span>
             </a>
-            <a href="#" class="flex items-center text-gray-700 hover:text-green-800 text-center"> <!-- Cambios aquí -->
+            <a href="#" class="flex items-center text-gray-700 hover:text-green-800 text-center"> 
                 <i class="text-3xl fa-solid fa-address-book"></i>
                 <span class="ml-4">Lista de Alumnos</span>
             </a>
-            <button id="closeMenu" class="text-2xl text-gray-700 hover:text-red-600 mt-8 text-center"> <!-- Cambios aquí -->
+            <button id="closeMenu" class="text-2xl text-gray-700 hover:text-red-600 mt-8 text-center"> 
                 <i class="fa-solid fa-times"></i> Cerrar
             </button>
         </div>

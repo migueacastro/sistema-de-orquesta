@@ -62,7 +62,11 @@ def agregar_alumno(request):
             alumno.save()
         return redirect('alumno_success')
     return render(request, 'administrador/create.html', {
-        
+        "form":{
+            "nombre": "text",
+            "apellido": "text",
+            "edad":"integer",
+        }
     })
 
 
@@ -104,3 +108,12 @@ def colores(request):
     query = Color.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+
+
+
+formulario = {
+    "nombre":"text",
+    "apellido":"text",
+    "edad":"integer",
+    
+}
