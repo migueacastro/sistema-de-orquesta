@@ -59,7 +59,20 @@
     </div>
 
     <div class="lg:ml-[5%] bg-gradient-to-r from-sky-200 to-sky-400 lg:w-[95%] w-full h-full">
-        
+
+        <div class="m-3">
+            {% if messages %}
+              <ul class="flex flex-col">
+                {% for message in messages %}
+                    <div class="{{ message.tags }} z-10 my-3" role="alert" >
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                        {{ message }}
+                    </div>
+                {% endfor %}
+              </ul>
+            {% endif %}
+        </div>
+
         {% block body %}
         {% endblock %}
     </div>
@@ -71,8 +84,8 @@
         });
         document.getElementById("closeMenu").addEventListener("click", function() {
             const mobileMenu = document.getElementById("mobileMenu");
-            mobileMenu.classList.add("hidden");
-            mobileMenu.classList.add("-translate-x-full"); 
+            mobileMenu.classList.toggle("hidden");
+            mobileMenu.classList.toggle("-translate-x-full"); 
         });
     </script>
 </body>

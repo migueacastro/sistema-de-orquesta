@@ -16,7 +16,7 @@ def importar_archivo(request):
 
 def inicio(request):
     alumnos = Alumno.objects.all()
-    return render(request, 'administrador/home.html', {'title': "Inicio", "alumnos":alumnos})
+    return render(request, 'administrador/home.html', {'title': 'Inicio', 'alumnos':alumnos})
 
 
 
