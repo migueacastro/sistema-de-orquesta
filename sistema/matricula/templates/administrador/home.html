@@ -40,26 +40,29 @@
                     </thead>
                     <tbody class="text-gray-600 text-sm font-light">
                         {% for alumno in alumnos %}
-                        <tr class="border-b border-gray-200 hover:bg-sky-100">
-                            <td class="py-3 px-6 text-left">{{ alumno.nombre }}</td>
-                            <td class="py-3 px-6 text-left">{{ alumno.apellido }}</td>
-                            <td class="py-3 px-6 text-left">{{ alumno.cedula }}</td>
-                            <td class="py-3 px-6 text-left">{{ alumno.edad }}</td>
-                            <td class="py-3 px-6 text-left">{{ alumno.telefono }}</td>
-                            <td class="py-3 px-6 text-left">{{ alumno.direccion }}</td>
-                            <td class="py-3 px-6 text-left">
-                                {% if alumno.becado_set.all.count > 0 %}
-                                    Si
-                                {% else %}
-                                    No
-                                {% endif %}
-                            </td>
-                            <td class="py-3 px-6 text-left">
-                                <a href="{% url 'detalles_alumno' alumno.id %}" class="text-blue-500 hover:underline">Ver</a> |
-                                <a href="#" class="text-yellow-500 hover:underline">Editar</a> |
-                                <a href="#" class="text-red-500 hover:underline">Eliminar</a>
-                            </td>
-                        </tr>
+                        
+                            <tr class="border-b border-gray-200 hover:bg-sky-100" onclick="goToURL('alumnos/{{ alumno.id }}');">
+                                    <td class="py-3 px-6 text-left">{{ alumno.nombre }}</td>
+                                    <td class="py-3 px-6 text-left">{{ alumno.apellido }}</td>
+                                    <td class="py-3 px-6 text-left">{{ alumno.cedula }}</td>
+                                    <td class="py-3 px-6 text-left">{{ alumno.edad }}</td>
+                                    <td class="py-3 px-6 text-left">{{ alumno.telefono }}</td>
+                                    <td class="py-3 px-6 text-left">{{ alumno.direccion }}</td>
+                                    <td class="py-3 px-6 text-left">
+                                        {% if alumno.becado_set.all.count > 0 %}
+                                            Si
+                                        {% else %}
+                                            No
+                                        {% endif %}
+                                    </td>
+                                    <td class="py-3 px-6 text-left">
+                                        <a href="{% url 'detalles_alumno' alumno.id %}" class="text-blue-500 hover:underline">Ver</a> |
+                                        <a href="#" class="text-yellow-500 hover:underline">Editar</a> |
+                                        <a href="#" class="text-red-500 hover:underline">Eliminar</a>
+                                    </td>
+                            </tr>
+                        
+                        
                         {% empty %}
                         <tr>
                             <td colspan="8" class="py-3 px-6 text-center">No hay alumnos registrados.</td>

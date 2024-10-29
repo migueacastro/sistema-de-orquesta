@@ -93,7 +93,8 @@ def alergias(request, id):
                 'name': 'descripcion',
                 'type': 'textarea',
                 'width': '50'
-            }
+            },
+            
         ],
         'Alergias', # Título
         id) # Id
