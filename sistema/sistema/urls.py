@@ -22,5 +22,5 @@ from schema_graph.views import Schema
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('schema/', Schema.as_view()),
-    path('matricula/', include('matricula.urls'))
+    path('', include('matricula.urls'))
 ]

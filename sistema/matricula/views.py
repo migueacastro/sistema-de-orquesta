@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import *
 from django.contrib import messages
 from django.forms.models import model_to_dict
+from .helpers import viewset
 
 def importar_archivo(request):
     if request.method == 'POST':
@@ -17,9 +18,7 @@ def inicio(request):
     alumnos = Alumno.objects.all()
     return render(request, 'administrador/home.html', {'title': "Inicio", "alumnos":alumnos})
 
-def listar_alumnos(request):
-    alumnos = Alumno.objects.all()
-    return render(request, '.html', {'alumnos': alumnos})
+
 
 def agregar_alumno(request):
     if request.method == 'POST':
@@ -81,11 +80,24 @@ def detalles_alumno(request, id):
     alumno = get_object_or_404(Alumno, id=id)
     return render(request, '.html', {'alumno': alumno})
 
-def alergias(request):
-    title = 'Alergias'
-    query = Alergia.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0]})
+def alergias(request, id):
+    return viewset(request, 
+        Alergia, # Modelo
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'descripcion',
+                'type': 'textarea',
+                'width': '50'
+            }
+        ],
+        'Alergias', # Título
+        id) # Id
+
 
 def tratamientos(request):
     title = 'Tratamientos'
@@ -105,115 +117,115 @@ def colores(request):
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def CategoriasInstrumentos(request):
-    title = 'CategoriaInstrumentos'
+def categorias_instrumentos(request):
+    title = 'Categoria Instrumentos'
     query = CategoriaInstrumento.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def MarcasInstrumentos(request):
-    title = 'MarcaInstrumentos'
+def marcas_instrumentos(request):
+    title = 'Marca Instrumentos'
     query = MarcaInstrumento.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Medicamentos(request):
+def medicamentos(request):
     title = 'Medicamentos'
     query = Medicamento.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def CondicionesEspeciales(request):
-    title = 'CondicionesEspeciales'
+def condiciones_especiales(request):
+    title = 'Condiciones Especiales'
     query = CondicionEspecial.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def ModelosInstrumentos(request):
-    title = 'ModelosInstrumentos'
+def modelos_instrumentos(request):
+    title = 'Modelos Instrumentos'
     query = ModeloInstrumento.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Instrumentos(request):
+def instrumentos(request):
     title = 'Instrumentos'
     query = Instrumento.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Agrupaciones(request):
+def agrupaciones(request):
     title = 'Agrupaciones'
     query = Agrupacion.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def NivelesTS(request):
-    title = 'NivelesTS'
+def nivelests(request):
+    title = 'Niveles TS'
     query = NivelTS.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Turnos(request):
+def turnos(request):
     title = 'Turnos'
     query = Turno.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def NivelesEstudiantiles(request):
-    title = 'NivelesEstudiantiles'
+def niveles_estudiantiles(request):
+    title = 'Niveles Estudiantiles'
     query = NivelEstudiantil.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def TiposBecas(request):
-    title = 'TiposBecas'
+def tipos_becas(request):
+    title = 'Tipos Becas'
     query = TipoBeca.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Representantes(request):
+def representantes(request):
     title = 'Representantes'
     query = Representante.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Programas(request):
+def programas(request):
     title = 'Programas'
     query = Programa.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def QuienesRetiran(request):
-    title = 'QuienesRetiran'
+def quienes_retiran(request):
+    title = 'Quienes Retiran'
     query = QuienRetira.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Alumnos(request):
+def alumnos(request):
     title = 'Alumnos'
     query = Alumno.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Becados(request):
+def becados(request):
     title = 'Becados'
     query = Becado.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Inscripciones(request):
+def inscripciones(request):
     title = 'Inscripciones'
     query = Inscripcion.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def TiposCatedras(request):
-    title = 'TiposCatedras'
+def tipos_catedras(request):
+    title = 'Tipos Catedras'
     query = TipoCatedra.objects.all()
     entries = [model_to_dict(i) for i in query]
     return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
 
-def Catedras(request):
+def catedras(request):
     title = 'Catedras'
     query = Catedra.objects.all()
     entries = [model_to_dict(i) for i in query]

@@ -5,51 +5,90 @@
     <h1 class="text-4xl text-center font-bold mb-4 capitalize ">{{ title }}</h1>
 </div>
 
+<!-- Form -->
 <div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9">
+    <h2 class="text-4xl text-center my-8 mb-16 capitalize ">Agregar</h2>
+    <form id="entries-form" method="post" class="w-[80%] lg:flex-row flex mx-auto flex-wrap">
+        {% for field in form %}
+            {% if field.type == "text" %}
+            <div class="lg:w-[{{ field.width }}%] mx-2">
+                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                <input type="text" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">
+            </div>
+            {% elif field.type == "integer"%}
+            <div class="lg:w-[{{ field.width }}%] mx-2">
+                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                <input type="text" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">
+            </div>
+            {% elif field.type == "textarea" %}
+            <div class="lg:w-[{{ field.width }}%] mx-2">
+                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                <textarea  rows="4"  name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm"></textarea>
+            </div>
+            {% endif %}
+        {% endfor %}
+    </form>
+    
+
+</div>
+<!-- End Form-->
+
+<!-- Data Table -->
+<div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 ">
     <a class="bg-gray-800 text-white px-4 py-2 my-2 rounded" href=" ">
         Crear
     </a>
-    <table class="min-w-full table-auto" id="entry-table">
-        <thead>
-            <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
-                {% if first_entry %}
-                    {% for field_name, field_value in first_entry.items  %}
-                        {% if field_name == "id" %}
-                            <th class="py-3 px-6 text-center" width="25">
-                                {{ field_name }}
-                            </th>
-                        {% else %}
-                            <th class="py-3 px-6 text-left">
-                                {{ field_name }}
-                            </th>
-                        {% endif %}
-                    {% endfor %}
-                {% else %}
-                    <th>Sin registros</th>
-                {% endif %}
-            </tr> 
-        </thead>
-        <tbody class="text-gray-600 text-sm font-light">
-            {% for entry in entries %}
-                <tr class="border-b border-gray-200 hover:bg-sky-100">
-                    
-                    {% for field_name, field_value in entry.items %}
-                            <td class="py-3 px-6 text-left">
-                                {{ field_value }}
-                            </td>
-                    {% empty %}
-                        <td class="py-3 px-6 text-left"> Sin registros </td>
-                    {% endfor %}
-                </tr>
-            {% endfor %}
-        </tbody>
-    
-    </table>    
+    <div class="overflow-x-auto">
+        <table class="min-w-full table-auto" id="entry-table">
+            <thead>
+                <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                    {% if first_entry %}
+                        {% for field_name, field_value in first_entry.items  %}
+                            {% if field_name == "id" %}
+                                <th class="py-3 px-6 text-center" width="25">
+                                    {{ field_name }}
+                                </th>
+                            {% else %}
+                                <th class="py-3 px-6 text-left">
+                                    {{ field_name }}
+                                </th>
+                            {% endif %}
+                        {% endfor %}
+                    {% else %}
+                        <th>Sin registros</th>
+                    {% endif %}
+                </tr> 
+            </thead>
+            <tbody class="text-gray-600 text-sm font-light">
+                {% for entry in entries %}
+                    <tr class="border-b border-gray-200 hover:bg-sky-100">
+                        
+                        {% for field_name, field_value in entry.items %}
+                                <td class="py-3 px-6 text-left">
+                                    {{ field_value }}
+                                </td>
+                        {% empty %}
+                            <td class="py-3 px-6 text-left"> Sin registros </td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        
+        </table>
+    </div>
+        
 </div>
-
+<!-- End  Data Table -->
 
 <script>
     let table = new DataTable('#entry-table');
+    document.addEventListener('DOMContentLoaded', () => {
+        let tableModifier = document.querySelector('#dt-layout-row');
+        tableModifier.classList.toggle('');
+        tablemodi.clone().appendTo('#anotherDiv');
+
+    $('#parentOfOldElement #yourElement').remove();
+    });
 </script>
 
 {% endblock %}
