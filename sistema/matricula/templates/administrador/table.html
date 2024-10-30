@@ -65,7 +65,7 @@
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 {% for entry in entries %}
-                    <tr class="border-b border-gray-200 hover:bg-sky-100">
+                    <tr class="border-b border-gray-200 hover:bg-sky-100 " onclick="goToURL(window.location + '{{ entry.id }}')">
                         {% for field_name, field_value in entry.items %}
                             <td class="py-3 px-6 text-left">
                                 {{ field_value }}

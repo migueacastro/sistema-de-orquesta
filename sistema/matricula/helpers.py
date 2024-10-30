@@ -4,6 +4,7 @@ from django.forms.models import model_to_dict
 from django.urls.resolvers import URLPattern
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages 
+from django.apps import apps
 
 
 class NullableIntConverter:
@@ -58,10 +59,11 @@ def viewset(request, model, field_list, title, id=None):
         entry = model.objects.get(id=id)
         match request.method:
             case 'GET':
-                # Plantilla details
-                return render(request, '', {'entry':entry})
+                for field in field_list:
+                    field["value"] = model_to_dict(entry).get(field["name"])
+                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
             case 'PUT':
-                # TODO: Manejar edicion de un registro
+                
                 instance_to_change = model.objects.get(id=id)
                 try:
 
@@ -69,14 +71,14 @@ def viewset(request, model, field_list, title, id=None):
                         data = request.POST.get(field.get('name'))
                         setattr(instance_to_change, field.name, data)
                     instance_to_change.save()
+                    messages.add_message(request, messages.SUCCESS, 'Registro actualizado exitosamente.')
                 except Exception:
                     messages.add_message(request, messages.ERROR, 'Error al actualizar registro.')
-                else:
-                    messages.add_message(request, messages.SUCCESS, 'Registro actualizado exitosamente.')
+                
+                    
                 
                 return render(request, '', {'entry':entry})
             case 'DELETE':
-                # TODO: Manejar eliminación de un registro
                 try:
                     model.objects.filter(id=id).delete()
                 except Exception:
