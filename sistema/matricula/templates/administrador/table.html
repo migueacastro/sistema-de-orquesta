@@ -1,41 +1,45 @@
 {% extends "administrador/layout.html" %}
 
 {% block body %}
-<div class="flex flex-col justify-center h-[10rem]">
+<div class="flex flex-col justify-center items-center h-[10rem]">
     <h1 class="text-4xl text-center font-bold mb-4 capitalize ">{{ title }}</h1>
 </div>
 
 <!-- Form -->
-<div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9">
-    <h2 class="text-4xl text-center my-8 mb-16 capitalize ">Agregar</h2>
-    <form id="entries-form" method="post" class="w-[80%] lg:flex-row flex mx-auto flex-wrap">
+<div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 flex flex-col items-center hidden" id="section-form"> 
+    <h2 class="text-4xl text-center my-4 mb-4 capitalize">Agregar</h2>
+    <form class="w-full">
         {% for field in form %}
             {% if field.type == "text" %}
-            <div class="lg:w-[{{ field.width }}%] mx-2">
+            <div class="mb-4">
                 <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
                 <input type="text" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">
             </div>
             {% elif field.type == "integer"%}
-            <div class="lg:w-[{{ field.width }}%] mx-2">
+            <div class="mb-4">
                 <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
                 <input type="text" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">
             </div>
             {% elif field.type == "textarea" %}
-            <div class="lg:w-[{{ field.width }}%] mx-2">
+            <div class="mb-4">
                 <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                <textarea  rows="4"  name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm"></textarea>
+                <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm"></textarea>
             </div>
             {% endif %}
         {% endfor %}
-    </form>
-    
 
+        <div class="flex justify-between mt-4">
+            <button type="submit" class="bg-blue-600 text-white px-4 py-1 rounded text-sm">Guardar</button>
+            <button type="button" id="cancel-button" class="bg-gray-400 text-white px-4 py-1 rounded text-sm">Volver</button>
+        </div>
+    </form>
 </div>
-<!-- End Form-->
+
+<!-- End Form -->
 
 <!-- Data Table -->
-<div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 ">
-    <a class="bg-gray-800 text-white px-4 py-2 my-2 rounded" href=" ">
+<div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 " id="section-table">
+    <a id="crear-btn" class="bg-gray-800 text-white px-4 py-2 my-2 rounded" href="#">
         Crear
     </a>
     <div class="overflow-x-auto">
@@ -43,7 +47,7 @@
             <thead>
                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                     {% if first_entry %}
-                        {% for field_name, field_value in first_entry.items  %}
+                        {% for field_name, field_value in first_entry.items %}
                             {% if field_name == "id" %}
                                 <th class="py-3 px-6 text-center" width="25">
                                     {{ field_name }}
@@ -62,25 +66,38 @@
             <tbody class="text-gray-600 text-sm font-light">
                 {% for entry in entries %}
                     <tr class="border-b border-gray-200 hover:bg-sky-100">
-                        
                         {% for field_name, field_value in entry.items %}
-                                <td class="py-3 px-6 text-left">
-                                    {{ field_value }}
-                                </td>
+                            <td class="py-3 px-6 text-left">
+                                {{ field_value }}
+                            </td>
                         {% empty %}
                             <td class="py-3 px-6 text-left"> Sin registros </td>
                         {% endfor %}
                     </tr>
                 {% endfor %}
             </tbody>
-        
         </table>
     </div>
-        
 </div>
-<!-- End  Data Table -->
 
 <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const crearBtn = document.getElementById('crear-btn');
+        const formContainer = document.getElementById('section-form');
+        const tableContainer = document.getElementById('section-table');
+        const cancelButton = document.getElementById('cancel-button');
+
+        crearBtn.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            formContainer.classList.remove('hidden'); 
+            tableContainer.classList.add('hidden'); 
+        });
+
+        cancelButton.addEventListener('click', () => {
+            formContainer.classList.add('hidden');
+            tableContainer.classList.remove('hidden'); 
+        });
+    });
     let table = new DataTable('#entry-table');
     document.addEventListener('DOMContentLoaded', () => {
         let tableModifier = document.querySelector('#dt-layout-row');
