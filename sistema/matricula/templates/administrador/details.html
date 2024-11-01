@@ -9,17 +9,17 @@
             {% if field.type == "text" %}
                 <div class="mb-4">
                     <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{{ field.value }}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
+                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{% if field.value %}{{ field.value }}{% endif %}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
                 </div>
             {% elif field.type == "integer" %}
                 <div class="mb-4">
                     <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{{ field.value }}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
+                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{% if field.value %}{{ field.value }}{% endif %}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
                 </div>
             {% elif field.type == "textarea" %}
                 <div class="mb-4">
                     <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                    <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="editable indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>{{ field.value }}</textarea>
+                    <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="editable indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>{% if field.value %}{{ field.value }}{% endif %}</textarea>
                 </div>
             {% endif %}
         {% endfor %}

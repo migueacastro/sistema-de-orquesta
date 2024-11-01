@@ -44,7 +44,7 @@
                             <tr class="border-b border-gray-200 hover:bg-sky-100" onclick="goToURL('alumnos/{{ alumno.id }}');">
                                     <td class="py-3 px-6 text-left">{{ alumno.nombre }}</td>
                                     <td class="py-3 px-6 text-left">{{ alumno.apellido }}</td>
-                                    <td class="py-3 px-6 text-left">{{ alumno.cedula }}</td>
+                                    <td class="py-3 px-6 text-left">{% if field.value %}{{ field.value }}{% endif %}</td>
                                     <td class="py-3 px-6 text-left">{{ alumno.edad }}</td>
                                     <td class="py-3 px-6 text-left">{{ alumno.telefono }}</td>
                                     <td class="py-3 px-6 text-left">{{ alumno.direccion }}</td>
