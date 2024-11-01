@@ -62,7 +62,7 @@ def viewset(request, model, field_list, title, id=None):
                 for field in field_list:
                     field["value"] = model_to_dict(entry).get(field["name"])
                 return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
-            case 'PUT':
+            case 'POST':
                 
                 instance_to_change = model.objects.get(id=id)
                 try:

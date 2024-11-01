@@ -7,7 +7,6 @@ register_converter(NullableIntConverter, 'nullable_int')
 urlpatterns = [
     path('importar-archivo/', importar_archivo, name="importar-archivo"),
     path('', inicio, name='inicio'),
-    path('agregar/', agregar_alumno, name='agregar_alumno'),
     path('alumnos/<nullable_int:id>', alumnos, name='alumnos'),
 
     
