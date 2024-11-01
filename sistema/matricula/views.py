@@ -41,7 +41,7 @@ def alumnos(request, id):
             },
             {
                 'name': 'edad',
-                'type': 'number',
+                'type': 'integer',
                 'width': '20'
             },
             {

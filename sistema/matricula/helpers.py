@@ -38,16 +38,27 @@ def viewset(request, model, field_list, title, id=None):
             case 'POST':
                 # TODO: Crear forma de repetir formularios
                 new_object = {}
+                many_to_many_fields = {}
                 for field in field_list:
-                    data = request.POST.get(field.get('name'))
-                    new_object[field.name] = data
+                    data = request.POST.get(field['name'])
+                    if data == 'None' or data == '' or data == ' ':
+                        data = None
+                    if field['type'] == 'manytomany' and data:
+                        many_to_many_fields[field['name']] = data.split(",")
+                    else:
+                        if data:
+                            new_object[field['name']] = data
                     
                 new_instance, created = model.objects.get_or_create(**new_object)
                 if created:
+                    for key, value in many_to_many_fields.items():
+                        many_to_many_setter = getattr(new_instance, key)
+                        many_to_many_setter.set(value)
+                        
                     messages.add_message(request, messages.SUCCESS, 'Registro agregado exitosamente.')
                 else:
                     messages.add_message(request, messages.ERROR, 'Error al crear registro.')
-
+                entries = [model_to_dict(i) for i in model.objects.all()]
                 return render(request, 'administrador/table.html', {
                     'title': title, 
                     'entries': entries, 
@@ -69,7 +80,7 @@ def viewset(request, model, field_list, title, id=None):
 
                     for field in field_list:
                         data = request.POST.get(field['name'])
-                        if data == 'None':
+                        if data == 'None' or data == '' or data == ' ':
                             data = None
                             
                         if field['type'] == 'manytomany' and data:
@@ -86,7 +97,8 @@ def viewset(request, model, field_list, title, id=None):
                     messages.add_message(request, messages.ERROR, 'Error al actualizar registro.')
                 
                 entry = instance_to_change
-                
+                for field in field_list:
+                    field["value"] = model_to_dict(entry).get(field["name"])
                 return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
             case 'DELETE':
                 try:
