@@ -1,0 +1,79 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }}</title>
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
+    <link rel="stylesheet" href="{% static 'all.min.css' %}">
+    <link rel="icon" href="{% static 'elsistemalogo.png' %}" />
+    <script src="{% static 'tailwind.js' %}"></script>
+
+    <script
+			  src="https://code.jquery.com/jquery-3.7.1.js"
+			  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+			  crossorigin="anonymous">
+    </script>
+		
+    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
+    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+</head>
+<body class="flex flex-col relative">
+    <div class="relative w-full bg-white shadow-md" style="height: 5rem;"> 
+        <a href="{% url 'inicio' %}">
+            <img src="{% static 'NI-COLOR-H.png' %}" alt="LOGO" class="absolute top-1/2 transform -translate-y-1/2 left-1/2 transform -translate-x-1/2 h-[8rem] w-auto">
+        </a>
+        
+        <i id="menuResponsive" class="fa fa-bars text-3xl ml-[1rem] mt-[1.5rem] cursor-pointer"></i>
+    </div>
+    
+    <div class="hidden z-10 lg:block fixed left-0 h-screen bg-gray-300 lg:w-[5%] hover:w-[12%] transition-all duration-200 shadow-lg group p-4">
+        <div class="flex flex-col items-center space-y-20">
+            <img src="{% static 'elsistemalogo.png' %}" alt="LOGO" class="h-[3rem] w-auto mx-auto pt-3">
+            <a href="{% url 'agregar_alumno' %}" class="flex items-center text-gray-700 hover:text-green-800">
+                <i class="text-3xl fa-solid fa-person-circle-plus"></i>
+                <span class="hidden group-hover:inline-block ml-4">Inscribir Alumno</span>
+            </a>
+            <a href="{% url 'alumnos' %}" class="flex items-center text-gray-700 hover:text-green-800">
+                <i class="text-3xl fa-solid fa-address-book"></i>
+                <span class="hidden group-hover:inline-block ml-4">Lista de Alumnos</span>
+            </a>
+        </div>
+    </div>
+    <div id="mobileMenu" class="fixed inset-y-0 left-0 hidden transition-transform duration-200 z-50 bg-gray-200 w-[200px] transform -translate-x-full">
+        <div class="flex flex-col items-center p-6 space-y-8">
+            <img src="{% static 'elsistemalogo.png' %}" alt="LOGO" class="h-[3rem] w-auto">
+            <a href="{% url 'agregar_alumno' %}" class="flex items-center text-gray-700 hover:text-green-800 text-center"> 
+                <i class="text-3xl fa-solid fa-person-circle-plus"></i>
+                <span class="ml-4">Inscribir Alumno</span>
+            </a>
+            <a href="#" class="flex items-center text-gray-700 hover:text-green-800 text-center"> 
+                <i class="text-3xl fa-solid fa-address-book"></i>
+                <span class="ml-4">Lista de Alumnos</span>
+            </a>
+            <button id="closeMenu" class="text-2xl text-gray-700 hover:text-red-600 mt-8 text-center"> 
+                <i class="fa-solid fa-times"></i> Cerrar
+            </button>
+        </div>
+    </div>
+
+    <div class="lg:ml-[5%] bg-gradient-to-r from-sky-200 to-sky-400 lg:w-[95%] w-full h-full">
+        
+        {% block body %}
+        {% endblock %}
+    </div>
+    <script>
+        document.getElementById("menuResponsive").addEventListener("click", function() {
+            const mobileMenu = document.getElementById("mobileMenu");
+            mobileMenu.classList.toggle("hidden");
+            mobileMenu.classList.toggle("-translate-x-full"); 
+        });
+        document.getElementById("closeMenu").addEventListener("click", function() {
+            const mobileMenu = document.getElementById("mobileMenu");
+            mobileMenu.classList.add("hidden");
+            mobileMenu.classList.add("-translate-x-full"); 
+        });
+    </script>
+</body>
+</html>
