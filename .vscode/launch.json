@@ -10,8 +10,7 @@
             "type": "debugpy",
             "request": "launch",
             "args": [
-                "test",
-                "matricula"
+                "runserver"
             ],
             "django": true,
             "autoStartBrowser": false,

@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 
 from pathlib import Path
+from django.contrib.messages import constants as messages
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -127,3 +128,10 @@ STATICFILES_DIRS = [BASE_DIR / 'matricula' / 'static',]
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+MESSAGE_TAGS = {
+    messages.DEBUG: 'bg-sky-100 border border-sky-400 text-sky-700 px-4 py-3 rounded relative',
+    messages.INFO: 'bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded relative',
+    messages.SUCCESS: 'bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative',
+    messages.WARNING: 'bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative',
+    messages.ERROR: 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative',
+}

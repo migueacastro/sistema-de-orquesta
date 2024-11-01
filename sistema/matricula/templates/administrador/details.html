@@ -2,23 +2,24 @@
 
 {% block body %}
 <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">Detalles del Alumno</h1>
+    <h1 class="text-2xl font-bold mb-4">{{ title }} #{{ entry.id }}</h1>
     <form method="POST" >
+        {% csrf_token %}
         {% for field in form %}
             {% if field.type == "text" %}
                 <div class="mb-4">
-                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.label }}</label>
-                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{{ field.value }}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
+                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{% if field.value %}{{ field.value }}{% endif %}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
                 </div>
             {% elif field.type == "integer" %}
                 <div class="mb-4">
-                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.label }}</label>
-                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{{ field.value }}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
+                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{% if field.value %}{{ field.value }}{% endif %}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
                 </div>
             {% elif field.type == "textarea" %}
                 <div class="mb-4">
-                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.label }}</label>
-                    <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="editable indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>{{ field.value }}</textarea>
+                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                    <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="editable indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>{% if field.value %}{{ field.value }}{% endif %}</textarea>
                 </div>
             {% endif %}
         {% endfor %}
