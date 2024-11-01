@@ -68,16 +68,26 @@ def viewset(request, model, field_list, title, id=None):
                 try:
 
                     for field in field_list:
-                        data = request.POST.get(field.get('name'))
-                        setattr(instance_to_change, field.name, data)
+                        data = request.POST.get(field['name'])
+                        if data == 'None':
+                            data = None
+                            
+                        if field['type'] == 'manytomany' and data:
+                            many_to_many_setter = getattr(instance_to_change, field['name'])
+                            many_to_many_setter.clear()
+                            many_to_many_setter.set(data.split(","))
+                                
+                        else:     
+                            if data:
+                                setattr(instance_to_change, field['name'], data)
                     instance_to_change.save()
                     messages.add_message(request, messages.SUCCESS, 'Registro actualizado exitosamente.')
                 except Exception:
                     messages.add_message(request, messages.ERROR, 'Error al actualizar registro.')
                 
-                    
+                entry = instance_to_change
                 
-                return render(request, '', {'entry':entry})
+                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
             case 'DELETE':
                 try:
                     model.objects.filter(id=id).delete()
@@ -85,7 +95,7 @@ def viewset(request, model, field_list, title, id=None):
                     messages.add_message(request, messages.ERROR, 'Error al eliminar registro')
                 else:
                     messages.add_message(request, messages.WARNING, 'Registro eliminado exitosamente.')
-                return render(request, '', {'entry':entry})
+                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
     return redirect("/")
 
 
