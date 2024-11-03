@@ -5,7 +5,6 @@ from django.contrib import messages
 from django.forms.models import model_to_dict
 from .helpers import viewset
 
-
 def importar_archivo(request):
     if request.method == 'POST':
         archivo = request.FILES.get('archivo')
@@ -19,6 +18,33 @@ def inicio(request):
     alumnos = Alumno.objects.all()
     return render(request, 'administrador/home.html', {'title': 'Inicio', 'alumnos':alumnos})
 
+def cards(request):
+    vistas = [
+        {'nombre': 'alergias', 'title': 'Alergias', 'description': 'Visualiza y edita la tabla de alergias.', 'id': 1},
+        {'nombre': 'tratamientos', 'title': 'Tratamientos', 'description': 'Visualiza y edita la tabla de tratamientos.'},
+        {'nombre': 'accesorios', 'title': 'Accesorios', 'description': 'Visualiza y edita la tabla de accesorios.'},
+        {'nombre': 'colores', 'title': 'Colores', 'description': 'Visualiza y edita la tabla de colores.'},
+        {'nombre': 'categorias-instrumentos', 'title': 'Categorías de Instrumentos', 'description': 'Visualiza y edita la tabla de categorías.'},
+        {'nombre': 'marcas-instrumentos', 'title': 'Marcas de Instrumentos', 'description': 'Visualiza y edita la tabla de marcas.'},
+        {'nombre': 'medicamentos', 'title': 'Medicamentos', 'description': 'Visualiza y edita la tabla de medicamentos.'},
+        {'nombre': 'condiciones-especiales', 'title': 'Condiciones Especiales', 'description': 'Visualiza y edita la tabla de condiciones especiales.'},
+        {'nombre': 'modelos-instrumentos', 'title': 'Modelos de Instrumentos', 'description': 'Visualiza y edita la tabla de modelos.'},
+        {'nombre': 'instrumentos', 'title': 'Instrumentos', 'description': 'Visualiza y edita la tabla de instrumentos.'},
+        {'nombre': 'agrupaciones', 'title': 'Agrupaciones', 'description': 'Visualiza y edita la tabla de agrupaciones.'},
+        {'nombre': 'niveles-ts', 'title': 'Niveles Técnicos', 'description': 'Visualiza y edita la tabla de niveles técnicos.'},
+        {'nombre': 'turnos', 'title': 'Turnos', 'description': 'Visualiza y edita la tabla de turnos.'},
+        {'nombre': 'niveles-estudiantiles', 'title': 'Niveles Estudiantiles', 'description': 'Visualiza y edita la tabla de niveles estudiantiles.'},
+        {'nombre': 'tipos-becas', 'title': 'Tipos de Becas', 'description': 'Visualiza y edita la tabla de tipos de becas.'},
+        {'nombre': 'representantes', 'title': 'Representantes', 'description': 'Visualiza y edita la tabla de representantes.'},
+        {'nombre': 'programas', 'title': 'Programas', 'description': 'Visualiza y edita la tabla de programas.'},
+        {'nombre': 'quienes-retiran', 'title': 'Quienes Retiran', 'description': 'Visualiza y edita la tabla de quienes retiran.'},
+        {'nombre': 'alumnos', 'title': 'Alumnos', 'description': 'Visualiza y edita la tabla de alumnos.'},
+        {'nombre': 'becados', 'title': 'Becados', 'description': 'Visualiza y edita la tabla de becados.'},
+        {'nombre': 'inscripciones', 'title': 'Inscripciones', 'description': 'Visualiza y edita la tabla de inscripciones.'},
+        {'nombre': 'tipos-catedras', 'title': 'Tipos de Cátedras', 'description': 'Visualiza y edita la tabla de tipos de cátedras.'},
+        {'nombre': 'catedras', 'title': 'Cátedras', 'description': 'Visualiza y edita la tabla de cátedras.'},
+    ]
+    return render(request, 'administrador/cards.html',{'vistas': vistas})
 
 def alumnos(request, id):
     return viewset(request, 

@@ -8,6 +8,7 @@ urlpatterns = [
     path('importar-archivo/', importar_archivo, name="importar-archivo"),
     path('', inicio, name='inicio'),
     path('alumnos/<nullable_int:id>', alumnos, name='alumnos'),
+    path('cards/', cards, name='cards'),
 
     
     path('alergias/<nullable_int:id>', alergias, name='alergias'),
@@ -21,7 +22,7 @@ urlpatterns = [
     path('modelos-instrumentos/', modelos_instrumentos, name='modelos-instrumentos'),
     path('instrumentos/',instrumentos, name='instrumentos'),
     path('agrupaciones/', agrupaciones, name='agrupaciones'),
-    path('niveles-ts/', nivelests, name='nivelesTS'),
+    path('niveles-ts/', nivelests, name='niveles-ts'),
     path('turnos/', turnos, name='turnos'),
     path('niveles-estudiantiles/', niveles_estudiantiles, name='niveles-estudiantiles'),
     path('tipos-becas/', tipos_becas, name='tipos-becas'),
