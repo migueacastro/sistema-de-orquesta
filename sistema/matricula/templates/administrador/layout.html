@@ -11,9 +11,9 @@
     <script src="{% static 'tailwind.js' %}"></script>
 
     <script
-			  src="https://code.jquery.com/jquery-3.7.1.js"
-			  integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
-			  crossorigin="anonymous">
+        src="https://code.jquery.com/jquery-3.7.1.js"
+        integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
+        crossorigin="anonymous">
     </script>
 		
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
@@ -39,6 +39,12 @@
                 <i class="text-3xl fa-solid fa-address-book"></i>
                 <span class="hidden group-hover:inline-block ml-4">Lista de Alumnos</span>
             </a>
+            
+            <a href="{% url 'cards' %}" class="flex items-center text-gray-700 hover:text-green-800">
+                <i class="text-3xl fa-solid fa-th-large"></i>
+                <span class="hidden group-hover:inline-block ml-4">Opciones</span>
+            </a>
+            
         </div>
     </div>
     <div id="mobileMenu" class="fixed inset-y-0 left-0 hidden transition-transform duration-200 z-50 bg-gray-200 w-[200px] transform -translate-x-full">
