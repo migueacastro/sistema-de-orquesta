@@ -81,6 +81,7 @@
                                 </th>
                             {% endif %}
                         {% endfor %}
+                        <th class="py-3 px-6 text-left">Acciones</th>
                     {% else %}
                         <th>Sin registros</th>
                     {% endif %}
@@ -93,9 +94,15 @@
                             <td class="py-3 px-6 text-left">
                                 {{ field_value }}
                             </td>
+                            
                         {% empty %}
                             <td class="py-3 px-6 text-left"> Sin registros </td>
                         {% endfor %}
+                        <td class="py-3 px-6 text-left">
+                            <a href="#" class="text-blue-500 hover:underline">Ver</a> |
+                            <a href="#" class="text-yellow-500 hover:underline">Editar</a> |
+                            <a href="#" class="text-red-500 hover:underline">Eliminar</a>
+                        </td>
                     </tr>
                 {% endfor %}
             </tbody>
@@ -131,6 +138,40 @@
                 });
             });
         });
+            tableContainer.classList.remove('hidden'); 
+        });
+
+        toggleFormVisibilityByParams();
+    });
+
+    const toggleFormVisibility = () => {
+        const formContainer = document.querySelector('#section-form');
+        const tableContainer = document.querySelector('#section-table');
+        formContainer.classList.remove('hidden'); 
+        tableContainer.classList.add('hidden');
+    }
+
+    const toggleFormVisibilityByParams = () => {
+        const urlObject = window.location.search
+        const urlParams = new URLSearchParams(urlObject);
+        const formState = urlParams.get('form_state');
+
+        console.log('formState:', formState); // Add a log to inspect the value
+
+        if (formState === 'open') {
+            toggleFormVisibility();
+        }
+    };
+
+    
+    //Para modificar la tabla 
+    let table = new DataTable('#entry-table');
+    document.addEventListener('DOMContentLoaded', () => {
+        let tableModifier = document.querySelector('.dt-layout-row');
+        tableModifier.classList.toggle('hidden');
+        tablemodi.clone().appendTo('#anotherDiv');
+
+    $('#parentOfOldElement #yourElement').remove();
     });
 </script>
 {% endblock %}
