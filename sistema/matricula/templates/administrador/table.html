@@ -27,6 +27,28 @@
                 <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">{% if field.value %}{{ field.value }}{% endif %}</textarea>
             </div>
             {% endif %}
+            {% elif field.type == "foreignkey" %}
+            <div class="mb-4">
+                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                <select name="{{ field.name }}" id="{{ field.name }}" class="block w-full border-gray-300 border rounded-md shadow-sm">
+                    <option value="">Seleccione una opción</option>
+                    {% for option in field.query %}
+                        <option value="{{ option.id }}" {% if field.value == option.id %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            {% elif field.type == "manytomany" %}
+            <div class="mb-4">
+                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                <input type="text" id="search-{{ field.name }}" placeholder="Buscar..." class="mb-2 indent-1.5 h-8 block w-full border-gray-300 border rounded-md shadow-sm">
+                <select name="{{ field.name }}" id="{{ field.name }}" multiple class="block w-full border-gray-300 border rounded-md shadow-sm">
+                    {% for option in field.query %}
+                        <option value="{{ option.id }}" {% if option.id in field.value %}selected{% endif %}>{{ option.nombre }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% endif %}
         {% endfor %}
 
         <div class="flex justify-between mt-4">
@@ -89,24 +111,27 @@
         const cancelButton = document.getElementById('cancel-button');
 
         crearBtn.addEventListener('click', (event) => {
-            event.preventDefault(); 
-            formContainer.classList.remove('hidden'); 
-            tableContainer.classList.add('hidden'); 
+            event.preventDefault();
+            formContainer.classList.remove('hidden');
+            tableContainer.classList.add('hidden');
         });
 
         cancelButton.addEventListener('click', () => {
             formContainer.classList.add('hidden');
-            tableContainer.classList.remove('hidden'); 
+            tableContainer.classList.remove('hidden');
+        });
+
+        document.querySelectorAll('input[id^="search-"]').forEach(input => {
+            const fieldName = input.id.replace("search-", "");
+            input.addEventListener("input", function () {
+                const filter = this.value.toLowerCase();
+                const select = document.getElementById(fieldName);
+                Array.from(select.options).forEach(option => {
+                    option.style.display = option.text.toLowerCase().includes(filter) ? '' : 'none';
+                });
+            });
         });
     });
-    let table = new DataTable('#entry-table');
-    document.addEventListener('DOMContentLoaded', () => {
-        let tableModifier = document.querySelector('#dt-layout-row');
-        tableModifier.classList.toggle('');
-        tablemodi.clone().appendTo('#anotherDiv');
-
-    $('#parentOfOldElement #yourElement').remove();
-    });
 </script>
-
 {% endblock %}
+
