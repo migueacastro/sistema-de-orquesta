@@ -4,7 +4,7 @@
 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 m-3">
     {% for vista in vistas %}
     <div class="bg-white rounded-lg shadow-lg p-4 hover:bg-blue-50 transition">
-        <a href="{% if vista.id %}{% url vista.nombre vista.id %}{% else %}{% url vista.nombre %}{% endif %}">
+        <a href="/{{ vista.nombre }}/">
             <h2 class="text-xl font-semibold mb-2 cursor-pointer hover:text-blue-500">{{ vista.title }}</h2>
         </a>
         <p class="text-gray-600">{{ vista.description }}</p>

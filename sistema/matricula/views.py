@@ -20,7 +20,7 @@ def inicio(request):
 
 def cards(request):
     vistas = [
-        {'nombre': 'alergias', 'title': 'Alergias', 'description': 'Visualiza y edita la tabla de alergias.', 'id': 1},
+        {'nombre': 'alergias', 'title': 'Alergias', 'description': 'Visualiza y edita la tabla de alergias.', },
         {'nombre': 'tratamientos', 'title': 'Tratamientos', 'description': 'Visualiza y edita la tabla de tratamientos.'},
         {'nombre': 'accesorios', 'title': 'Accesorios', 'description': 'Visualiza y edita la tabla de accesorios.'},
         {'nombre': 'colores', 'title': 'Colores', 'description': 'Visualiza y edita la tabla de colores.'},
