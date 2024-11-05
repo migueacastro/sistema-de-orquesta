@@ -56,9 +56,8 @@
                                         {% endif %}
                                     </td>
                                     <td class="py-3 px-6 text-left">
-                                        <a href="{% url 'alumnos' alumno.id %}" class="text-blue-500 hover:underline">Ver</a> |
-                                        <a href="#" class="text-yellow-500 hover:underline">Editar</a> |
-                                        <a href="#" class="text-red-500 hover:underline">Eliminar</a>
+                                        <a href="#" class="text-blue-500 hover:underline" onclick="editarRegistro('{{ alumno.id }}')">Ver</a> |
+                                        <a href="#" class="text-red-500 hover:underline" onclick="eliminarRegistro('{{ alumno.id }}')">Eliminar</a>
                                     </td>
                             </tr>
                         
@@ -82,5 +81,6 @@
                 window.location.href = "{% url 'alumnos' %}?form_enabled=true";
             });
         });
+        
     </script>
 {% endblock %}
