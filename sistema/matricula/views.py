@@ -44,7 +44,7 @@ def cards(request):
         {'nombre': 'tratamientos', 'title': 'Tratamientos', 'description': 'Visualiza y edita la tabla de tratamientos.'},
         {'nombre': 'tipos-catedras', 'title': 'Tipos de Cátedras', 'description': 'Visualiza y edita la tabla de tipos de cátedras.'},
     ]
-    return render(request, 'administrador/cards.html', {'title': 'Opciones', 'vistas': vistas})
+    return render(request, 'administrador/cards.html', {'title': 'Tablas', 'vistas': vistas})
 
 def alumnos(request, id):
     return viewset(request, 
