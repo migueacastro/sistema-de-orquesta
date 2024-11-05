@@ -26,7 +26,6 @@
                 <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
                 <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">{% if field.value %}{{ field.value }}{% endif %}</textarea>
             </div>
-            {% endif %}
             {% elif field.type == "foreignkey" %}
             <div class="mb-4">
                 <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
@@ -37,16 +36,23 @@
                     {% endfor %}
                 </select>
             </div>
-
             {% elif field.type == "manytomany" %}
             <div class="mb-4">
                 <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+            
                 <input type="text" id="search-{{ field.name }}" placeholder="Buscar..." class="mb-2 indent-1.5 h-8 block w-full border-gray-300 border rounded-md shadow-sm">
-                <select name="{{ field.name }}" id="{{ field.name }}" multiple class="block w-full border-gray-300 border rounded-md shadow-sm">
+            
+                <div class="flex flex-wrap gap-2">
                     {% for option in field.query %}
-                        <option value="{{ option.id }}" {% if option.id in field.value %}selected{% endif %}>{{ option.nombre }}</option>
+                        {% if option.id in field.value %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-gray-700 bg-blue-200 cursor-pointer" onclick="toggleSelection('{{ option.id }}', '{{ option.nombre }}')">
+                        {% else %}
+                            <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium text-gray-700 bg-blue-100 cursor-pointer" onclick="toggleSelection('{{ option.id }}', '{{ option.nombre }}')">
+                        {% endif %}
+                            {{ option.nombre }}
+                            </span>
                     {% endfor %}
-                </select>
+                </div>
             </div>
             {% endif %}
         {% endfor %}
@@ -118,26 +124,13 @@
         const cancelButton = document.getElementById('cancel-button');
 
         crearBtn.addEventListener('click', (event) => {
-            event.preventDefault();
-            formContainer.classList.remove('hidden');
-            tableContainer.classList.add('hidden');
+            event.preventDefault(); 
+            formContainer.classList.remove('hidden'); 
+            tableContainer.classList.add('hidden'); 
         });
 
         cancelButton.addEventListener('click', () => {
             formContainer.classList.add('hidden');
-            tableContainer.classList.remove('hidden');
-        });
-
-        document.querySelectorAll('input[id^="search-"]').forEach(input => {
-            const fieldName = input.id.replace("search-", "");
-            input.addEventListener("input", function () {
-                const filter = this.value.toLowerCase();
-                const select = document.getElementById(fieldName);
-                Array.from(select.options).forEach(option => {
-                    option.style.display = option.text.toLowerCase().includes(filter) ? '' : 'none';
-                });
-            });
-        });
             tableContainer.classList.remove('hidden'); 
         });
 
@@ -162,8 +155,22 @@
             toggleFormVisibility();
         }
     };
-
+    //tags
     
+    function toggleSelection(id, nombre) {
+        const tag = document.querySelector(`span[onclick*="${id}"]`);
+        tag.classList.toggle('bg-gray-200');
+
+        // Obtener el input de búsqueda asociado
+        const searchInput = document.getElementById(`search-${tag.parentElement.parentElement.id}`);
+
+        if (tag.classList.contains('bg-gray-200')) {
+            // Si la opción fue seleccionada, establece el valor en el input
+            searchInput.value = nombre;  // Asigna el nombre de la opción seleccionada al campo de búsqueda
+        } else {
+            searchInput.value = '';  
+        }
+    }
     //Para modificar la tabla 
     let table = new DataTable('#entry-table');
     document.addEventListener('DOMContentLoaded', () => {
