@@ -6,38 +6,46 @@ from django.db import models
 
 class Medicamento(models.Model):
     nombre = models.CharField(max_length=512, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class Tratamiento(models.Model):
     nombre = models.CharField(max_length=512, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     medicamentos = models.ManyToManyField(Medicamento, blank=True)
+    activo = models.BooleanField(default=True)
 
 class CondicionEspecial(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     tratamiento = models.ManyToManyField(Tratamiento, blank=True)
+    activo = models.BooleanField(default=True)
 
 
 class Alergia(models.Model):
     nombre = models.CharField(max_length=512)
     descripcion = models.TextField(blank=True)
-
+    activo = models.BooleanField(default=True)
 
 class Color(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class CategoriaInstrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class MarcaInstrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class ModeloInstrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     marca = models.ForeignKey(MarcaInstrumento, null=True, on_delete=models.CASCADE)
     categoria = models.ForeignKey(CategoriaInstrumento, null=True, on_delete=models.CASCADE)
+    activo = models.BooleanField(default=True)
 
 class Accesorio(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class Instrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
@@ -49,22 +57,28 @@ class Instrumento(models.Model):
         ('Asignado', 'asignado'),
         ('Propio', 'propio')
     ))
+    activo = models.BooleanField(default=True)
 
 class Agrupacion(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     instrumentos = models.ManyToManyField(Instrumento, blank=True)
+    activo = models.BooleanField(default=True)
 
 class Turno (models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class NivelTS (models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class NivelEstudiantil (models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class TipoBeca(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 class Representante(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
@@ -72,15 +86,17 @@ class Representante(models.Model):
     telefono = models.CharField(max_length=128, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
     parentesco = models.CharField(max_length=128, blank=True, null=True)
+    activo = models.BooleanField(default=True)
 
 
 class Programa(models.Model):
     nombre = models.CharField(max_length=128)
     agrupacion = models.ForeignKey(Agrupacion, blank=True, on_delete=models.CASCADE, null=True)
-
+    activo = models.BooleanField(default=True)
 
 class QuienRetira(models.Model):  
     nombre = models.CharField(blank=True, null=True, max_length=64)
+    activo = models.BooleanField(default=True)
 
 
 class Alumno(models.Model):
@@ -104,26 +120,28 @@ class Alumno(models.Model):
     alergias = models.ManyToManyField(Alergia, blank=True) 
     tratamientos = models.ManyToManyField(Tratamiento, blank=True) 
     programa = models.ForeignKey(Programa, on_delete=models.DO_NOTHING, blank=True, null=True) 
-    quien_retiras = models.ManyToManyField(QuienRetira, blank=True) 
+    quien_retiras = models.ManyToManyField(QuienRetira, blank=True)
+    activo = models.BooleanField(default=True) 
 
 
 
 class Becado(models.Model):
     alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
     tipo = models.ForeignKey(TipoBeca, blank=True, null=True, on_delete=models.CASCADE)
-
+    activo = models.BooleanField(default=True)
 
 class Inscripcion(models.Model):
     alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
     fecha_inscripcion = models.DateField(max_length=128, null=True, blank=True)
     turno = models.ForeignKey(Turno, blank=True, null=True, on_delete=models.DO_NOTHING)
-
+    activo = models.BooleanField(default=True)
 
 class TipoCatedra(models.Model):
     nombre = models.CharField(max_length=128)
-
+    activo = models.BooleanField(default=True)
 
 class Catedra(models.Model):
     nombre = models.CharField(max_length=128)
     instrumento = models.ForeignKey(Instrumento, blank=True, null=True, on_delete=models.DO_NOTHING)
     tipo = models.ForeignKey(TipoCatedra, blank=True, null=True, on_delete=models.DO_NOTHING)
+    activo = models.BooleanField(default=True)
