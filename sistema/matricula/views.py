@@ -1,18 +1,20 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import *
+from matricula.tasks import ejecutar_importaciones, ARCHIVO, leer_db_excel
 from django.contrib import messages
 from django.forms.models import model_to_dict
 from .helpers import viewset
 
 def importar_archivo(request):
-    if request.method == 'POST':
-        archivo = request.FILES.get('archivo')
-        if archivo:
-            messages.success(request, 'Archivo importado correctamente.')
-        else:
-            messages.error(request, 'No se seleccionó ningún archivo.')
-    return render(request, '.html')
+    if request.method == 'GET':
+        ejecutar_importaciones(leer_db_excel({
+            "nombre": "matriculasf.xlsm",
+            "rango_columnas": ["A", "AJ"],
+            "omitir_filas": 4,
+            "tabla": "BD"
+        }))
+    return redirect('/')
 
 def inicio(request):
     alumnos = Alumno.objects.all()

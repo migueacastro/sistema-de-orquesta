@@ -302,8 +302,6 @@ def importar_alumnos(tabla):
                 fecha_nacimiento = datetime.datetime.strptime(str(fecha_nacimiento), "%Y-%m-%d %H:%M:%S")
             
         print(fecha_nacimiento)
-        
-
         turno = None
         try:
             turno = Turno.objects.get(nombre=row["TURNO"])
