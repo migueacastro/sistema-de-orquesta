@@ -31,13 +31,11 @@
 </div>
 
 <script>
-    function toggleEditMode() {
-        const fields = document.querySelectorAll('.editable');
-        const saveButton = document.getElementById('saveButton');
-        fields.forEach(field => {
-            field.disabled = !field.disabled;
-        });
-        saveButton.classList.toggle('hidden');
-    }
+    document.addEventListener('DOMContentLoaded', () => {
+        if (checkFormVisibilityByParams()) {
+            toggleEditMode();
+        };
+    });
+    
 </script>
 {% endblock %}

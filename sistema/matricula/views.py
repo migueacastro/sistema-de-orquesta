@@ -20,31 +20,31 @@ def inicio(request):
 
 def cards(request):
     vistas = [
+        {'nombre': 'alumnos', 'title': 'Alumnos', 'description': 'Visualiza y edita la tabla de alumnos.'},
         {'nombre': 'alergias', 'title': 'Alergias', 'description': 'Visualiza y edita la tabla de alergias.', },
-        {'nombre': 'tratamientos', 'title': 'Tratamientos', 'description': 'Visualiza y edita la tabla de tratamientos.'},
+        {'nombre': 'agrupaciones', 'title': 'Agrupaciones', 'description': 'Visualiza y edita la tabla de agrupaciones.'},
         {'nombre': 'accesorios', 'title': 'Accesorios', 'description': 'Visualiza y edita la tabla de accesorios.'},
+        {'nombre': 'becados', 'title': 'Becados', 'description': 'Visualiza y edita la tabla de becados.'}, 
         {'nombre': 'colores', 'title': 'Colores', 'description': 'Visualiza y edita la tabla de colores.'},
+        {'nombre': 'catedras', 'title': 'Cátedras', 'description': 'Visualiza y edita la tabla de cátedras.'},
         {'nombre': 'categorias-instrumentos', 'title': 'Categorías de Instrumentos', 'description': 'Visualiza y edita la tabla de categorías.'},
+        {'nombre': 'condiciones-especiales', 'title': 'Condiciones Especiales', 'description': 'Visualiza y edita la tabla de condiciones especiales.'},
+        {'nombre': 'instrumentos', 'title': 'Instrumentos', 'description': 'Visualiza y edita la tabla de instrumentos.'},
+        {'nombre': 'inscripciones', 'title': 'Inscripciones', 'description': 'Visualiza y edita la tabla de inscripciones.'},
         {'nombre': 'marcas-instrumentos', 'title': 'Marcas de Instrumentos', 'description': 'Visualiza y edita la tabla de marcas.'},
         {'nombre': 'medicamentos', 'title': 'Medicamentos', 'description': 'Visualiza y edita la tabla de medicamentos.'},
-        {'nombre': 'condiciones-especiales', 'title': 'Condiciones Especiales', 'description': 'Visualiza y edita la tabla de condiciones especiales.'},
         {'nombre': 'modelos-instrumentos', 'title': 'Modelos de Instrumentos', 'description': 'Visualiza y edita la tabla de modelos.'},
-        {'nombre': 'instrumentos', 'title': 'Instrumentos', 'description': 'Visualiza y edita la tabla de instrumentos.'},
-        {'nombre': 'agrupaciones', 'title': 'Agrupaciones', 'description': 'Visualiza y edita la tabla de agrupaciones.'},
         {'nombre': 'niveles-ts', 'title': 'Niveles Técnicos', 'description': 'Visualiza y edita la tabla de niveles técnicos.'},
-        {'nombre': 'turnos', 'title': 'Turnos', 'description': 'Visualiza y edita la tabla de turnos.'},
         {'nombre': 'niveles-estudiantiles', 'title': 'Niveles Estudiantiles', 'description': 'Visualiza y edita la tabla de niveles estudiantiles.'},
-        {'nombre': 'tipos-becas', 'title': 'Tipos de Becas', 'description': 'Visualiza y edita la tabla de tipos de becas.'},
-        {'nombre': 'representantes', 'title': 'Representantes', 'description': 'Visualiza y edita la tabla de representantes.'},
+        {'nombre': 'turnos', 'title': 'Turnos', 'description': 'Visualiza y edita la tabla de turnos.'},
         {'nombre': 'programas', 'title': 'Programas', 'description': 'Visualiza y edita la tabla de programas.'},
         {'nombre': 'quienes-retiran', 'title': 'Quienes Retiran', 'description': 'Visualiza y edita la tabla de quienes retiran.'},
-        {'nombre': 'alumnos', 'title': 'Alumnos', 'description': 'Visualiza y edita la tabla de alumnos.'},
-        {'nombre': 'becados', 'title': 'Becados', 'description': 'Visualiza y edita la tabla de becados.'},
-        {'nombre': 'inscripciones', 'title': 'Inscripciones', 'description': 'Visualiza y edita la tabla de inscripciones.'},
+        {'nombre': 'representantes', 'title': 'Representantes', 'description': 'Visualiza y edita la tabla de representantes.'},
+        {'nombre': 'tipos-becas', 'title': 'Tipos de Becas', 'description': 'Visualiza y edita la tabla de tipos de becas.'},
+        {'nombre': 'tratamientos', 'title': 'Tratamientos', 'description': 'Visualiza y edita la tabla de tratamientos.'},
         {'nombre': 'tipos-catedras', 'title': 'Tipos de Cátedras', 'description': 'Visualiza y edita la tabla de tipos de cátedras.'},
-        {'nombre': 'catedras', 'title': 'Cátedras', 'description': 'Visualiza y edita la tabla de cátedras.'},
     ]
-    return render(request, 'administrador/cards.html',{'vistas': vistas})
+    return render(request, 'administrador/cards.html', {'title': 'Tablas', 'vistas': vistas})
 
 def alumnos(request, id):
     return viewset(request, 
@@ -160,7 +160,7 @@ def alumnos(request, id):
 
 def alergias(request, id):
     return viewset(request, 
-        Alergia, # Modelo
+        Alergia, 
         [
             {
                 'name': 'nombre',
@@ -172,134 +172,428 @@ def alergias(request, id):
                 'type': 'textarea',
                 'width': '50'
             },
-            
         ],
-        'Alergias', # Título
-        id) # Id
+        'Alergias', 
+        id
+    )
 
+def tratamientos(request, id):
+    return viewset(request, 
+        Tratamiento, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'description',
+                'type': 'textarea',
+                'width': '50'
+            },
+            {
+                'name': 'medicamentos',
+                'type': 'manytomany',
+                'query': [model_to_dict(i) for i in Medicamento.objects.all()],
+                'multiple': True,
+                'width': '50'
+            },
+        ],
+        'Tratamientos', 
+        id
+    )
 
-def tratamientos(request):
-    title = 'Tratamientos'
-    query = Tratamiento.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def medicamentos(request, id):
+    return viewset(request, 
+        Medicamento, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Medicamentos', 
+        id
+    )
 
-def accesorios(request):
-    title = 'Accesorios'
-    query = Accesorio.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def condiciones_especiales(request, id):
+    return viewset(request, 
+        CondicionEspecial, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'tratamiento',
+                'type': 'manytomany',
+                'query': [model_to_dict(i) for i in Tratamiento.objects.all()],
+                'multiple': True,
+                'width': '50'
+            },
+        ],
+        'Condiciones Especiales', 
+        id
+    )
 
-def colores(request):
-    title = 'Colores'
-    query = Color.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def colores(request, id):
+    return viewset(request, 
+        Color, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Colores', 
+        id
+    )
 
-def categorias_instrumentos(request):
-    title = 'Categoria Instrumentos'
-    query = CategoriaInstrumento.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def categorias_instrumentos(request, id):
+    return viewset(request, 
+        CategoriaInstrumento, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Categorías de Instrumentos', 
+        id
+    )
 
-def marcas_instrumentos(request):
-    title = 'Marca Instrumentos'
-    query = MarcaInstrumento.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def marcas_instrumentos(request, id):
+    return viewset(request, 
+        MarcaInstrumento, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Marcas de Instrumentos', 
+        id
+    )
 
-def medicamentos(request):
-    title = 'Medicamentos'
-    query = Medicamento.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def modelos_instrumentos(request, id):
+    return viewset(request, 
+        ModeloInstrumento, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'marca',
+                'type': 'foreignkey',
+                'query': MarcaInstrumento.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'categoria',
+                'type': 'foreignkey',
+                'query': CategoriaInstrumento.objects.all(),
+                'width': '50'
+            },
+        ],
+        'Modelos de Instrumentos', 
+        id
+    )
 
-def condiciones_especiales(request):
-    title = 'Condiciones Especiales'
-    query = CondicionEspecial.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def accesorios(request, id):
+    return viewset(request, 
+        Accesorio, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Accesorios', 
+        id
+    )
 
-def modelos_instrumentos(request):
-    title = 'Modelos Instrumentos'
-    query = ModeloInstrumento.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def instrumentos(request, id):
+    return viewset(request, 
+        Instrumento, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'serial',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'modelo',
+                'type': 'foreignkey',
+                'query': ModeloInstrumento.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'color',
+                'type': 'foreignkey',
+                'query': Color.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'accesorio',
+                'type': 'foreignkey',
+                'query': Accesorio.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'asignado',
+                'type': 'select',
+                'query': [
+                    {'value': 'Asignado', 'label': 'Asignado'},
+                    {'value': 'Propio', 'label': 'Propio'},
+                ],
+                'width': '50'
+            },
+        ],
+        'Instrumentos', 
+        id
+    )
 
-def instrumentos(request):
-    title = 'Instrumentos'
-    query = Instrumento.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def agrupaciones(request, id):
+    return viewset(request, 
+        Agrupacion, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'instrumentos',
+                'type': 'manytomany',
+                'query': [model_to_dict(i) for i in Instrumento.objects.all()],
+                'multiple': True,
+                'width': '50'
+            },
+        ],
+        'Agrupaciones', 
+        id
+    )
 
-def agrupaciones(request):
-    title = 'Agrupaciones'
-    query = Agrupacion.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def niveles_estudiantiles(request,id):
+    return viewset(request, 
+        NivelEstudiantil,
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Niveles Estudiantiles',
+        id
+    )
 
-def nivelests(request):
-    title = 'Niveles TS'
-    query = NivelTS.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def nivelests(request,id):
+    return viewset(request, 
+        NivelTS,
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Niveles TS',
+        id
+    )
 
-def turnos(request):
-    title = 'Turnos'
-    query = Turno.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def turnos(request,id):
+    return viewset(request, 
+        Turno,
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Turnos',
+        id
+    )
 
-def niveles_estudiantiles(request):
-    title = 'Niveles Estudiantiles'
-    query = NivelEstudiantil.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def tipos_becas(request,id):
+    return viewset(request, 
+        TipoBeca,
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Tipos de Beca',
+        id
+    )
 
-def tipos_becas(request):
-    title = 'Tipos Becas'
-    query = TipoBeca.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def representantes(request,id):
+    return viewset(request, 
+        Representante,
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'cedula',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'telefono',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'email',
+                'type': 'email',
+                'width': '50'
+            },
+            {
+                'name': 'parentesco',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Representantes',
+        id
+    )
 
-def representantes(request):
-    title = 'Representantes'
-    query = Representante.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def programas(request,id):
+    return viewset(request, 
+        Programa,
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'agrupacion',
+                'type': 'foreignkey',
+                'query': Agrupacion.objects.all(),
+                'width': '50'
+            },
+        ],
+        'Programas',
+        id
+    )
 
-def programas(request):
-    title = 'Programas'
-    query = Programa.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def quienes_retiran(request,id):
+    return viewset(request, 
+        QuienRetira,
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Quien Retira',
+        id
+    )
+def becados(request, id):
+    return viewset(request, 
+        Becado, 
+        [
+            {
+                'name': 'nombre_becado',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'tipo_beca',
+                'type': 'text',
+                'width': '50'
+            },
+        ],
+        'Becados', 
+        id
+    )
+def inscripciones(request,id):
+    return viewset(request, 
+        Inscripcion,
+        [
+            {
+                'name': 'alumno',
+                'type': 'foreignkey',
+                'query': Alumno.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'fecha_inscripcion',
+                'type': 'date',
+                'width': '50'
+            },
+            {
+                'name': 'turno',
+                'type': 'foreignkey',
+                'query': Turno.objects.all(),
+                'width': '50'
+            },
+        ],
+        'Inscripciones',
+        id
+    )
+def tipos_catedras(request, id):
+    return viewset(request, 
+        TipoCatedra, 
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'descripcion',
+                'type': 'textarea',
+                'width': '50'
+            },
+        ],
+        'Tipos de Cátedra', 
+        id
+    )
 
-def quienes_retiran(request):
-    title = 'Quienes Retiran'
-    query = QuienRetira.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
-
-def becados(request):
-    title = 'Becados'
-    query = Becado.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
-
-def inscripciones(request):
-    title = 'Inscripciones'
-    query = Inscripcion.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
-
-def tipos_catedras(request):
-    title = 'Tipos Catedras'
-    query = TipoCatedra.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
-
-def catedras(request):
-    title = 'Catedras'
-    query = Catedra.objects.all()
-    entries = [model_to_dict(i) for i in query]
-    return render(request, 'administrador/table.html', {'title': title, 'entries': entries, 'first_entry': entries[0] if len(entries) > 0 else None})
+def catedras(request,id):
+    return viewset(request, 
+        Catedra,
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'instrumento',
+                'type': 'foreignkey',
+                'query': Instrumento.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'tipo',
+                'type': 'foreignkey',
+                'query': TipoCatedra.objects.all(),
+                'width': '50'
+            },
+        ],
+        'Cátedras',
+        id
+    )

@@ -10,6 +10,7 @@
     <h2 class="text-4xl text-center my-4 mb-4 capitalize">Agregar</h2>
     <form class="w-full" method="post">
         {% csrf_token %}
+        <p id="csrf_token" class="hidden">{{ csrf_token }}</p>
         {% for field in form %}
             {% if field.type == "text" %}
             <div class="mb-4">
@@ -25,6 +26,25 @@
             <div class="mb-4">
                 <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
                 <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">{% if field.value %}{{ field.value }}{% endif %}</textarea>
+            </div>
+            {% elif field.type == "foreignkey" %}
+            <div class="mb-4">
+                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                <select name="{{ field.name }}" id="{{ field.name }}" class="foreignkey-select block w-full border-gray-300 border rounded-md shadow-sm">
+                    <option value="">Seleccione una opción</option>
+                    {% for option in field.query %}
+                        <option value="{{ option.id }}" {% if field.value == option.id %}selected{% endif %}>{{ option }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+            {% elif field.type == "manytomany" %}
+            <div class="mb-4">
+                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                <select name="{{ field.name }}" id="manytomany-{{ field.name }}" class="manytomany-select block w-full border-gray-300 border rounded-md shadow-sm" multiple="multiple">
+                    {% for option in field.query %}
+                        <option value="{{ option.id }}" {% if option.id in field.value %}selected{% endif %}>{{ option.nombre }}</option>
+                    {% endfor %}
+                </select>
             </div>
             {% endif %}
         {% endfor %}
@@ -67,7 +87,7 @@
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 {% for entry in entries %}
-                    <tr class="border-b border-gray-200 hover:bg-sky-100 " onclick="goToURL(window.location + '{{ entry.id }}')">
+                    <tr class="border-b border-gray-200 hover:bg-sky-100 " onclick="event.stopPropagation();(window.location + '{{ entry.id }}');">
                         {% for field_name, field_value in entry.items %}
                             <td class="py-3 px-6 text-left">
                                 {{ field_value }}
@@ -76,10 +96,9 @@
                         {% empty %}
                             <td class="py-3 px-6 text-left"> Sin registros </td>
                         {% endfor %}
-                        <td class="py-3 px-6 text-left">
-                            <a href="#" class="text-blue-500 hover:underline">Ver</a> |
-                            <a href="#" class="text-yellow-500 hover:underline">Editar</a> |
-                            <a href="#" class="text-red-500 hover:underline">Eliminar</a>
+                        <td class="py-3 px-6 text-left flex flex-row">
+                            <i class="fa-solid fa-pen mx-2 text-xl z-10 hover:text-3xl" onclick="editEntry('{{ entry.id }}');"></i>
+                            <i class="fa-solid fa-xmark mx-2 text-xl" onclick="deleteEntry('{{ entry.id }}')"></i>
                         </td>
                     </tr>
                 {% endfor %}
@@ -106,38 +125,37 @@
             tableContainer.classList.remove('hidden'); 
         });
 
-        toggleFormVisibilityByParams();
-    });
-
-    const toggleFormVisibility = () => {
-        const formContainer = document.querySelector('#section-form');
-        const tableContainer = document.querySelector('#section-table');
-        formContainer.classList.remove('hidden'); 
-        tableContainer.classList.add('hidden');
-    }
-
-    const toggleFormVisibilityByParams = () => {
-        const urlObject = window.location.search
-        const urlParams = new URLSearchParams(urlObject);
-        const formState = urlParams.get('form_state');
-
-        console.log('formState:', formState); // Add a log to inspect the value
-
-        if (formState === 'open') {
+        if (checkFormVisibilityByParams()) {
             toggleFormVisibility();
+        };
+        if (checkDeletedEntryByParams()) {
+            success
         }
-    };
+        $('.foreignkey-select').select2({
+            theme: "classic",
+            placeholder: "Seleccione una opción"
+        });
 
+        // Inicializa Select2 en los campos ManyToMany con opción de tags
+        $('.manytomany-select').select2({
+            theme: "classic",
+            tags: true,
+            tokenSeparators: [',', ' '],
+            placeholder: "Añadir o seleccionar etiquetas"
+        });
+    });
+    //tags
     
     //Para modificar la tabla 
+    
     let table = new DataTable('#entry-table');
-    document.addEventListener('DOMContentLoaded', () => {
+
+   /*comment %}  document.addEventListener('DOMContentLoaded', () => {
         let tableModifier = document.querySelector('.dt-layout-row');
         tableModifier.classList.toggle('hidden');
         tablemodi.clone().appendTo('#anotherDiv');
-
     $('#parentOfOldElement #yourElement').remove();
-    });
+    });*/
 </script>
-
 {% endblock %}
+

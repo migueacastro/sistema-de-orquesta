@@ -26,7 +26,7 @@ def viewset(request, model, field_list, title, id=None):
         match request.method:
             case 'GET':
                 # Plantilla datatable
-                query = model.objects.all()
+                query = model.objects.filter(activo=True)
                 entries = [model_to_dict(i) for i in query]
                 return render(request, 'administrador/table.html', {
                     'title': title, 
@@ -101,13 +101,12 @@ def viewset(request, model, field_list, title, id=None):
                     field["value"] = model_to_dict(entry).get(field["name"])
                 return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
             case 'DELETE':
-                try:
-                    model.objects.filter(id=id).delete()
-                except Exception:
-                    messages.add_message(request, messages.ERROR, 'Error al eliminar registro')
-                else:
-                    messages.add_message(request, messages.WARNING, 'Registro eliminado exitosamente.')
-                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
+                
+                model_to_delete = model.objects.get(id=id)
+                model_to_delete.activo = False
+                model_to_delete.save()
+                return HttpResponse(400)
+                
     return redirect("/")
 
 

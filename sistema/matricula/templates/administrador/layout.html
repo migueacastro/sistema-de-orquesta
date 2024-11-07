@@ -7,8 +7,12 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link rel="stylesheet" href="{% static 'all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'select2.min.css' %}">
     <link rel="icon" href="{% static 'elsistemalogo.png' %}" />
     <script src="{% static 'tailwind.js' %}"></script>
+    <script src="{% static 'select2.min.js' %}"></script>
+    <script src="{% static 'sweetalert2@11.js' %}"></script>
+    <script src="{% static 'scripts.js' %}"></script>
 
     <script
         src="https://code.jquery.com/jquery-3.7.1.js"
@@ -35,14 +39,14 @@
                 <i class="text-3xl fa-solid fa-person-circle-plus"></i>
                 <span class="hidden group-hover:inline-block ml-4">Inscribir Alumno</span>
             </a>
-            <a href="{% url 'alumnos' %}" class="flex items-center text-gray-700 hover:text-green-800">
+            <a href="/alumnos/" class="flex items-center text-gray-700 hover:text-green-800">
                 <i class="text-3xl fa-solid fa-address-book"></i>
                 <span class="hidden group-hover:inline-block ml-4">Lista de Alumnos</span>
             </a>
             
             <a href="{% url 'cards' %}" class="flex items-center text-gray-700 hover:text-green-800">
                 <i class="text-3xl fa-solid fa-th-large"></i>
-                <span class="hidden group-hover:inline-block ml-4">Opciones</span>
+                <span class="hidden group-hover:inline-block ml-4">Tablas</span>
             </a>
             
         </div>
@@ -68,7 +72,7 @@
 
         <div class="m-3">
             {% if messages %}
-              <ul class="flex flex-col">
+              <ul class="flex flex-col" id="message-list">
                 {% for message in messages %}
                     <div class="{{ message.tags }} z-10 my-3" role="alert" >
                         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
