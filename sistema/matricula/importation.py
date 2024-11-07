@@ -435,7 +435,8 @@ def importar_inscripciones(tabla):
                 fecha_inscripcion = datetime.datetime.strptime(str(fecha_inscripcion), "%Y-%m-%d")
             except Exception as e:
                 fecha_inscripcion = datetime.datetime.strptime(str(fecha_inscripcion), "%Y-%m-%d %H:%M:%S")
-            print(fecha_inscripcion)
+            
+            
 
         Inscripcion.objects.get_or_create(
             alumno=alumno,

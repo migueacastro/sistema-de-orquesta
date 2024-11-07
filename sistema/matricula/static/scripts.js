@@ -32,17 +32,38 @@ const editEntry = (id) => {
     window.location.replace(url); 
 };
 const deleteEntry = (id) => {
-    
-    let parts = window.location.href.toString().split("/"); 
-    let tableName = parts[parts.length-2];
-    let url =`/${tableName}/${id}`;
-    let csrfToken = document.querySelector('#csrf_token').innerHTML; 
-    fetch(url, {
-        method: 'DELETE',
-        headers: {
-            'X-CSRFToken':csrfToken
-        }
+
+    Swal.fire({
+
+        title: "Estas seguro?",
+        text: "¡No podrás revertir esto!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        confirmButtonText: "Si, eliminalo!"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            Swal.fire({
+            title: "Eliminado!",
+            text: "Tu registro ha sido eliminado",
+            icon: "success"
+        });
+        let parts = window.location.href.toString().split("/"); 
+        let tableName = parts[parts.length-2];
+        let url =`/${tableName}/${id}`;
+        let csrfToken = document.querySelector('#csrf_token').innerHTML; 
+        fetch(url, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRFToken':csrfToken
+            }
+        });
+        
+    }
     });
+    
+    
 };
 
 function toggleEditMode() {

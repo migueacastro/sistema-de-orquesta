@@ -7,8 +7,10 @@
     <title>{{ title }}</title>
     <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link rel="stylesheet" href="{% static 'all.min.css' %}">
+    <link rel="stylesheet" href="{% static 'select2.min.css' %}">
     <link rel="icon" href="{% static 'elsistemalogo.png' %}" />
     <script src="{% static 'tailwind.js' %}"></script>
+    <script src="{% static 'select2.min.js' %}"></script>
     <script src="{% static 'sweetalert2@11.js' %}"></script>
     <script src="{% static 'scripts.js' %}"></script>
 
@@ -37,7 +39,7 @@
                 <i class="text-3xl fa-solid fa-person-circle-plus"></i>
                 <span class="hidden group-hover:inline-block ml-4">Inscribir Alumno</span>
             </a>
-            <a href="{% url 'alumnos' %}" class="flex items-center text-gray-700 hover:text-green-800">
+            <a href="/alumnos/" class="flex items-center text-gray-700 hover:text-green-800">
                 <i class="text-3xl fa-solid fa-address-book"></i>
                 <span class="hidden group-hover:inline-block ml-4">Lista de Alumnos</span>
             </a>
