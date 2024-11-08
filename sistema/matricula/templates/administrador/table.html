@@ -69,14 +69,16 @@
                 <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
                     {% if first_entry %}
                         {% for field_name, field_value in first_entry.items %}
-                            {% if field_name == "id" %}
-                                <th class="py-3 px-6 text-center" width="25">
-                                    {{ field_name }}
-                                </th>
-                            {% else %}
-                                <th class="py-3 px-6 text-left">
-                                    {{ field_name }}
-                                </th>
+                            {% if field_name != "activo" %}
+                                {% if field_name == "id" %}
+                                    <th class="py-3 px-6 text-center" width="25">
+                                        {{ field_name }}
+                                    </th>
+                                {% else %}
+                                    <th class="py-3 px-6 text-left">
+                                        {{ field_name }}
+                                    </th>
+                                {% endif %}
                             {% endif %}
                         {% endfor %}
                         <th class="py-3 px-6 text-left">Acciones</th>
@@ -89,9 +91,11 @@
                 {% for entry in entries %}
                     <tr class="border-b border-gray-200 hover:bg-sky-100 " onclick="event.stopPropagation();(window.location + '{{ entry.id }}');">
                         {% for field_name, field_value in entry.items %}
+                            {% if field_name != "activo" %}
                             <td class="py-3 px-6 text-left">
                                 {{ field_value }}
                             </td>
+                            {% endif %}
                             
                         {% empty %}
                             <td class="py-3 px-6 text-left"> Sin registros </td>
