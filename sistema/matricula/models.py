@@ -133,6 +133,7 @@ class Alumno(models.Model):
     quien_retiras = models.ManyToManyField(QuienRetira, blank=True)
     activo = models.BooleanField(default=True) 
     catedras = models.ManyToManyField(Catedra, blank=True)
+    agrupacion = models.ForeignKey(Agrupacion, on_delete=models.DO_NOTHING, blank=True, null=True)
 
 
 

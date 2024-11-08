@@ -322,6 +322,11 @@ def importar_alumnos(tabla):
             print(e)
             programa = None
 
+        agrupacion = None
+        try:
+            agrupacion = Agrupacion.objects.get(nombre=row["AGRUPACIÓN"].strip())
+        except Exception:
+            agrupacion = None
         
 
         condicion_especial = None
@@ -347,7 +352,8 @@ def importar_alumnos(tabla):
             nivel_ts=nivel_ts,
             direccion=direccion,
             programa=programa,
-            condicion_especial=condicion_especial
+            condicion_especial=condicion_especial,
+            agrupacion=agrupacion
 
         )
         
