@@ -91,13 +91,22 @@ class Representante(models.Model):
 
 class Programa(models.Model):
     nombre = models.CharField(max_length=128)
-    agrupacion = models.ForeignKey(Agrupacion, blank=True, on_delete=models.CASCADE, null=True)
+    #agrupacion = models.ForeignKey(Agrupacion, blank=True, on_delete=models.CASCADE, null=True)
     activo = models.BooleanField(default=True)
 
 class QuienRetira(models.Model):  
     nombre = models.CharField(blank=True, null=True, max_length=64)
     activo = models.BooleanField(default=True)
 
+class TipoCatedra(models.Model):
+    nombre = models.CharField(max_length=128)
+    activo = models.BooleanField(default=True)
+
+class Catedra(models.Model):
+    nombre = models.CharField(max_length=128)
+    instrumento = models.ForeignKey(Instrumento, blank=True, null=True, on_delete=models.DO_NOTHING)
+    tipo = models.ForeignKey(TipoCatedra, blank=True, null=True, on_delete=models.DO_NOTHING)
+    activo = models.BooleanField(default=True)
 
 class Alumno(models.Model):
     nombre = models.CharField(max_length=128) 
@@ -118,10 +127,12 @@ class Alumno(models.Model):
     nivel_ts = models.ForeignKey(NivelTS, blank=True, on_delete=models.DO_NOTHING, null=True) 
     representantes = models.ManyToManyField(Representante, blank=True) 
     alergias = models.ManyToManyField(Alergia, blank=True) 
+    condicion_especial = models.ForeignKey(CondicionEspecial, blank=True, null=True, on_delete=models.DO_NOTHING)
     tratamientos = models.ManyToManyField(Tratamiento, blank=True) 
     programa = models.ForeignKey(Programa, on_delete=models.DO_NOTHING, blank=True, null=True) 
     quien_retiras = models.ManyToManyField(QuienRetira, blank=True)
     activo = models.BooleanField(default=True) 
+    catedras = models.ManyToManyField(Catedra, blank=True)
 
 
 
@@ -136,12 +147,3 @@ class Inscripcion(models.Model):
     turno = models.ForeignKey(Turno, blank=True, null=True, on_delete=models.DO_NOTHING)
     activo = models.BooleanField(default=True)
 
-class TipoCatedra(models.Model):
-    nombre = models.CharField(max_length=128)
-    activo = models.BooleanField(default=True)
-
-class Catedra(models.Model):
-    nombre = models.CharField(max_length=128)
-    instrumento = models.ForeignKey(Instrumento, blank=True, null=True, on_delete=models.DO_NOTHING)
-    tipo = models.ForeignKey(TipoCatedra, blank=True, null=True, on_delete=models.DO_NOTHING)
-    activo = models.BooleanField(default=True)
