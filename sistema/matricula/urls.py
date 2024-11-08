@@ -1,7 +1,7 @@
 from django.urls import path
-from matricula.views import *
 from django.urls import register_converter
 from .helpers import NullableIntConverter
+from .views import *
 register_converter(NullableIntConverter, 'nullable_int')
 
 urlpatterns = [
