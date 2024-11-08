@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from .models import *
 from matricula.tasks import ejecutar_importaciones, ARCHIVO, leer_db_excel
 from django.contrib import messages
+from matricula.tasks import ejecutar_importaciones, ARCHIVO, leer_db_excel
 from django.forms.models import model_to_dict
 from .helpers import viewset
 
@@ -146,6 +147,12 @@ def alumnos(request, id):
                 'name': 'programa',
                 'type': 'foreignkey',
                 'options': Programa.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'condición especial',
+                'type': 'foreignkey',
+                'options': CondicionEspecial.objects.all(),
                 'width': '50'
             },
             {
