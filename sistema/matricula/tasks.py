@@ -8,16 +8,13 @@ ARCHIVO = {
     "rango_columnas": ["A", "AJ"],
     "omitir_filas": 4,
     "tabla": "BD"
-}
-
-
+} 
 def leer_db_excel(archivo):
     tabla = pd.read_excel(
         "matriculasf.xlsm", sheet_name="BD", 
         usecols=f'A:AJ', 
         skiprows=4
     )
-
     return tabla
 
 """def leer_db_excel(archivo):
