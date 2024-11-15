@@ -41,7 +41,6 @@ def ejecutar_importaciones(archivo):
     a.importar_marcas_instrumentos(archivo)
     a.importar_modelos_instrumentos(archivo)
     a.importar_accesorios(archivo)
-    a.importar_instrumentos(archivo)
     a.importar_agrupaciones(archivo)
     a.importar_turnos(archivo)
     a.importar_niveles_ts(archivo)
@@ -53,6 +52,7 @@ def ejecutar_importaciones(archivo):
     a.importar_representantes(archivo)
     a.importar_quienretira(archivo)
     a.importar_alumnos(archivo)
+    a.importar_instrumentos(archivo)
     a.importar_becados(archivo)
     a.importar_inscripciones(archivo)
 

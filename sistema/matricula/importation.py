@@ -113,38 +113,6 @@ def importar_accesorios(tabla):
             )
     return True
 
-def importar_instrumentos(tabla):
-    for index, row in tabla.iterrows():
-        if row["MODELO"] not in LISTA_MODELOS_EXCLUIDOS:
-            modelo = None
-            color = None
-            accesorio = None
-            serial = row["SERIAL"]
-
-            try:
-                modelo = CategoriaInstrumento.objects.get(nombre=row["CÁTEDRA"].strip())
-            except Exception:
-                modelo = None
-
-            try:
-                color = Color.objects.get(nombre=row["COLOR"].strip())
-            except Exception:
-                color = None
-                
-            try:
-                accesorio = Accesorio.objects.get(nombre=row["ACCESORIO"].strip())
-            except Exception:
-                accesorio = None
-
-            Instrumento.objects.update_or_create(
-                nombre="",
-                modelo=modelo,
-                color=color,
-                serial=serial,
-                accesorio=accesorio
-            )
-
-    return True
 
 def importar_agrupaciones(tabla):
     for index, row in tabla.iterrows():
@@ -206,21 +174,14 @@ def importar_catedras(tabla):
         for key, col in row.items():
             if "CÁTEDRA" in key and row[key] not in LISTA_NO: 
                 tipo = None
-                instrumento = None
                 try:
                     tipo = TipoCatedra.objects.get(nombre=key.strip())
-                    if tipo not in LISTA_CATEDRAS_EXCLUIDAS:
-                        try:
-                            instrumento = Instrumento.objects.get(nombre=row[key].strip())
-                        except Exception:
-                            instrumento = None
                 except Exception:
                     tipo = None
                 
                 Catedra.objects.update_or_create(
                     nombre=row[key].strip(),
                     tipo=tipo,
-                    instrumento=instrumento
                 )
     
     return True        
@@ -358,12 +319,6 @@ def importar_alumnos(tabla):
         )
         
         try:
-            instrumento = Instrumento.objects.get(serial=row["SERIAL"].strip())
-            alumno.instrumentos.add(instrumento)
-        except Exception:
-            instrumento = None
-        
-        try:
             representante = Representante.objects.get(cedula=row["CÉDULA4"].strip())
             alumno.representantes.add(representante)
             
@@ -420,6 +375,47 @@ def importar_alumnos(tabla):
         alumno.save()
     print(Alumno.objects.all().count())
     return Alumno.objects.all().count() > 0
+
+
+def importar_instrumentos(tabla):
+    for index, row in tabla.iterrows():
+        if row["MODELO"] not in LISTA_MODELOS_EXCLUIDOS and row["SERIAL"] not in LISTA_NO:
+            modelo = None
+            color = None
+            accesorio = None
+            serial = row["SERIAL"]
+            alumno = None
+
+            try:
+                modelo = CategoriaInstrumento.objects.get(nombre=row["CÁTEDRA"].strip())
+            except Exception:
+                modelo = None
+
+            try:
+                color = Color.objects.get(nombre=row["COLOR"].strip())
+            except Exception:
+                color = None
+                
+            try:
+                accesorio = Accesorio.objects.get(nombre=row["ACCESORIO"].strip())
+            except Exception:
+                accesorio = None
+
+            try:
+                alumno = Alumno.objects.get(nombre=row["NOMBRES"], apellido=row["APELLIDOS"])
+            except Exception:
+                alumno = None
+
+            Instrumento.objects.update_or_create(
+                nombre="",
+                modelo=modelo,
+                color=color,
+                serial=serial,
+                accesorio=accesorio,
+                alumno=alumno
+            )
+
+    return True
 
 
 def importar_becados(tabla):
