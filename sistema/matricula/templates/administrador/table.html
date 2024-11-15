@@ -93,7 +93,16 @@
                         {% for field_name, field_value in entry.items %}
                             {% if field_name != "activo" %}
                             <td class="py-3 px-6 text-left">
-                                {{ field_value }}
+                                
+                                {% if field_value.name %}
+                                    {{ field_value.name }}
+                                {% elif field_value.all %}
+                                    {% for item in field_value.all %}
+                                        {{ item.name }}
+                                    {% endfor %}
+                                {% else %}
+                                    {{ field_value }}
+                                {% endif %}
                             </td>
                             {% endif %}
                             
