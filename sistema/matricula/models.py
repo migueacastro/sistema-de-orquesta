@@ -58,6 +58,8 @@ class Instrumento(models.Model):
         ('Propio', 'propio')
     ))
     activo = models.BooleanField(default=True)
+    def __str__(self):
+        return self.nombre 
 
 class Agrupacion(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
@@ -87,7 +89,8 @@ class Representante(models.Model):
     email = models.EmailField(blank=True, null=True)
     parentesco = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
-
+    def __str__(self):
+        return self.nombre 
 
 class Programa(models.Model):
     nombre = models.CharField(max_length=128)
@@ -97,7 +100,8 @@ class Programa(models.Model):
 class QuienRetira(models.Model):  
     nombre = models.CharField(blank=True, null=True, max_length=64)
     activo = models.BooleanField(default=True)
-
+    def __str__(self):
+        return self.nombre 
 class TipoCatedra(models.Model):
     nombre = models.CharField(max_length=128)
     activo = models.BooleanField(default=True)
@@ -107,7 +111,8 @@ class Catedra(models.Model):
     instrumento = models.ForeignKey(Instrumento, blank=True, null=True, on_delete=models.DO_NOTHING)
     tipo = models.ForeignKey(TipoCatedra, blank=True, null=True, on_delete=models.DO_NOTHING)
     activo = models.BooleanField(default=True)
-
+    def __str__(self):
+        return self.nombre 
 class Alumno(models.Model):
     nombre = models.CharField(max_length=128) 
     apellido = models.CharField(max_length=128) 

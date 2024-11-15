@@ -1,11 +1,40 @@
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, HttpResponseBadRequest, JsonResponse
 from django.forms.models import model_to_dict
+from itertools import chain
 from django.urls.resolvers import URLPattern
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages 
 from django.apps import apps
 
+
+def model_to_dict_better(instance, fields=None, exclude=None):
+    opts = instance._meta
+    data = {}
+    for f in chain(opts.concrete_fields, opts.private_fields, opts.many_to_many): 
+        if not getattr(f, "editable", False): 
+            continue 
+        if fields is not None and f.name not in fields: 
+            continue 
+        if exclude and f.name in exclude: 
+            continue 
+        value = f.value_from_object(instance) 
+        if f.many_to_many: # Manejo de muchos-a-muchos 
+            data[f.name] = ""
+            for item in value:
+                data[f.name] = data[f.name] + str(item.nombre) + "," 
+            data[f.name] = data[f.name][:-1]
+
+        elif f.is_relation and f.many_to_one: # Manejo de claves foráneas 
+            related_object = getattr(instance, f.name) 
+            if related_object: 
+                data[f.name] = str(related_object.nombre)
+            else: 
+                data[f.name] = None 
+        else: 
+            data[f.name] = value
+    
+    return data
 
 class NullableIntConverter:
     
@@ -27,7 +56,7 @@ def viewset(request, model, field_list, title, id=None):
             case 'GET':
                 # Plantilla datatable
                 query = model.objects.filter(activo=True)
-                entries = [model_to_dict(i) for i in query]
+                entries = [model_to_dict_better(i) for i in query]
                 return render(request, 'administrador/table.html', {
                     'title': title, 
                     'entries': entries, 

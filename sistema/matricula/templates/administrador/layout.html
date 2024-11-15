@@ -13,13 +13,11 @@
     <script src="{% static 'select2.min.js' %}"></script>
     <script src="{% static 'sweetalert2@11.js' %}"></script>
     <script src="{% static 'scripts.js' %}"></script>
-
     <script
         src="https://code.jquery.com/jquery-3.7.1.js"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
         crossorigin="anonymous">
     </script>
-		
     <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
     <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
 </head>
@@ -48,22 +46,22 @@
                 <i class="text-3xl fa-solid fa-th-large"></i>
                 <span class="hidden group-hover:inline-block ml-4">Tablas</span>
             </a>
-            
         </div>
     </div>
-    <div id="mobileMenu" class="fixed inset-y-0 left-0 hidden transition-transform duration-200 z-50 bg-gray-200 w-[200px] transform -translate-x-full">
-        <div class="flex flex-col items-center p-6 space-y-8">
-            <img src="{% static 'elsistemalogo.png' %}" alt="LOGO" class="h-[3rem] w-auto">
-            <a href="#" class="flex items-center text-gray-700 hover:text-green-800 text-center"> 
-                <i class="text-3xl fa-solid fa-person-circle-plus"></i>
-                <span class="ml-4">Inscribir Alumno</span>
+    <div id="mobileMenu" class="fixed inset-y-0 left-0 hidden transition-transform duration-200 z-50 bg-gray-200 w-[250px] transform -translate-x-full">
+        <div class="flex flex-col p-6 space-y-8">
+            <img src="{% static 'elsistemalogo.png' %}" alt="LOGO" class="h-[3rem] w-auto mx-auto pt-3">
+            <a href="/alumnos?form_state=open" class="flex items-center text-gray-700 hover:text-green-800">
+                <i class="text-3xl p-3 fa-solid fa-person-circle-plus"></i>Inscribir Alumno
             </a>
-            <a href="#" class="flex items-center text-gray-700 hover:text-green-800 text-center"> 
-                <i class="text-3xl fa-solid fa-address-book"></i>
-                <span class="ml-4">Lista de Alumnos</span>
+            <a href="/alumnos/" class="flex items-center text-gray-700 hover:text-green-800">
+                <i class="text-3xl p-3 fa-solid fa-address-book"></i>Lista de Alumnos
             </a>
-            <button id="closeMenu" class="text-2xl text-gray-700 hover:text-red-600 mt-8 text-center"> 
-                <i class="fa-solid fa-times"></i> Cerrar
+            <a href="{% url 'cards' %}" class="flex items-center text-gray-700 hover:text-green-800 ">
+                <i class="text-3xl p-3 fa-solid fa-th-large"></i>Tablas
+            </a>
+            <button id="closeMenu" class="flex items-center text-gray-700 hover:text-red-600 mt-8"> 
+                <i class="text-3xl fa-solid p-3 fa-times"></i> Cerrar
             </button>
         </div>
     </div>

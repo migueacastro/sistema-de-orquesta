@@ -75,7 +75,7 @@
                                         {{ field_name }}
                                     </th>
                                 {% else %}
-                                    <th class="py-3 px-6 text-left">
+                                    <th class="py-3 px-6 text-left"> 
                                         {{ field_name }}
                                     </th>
                                 {% endif %}
@@ -89,25 +89,19 @@
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 {% for entry in entries %}
-                    <tr class="border-b border-gray-200 hover:bg-sky-100 " onclick="event.stopPropagation();goToURL(window.location + '{{ entry.id }}');">
+                    <tr class="border-b border-gray-200 hover:bg-sky-100" onclick="event.stopPropagation();goToURL(window.location + '{{ entry.id }}');">
                         {% for field_name, field_value in entry.items %}
                             {% if field_name != "activo" %}
-                            <td class="py-3 px-6 text-left">
-                                
-                                {% if field_value.name %}
-                                    {{ field_value.name }}
-                                {% elif field_value.all %}
-                                    {% for item in field_value.all %}
-                                        {{ item.name }}
-                                    {% endfor %}
-                                {% else %}
-                                    {{ field_value }}
-                                {% endif %}
-                            </td>
+                                <td class="py-3 px-6 text-left">
+                                    {% if field_value %}
+                                        {{ field_value }}
+                                    {% else %}
+                                        Ninguno
+                                    {% endif %}
+                                </td>
                             {% endif %}
-                            
                         {% empty %}
-                            <td class="py-3 px-6 text-left"> Sin registros </td>
+                            <td class="py-3 px-6 text-left">Sin registros</td>
                         {% endfor %}
                         <td class="py-3 px-6 text-left flex flex-row">
                             <i class="fa-solid fa-pen mx-2 text-xl z-10 hover:text-3xl" onclick="editEntry('{{ entry.id }}');"></i>
