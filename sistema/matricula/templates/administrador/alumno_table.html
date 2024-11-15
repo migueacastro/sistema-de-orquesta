@@ -1,0 +1,241 @@
+{% extends "administrador/layout.html" %}
+
+{% block body %}
+    ay cris por que, ahora trabajo doble 
+    <div class="flex flex-col justify-center items-center h-[10rem]">
+        <h1 class="text-4xl text-center font-bold mb-4 capitalize ">Alumnos</h1>
+    </div>
+    
+    <!-- Form -->
+    <div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 flex flex-col items-center hidden" id="section-form"> 
+        <h2 class="text-4xl text-center my-4 mb-10 capitalize">Agregar</h2>
+        <form class="w-full" method="post">
+            {% csrf_token %}
+            <p id="csrf_token" class="hidden">{{ csrf_token }}</p>
+            <div class="flex flex-row">
+                <div class="mb-4 w-1/2 mx-2">
+                    <label for="nombre" class="block text-sm font-medium text-gray-700 capitalize">nombre</label>
+                    <input type="text" name="nombre" id="nombre" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if alumno.nombre %}{{ alumno.nombre }}{% endif %}">
+                </div>
+                <div class="mb-4 w-1/2 mx-4">
+                    <label for="apellido" class="block text-sm font-medium text-gray-700 capitalize">apellido</label>
+                    <input type="text" name="apellido" id="apellido" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if alumno.apellido %}{{ alumno.apellido }}{% endif %}">
+                </div>
+            </div>
+            <div class="flex flex-row">
+                <div class="mb-4 mx-4 w-1/2">
+                    <label for="cedula" class="block text-sm font-medium text-gray-700 capitalize">cedula</label>
+                    <input type="text" name="cedula" id="cedula" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if alumno.cedula %}{{ alumno.cedula }}{% endif %}">
+                </div>
+                <div class="mb-4 mx-4 w-1/2">
+                    <label for="edad" class="block text-sm font-medium text-gray-700 capitalize">edad</label>
+                    <input type="number" name="edad" id="edad" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if alumno.edad %}{{ alumno.edad }}{% endif %}">
+                </div>
+            </div>
+            <div class="flex flex-row">
+                <div class="mb-4 w-1/2 mx-4">
+                    <label for="turno" class="block text-sm font-medium text-gray-700 capitalize">turno</label>
+                    <select name="turno" id="turno" class="foreignkey-select block w-full border-gray-300 border rounded-md shadow-sm">
+                        <option value="">Seleccione una opción</option>
+                        {% for option in turnos %}
+                            <option value="{{ option.id }}">{{ option.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="mb-4 w-1/2 mx-4">
+                    <label for="sexo" class="block text-sm font-medium text-gray-700 capitalize">sexo</label>
+                    <select name="sexo" id="sexo" class="foreignkey-select block w-full border-gray-300 border rounded-md shadow-sm">
+                        <option value="">Seleccione una opción</option>
+                        <option value="Femenino">Femenino</option>
+                        <option value="Masculino">Masculino</option>
+                    </select>
+                </div>
+                <div class="mb-4 w-1/2 mx-4">
+                    <div class="mb-4 mx-4 w-1/2">
+                        <label for="telefono" class="block text-sm font-medium text-gray-700 capitalize">telefono</label>
+                        <input type="text" name="telefono" id="telefono" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if alumno.telefono %}{{ alumno.telefono }}{% endif %}">
+                    </div>
+                    <div class="mb-4 mx-4 w-1/2">
+                        <label for="fecha_nacimento" class="block text-sm font-medium text-gray-700 capitalize">Fecha Nacimiento</label>
+                        <input type="date" name="fecha_nacimento" id="fecha_nacimento" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if alumno.fecha_nacimento %}{{ alumno.fecha_nacimento }}{% endif %}">
+                    </div>
+                </div>
+                <div class="mb-4 w-1/2 mx-4">
+                    <div class="mb-4 mx-4 w-1/2">
+                        <label for="direccion" class="block text-sm font-medium text-gray-700 capitalize">direccion</label>
+                        <input type="text" name="direccion" id="direccion" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if alumno.direccion %}{{ alumno.direccion }}{% endif %}">
+                    </div>
+                    <div class="mb-4 mx-4 w-1/2">
+                        <label for="fecha_nacimento" class="block text-sm font-medium text-gray-700 capitalize">Fecha Nacimiento</label>
+                        <input type="date" name="fecha_nacimento" id="fecha_nacimento" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if alumno.fecha_nacimento %}{{ alumno.fecha_nacimento }}{% endif %}">
+                    </div>
+                </div>
+                
+            </div>
+
+
+            
+            {% for field in form %}
+                {% if field.type == "text" %}
+                <div class="mb-4">
+                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if field.value %}{{ field.value }}{% endif %}">
+                </div>
+                {% elif field.type == "integer"%}
+                <div class="mb-4">
+                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if field.value %}{{ field.value }}{% endif %}">
+                </div>
+                {% elif field.type == "textarea" %}
+                <div class="mb-4">
+                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                    <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">{% if field.value %}{{ field.value }}{% endif %}</textarea>
+                </div>
+                {% elif field.type == "foreignkey" %}
+                <div class="mb-4">
+                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                    <select name="{{ field.name }}" id="{{ field.name }}" class="foreignkey-select block w-full border-gray-300 border rounded-md shadow-sm">
+                        <option value="">Seleccione una opción</option>
+                        {% for option in field.query %}
+                            <option value="{{ option.id }}" {% if field.value == option.id %}selected{% endif %}>{{ option }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% elif field.type == "manytomany" %}
+                <div class="mb-4">
+    
+                    <div class="flex flex-row flex-wrap">
+                        {% for option in field.query %}
+                            
+                        <div class="px-2 py-2 bg-blue-400 m-2 rounded-md">
+                            {{ option.nombre }}
+                        </div>
+                 
+                        {% endfor %}
+                    </div>
+                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
+                    <select name="{{ field.name }}" id="manytomany-{{ field.name }}" class="manytomany-select block w-full border-gray-300 border rounded-md shadow-sm" multiple="multiple">
+                        {% for option in field.query %}
+                            <option value="{{ option.id }}" {% if option.id in field.value %}selected{% endif %}>{{ option.nombre }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                {% endif %}
+            {% endfor %}
+    
+            <div class="flex justify-between mt-4">
+                <button type="submit" class="bg-blue-600 text-white px-4 py-1 rounded text-sm">Guardar</button>
+                <button type="button" id="cancel-button" class="bg-gray-400 text-white px-4 py-1 rounded text-sm">Volver</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- End Form -->
+    
+    <!-- Data Table -->
+    <div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 " id="section-table">
+        <a id="crear-btn" class="bg-gray-800 text-white px-4 py-2 my-2 rounded" href="#">
+            Crear
+        </a>
+        <div class="overflow-x-auto">
+            <table class="min-w-full table-auto" id="entry-table">
+                <thead>
+                    <tr class="bg-gray-200 text-gray-600 uppercase text-sm leading-normal">
+                        {% if first_entry %}
+                            {% for field_name, field_value in first_entry.items %}
+                                {% if field_name != "activo" %}
+                                    {% if field_name == "id" %}
+                                        <th class="py-3 px-6 text-center" width="25">
+                                            {{ field_name }}
+                                        </th>
+                                    {% else %}
+                                        <th class="py-3 px-6 text-left"> 
+                                            {{ field_name }}
+                                        </th>
+                                    {% endif %}
+                                {% endif %}
+                            {% endfor %}
+                            <th class="py-3 px-6 text-left">Acciones</th>
+                        {% else %}
+                            <th>Sin registros</th>
+                        {% endif %}
+                    </tr> 
+                </thead>
+                <tbody class="text-gray-600 text-sm font-light">
+                    {% for entry in entries %}
+                        <tr class="border-b border-gray-200 hover:bg-sky-100" onclick="event.stopPropagation();goToURL(window.location + '{{ entry.id }}');">
+                            {% for field_name, field_value in entry.items %}
+                                {% if field_name != "activo" %}
+                                    <td class="py-3 px-6 text-left">
+                                        {% if field_value %}
+                                            {{ field_value }}
+                                        {% else %}
+                                            Ninguno
+                                        {% endif %}
+                                    </td>
+                                {% endif %}
+                            {% empty %}
+                                <td class="py-3 px-6 text-left">Sin registros</td>
+                            {% endfor %}
+                            <td class="py-3 px-6 text-left flex flex-row">
+                                <i class="fa-solid fa-pen mx-2 text-xl z-10 hover:text-3xl" onclick="editEntry('{{ entry.id }}');"></i>
+                                <i class="fa-solid fa-xmark mx-2 text-xl" onclick="deleteEntry('{{ entry.id }}')"></i>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const crearBtn = document.getElementById('crear-btn');
+            const formContainer = document.getElementById('section-form');
+            const tableContainer = document.getElementById('section-table');
+            const cancelButton = document.getElementById('cancel-button');
+    
+            crearBtn.addEventListener('click', (event) => {
+                event.preventDefault(); 
+                formContainer.classList.remove('hidden'); 
+                tableContainer.classList.add('hidden'); 
+            });
+    
+            cancelButton.addEventListener('click', () => {
+                formContainer.classList.add('hidden');
+                tableContainer.classList.remove('hidden'); 
+            });
+    
+            if (checkFormVisibilityByParams()) {
+                toggleFormVisibility();
+            };
+            if (checkDeletedEntryByParams()) {
+                success
+            }
+            $('.foreignkey-select').select2({
+                theme: "classic",
+                placeholder: "Seleccione una opción"
+            });
+    
+            // Inicializa Select2 en los campos ManyToMany con opción de tags
+            $('.manytomany-select').select2({
+                theme: "classic",
+                tags: true,
+                tokenSeparators: [',', ' '],
+                placeholder: "Añadir o seleccionar etiquetas"
+            });
+        });
+        //tags
+        
+        //Para modificar la tabla 
+        
+        let table = new DataTable('#entry-table');
+    
+       /*comment %}  document.addEventListener('DOMContentLoaded', () => {
+            let tableModifier = document.querySelector('.dt-layout-row');
+            tableModifier.classList.toggle('hidden');
+            tablemodi.clone().appendTo('#anotherDiv');
+        $('#parentOfOldElement #yourElement').remove();
+        });*/
+    </script>
+{% endblock %}

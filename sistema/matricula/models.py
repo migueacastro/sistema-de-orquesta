@@ -47,23 +47,10 @@ class Accesorio(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
 
-class Instrumento(models.Model):
-    nombre = models.CharField(max_length=128, blank=True, null=True)
-    serial = models.CharField(max_length=128, blank=True, null=True)
-    modelo = models.ForeignKey(ModeloInstrumento, null=True, on_delete=models.CASCADE)
-    color = models.ForeignKey(Color, null=True, on_delete=models.CASCADE)
-    accesorio = models.ForeignKey(Accesorio, null=True, blank=True, on_delete=models.CASCADE)
-    asignado = models.CharField(max_length=128, blank=True, null=True, choices=(
-        ('Asignado', 'asignado'),
-        ('Propio', 'propio')
-    ))
-    activo = models.BooleanField(default=True)
-    def __str__(self):
-        return self.nombre 
+
 
 class Agrupacion(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
-    instrumentos = models.ManyToManyField(Instrumento, blank=True)
     activo = models.BooleanField(default=True)
 
 class Turno (models.Model):
@@ -108,7 +95,6 @@ class TipoCatedra(models.Model):
 
 class Catedra(models.Model):
     nombre = models.CharField(max_length=128)
-    instrumento = models.ForeignKey(Instrumento, blank=True, null=True, on_delete=models.DO_NOTHING)
     tipo = models.ForeignKey(TipoCatedra, blank=True, null=True, on_delete=models.DO_NOTHING)
     activo = models.BooleanField(default=True)
     def __str__(self):
@@ -119,7 +105,6 @@ class Alumno(models.Model):
     cedula = models.CharField(max_length=32, null=True) 
     edad = models.IntegerField()
     turno = models.ForeignKey(Turno, blank=True, on_delete=models.DO_NOTHING, null=True) 
-    instrumentos = models.ManyToManyField(Instrumento, blank=True) 
     sexo = models.CharField(max_length=32, choices=( 
         ('Masculino', 'masculino'),
         ('Femenino', 'femenino'),
@@ -140,7 +125,20 @@ class Alumno(models.Model):
     catedras = models.ManyToManyField(Catedra, blank=True)
     agrupacion = models.ForeignKey(Agrupacion, on_delete=models.DO_NOTHING, blank=True, null=True)
 
-
+class Instrumento(models.Model):
+    nombre = models.CharField(max_length=128, blank=True, null=True)
+    serial = models.CharField(max_length=128, blank=True, null=True)
+    alumno = models.ForeignKey(Alumno, on_delete=models.DO_NOTHING, blank=True, null=True)
+    modelo = models.ForeignKey(ModeloInstrumento, null=True, on_delete=models.CASCADE)
+    color = models.ForeignKey(Color, null=True, on_delete=models.CASCADE)
+    accesorio = models.ForeignKey(Accesorio, null=True, blank=True, on_delete=models.CASCADE)
+    asignado = models.CharField(max_length=128, blank=True, null=True, choices=(
+        ('Asignado', 'asignado'),
+        ('Propio', 'propio')
+    ))
+    activo = models.BooleanField(default=True)
+    def __str__(self):
+        return self.nombre 
 
 class Becado(models.Model):
     alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)

@@ -5,7 +5,7 @@ from matricula.tasks import ejecutar_importaciones, ARCHIVO, leer_db_excel
 from django.contrib import messages
 from matricula.tasks import ejecutar_importaciones, ARCHIVO, leer_db_excel
 from django.forms.models import model_to_dict
-from .helpers import viewset
+from .helpers import viewset, model_to_dict_better
 
 def importar_archivo(request):
     if request.method == 'GET':
@@ -50,122 +50,29 @@ def cards(request):
     return render(request, 'administrador/cards.html', {'title': 'Tablas', 'vistas': vistas})
 
 def alumnos(request, id):
-    return viewset(request, 
-        Alumno,  
-        [
-            {
-                'name': 'nombre',
-                'type': 'text',
-                'width': '50'
-            },
-            {
-                'name': 'apellido',
-                'type': 'text',
-                'width': '50'
-            },
-            {
-                'name': 'cedula',
-                'type': 'text',
-                'width': '50'
-            },
-            {
-                'name': 'edad',
-                'type': 'integer',
-                'width': '20'
-            },
-            {
-                'name': 'turno',
-                'type': 'foreingnkey', 
-                'query': Turno.objects.all(),
-                'width': '50'
-            },
-            {
-                'name': 'instrumentos',
-                'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Instrumento.objects.all()],
-                'multiple': True,
-                'width': '50'
-            },
-            {
-                'name': 'sexo',
-                'type': 'select',
-                'query': [
-                    {'value': 'Masculino', 'label': 'Masculino'},
-                    {'value': 'Femenino', 'label': 'Femenino'},
-                ],
-                'width': '50'
-            },
-            {
-                'name': 'telefono',
-                'type': 'text',
-                'width': '50'
-            },
-            {
-                'name': 'fecha_nacimiento',
-                'type': 'date',
-                'width': '50'
-            },
-            {
-                'name': 'direccion',
-                'type': 'textarea',
-                'width': '50'
-            },
-            {
-                'name': 'nivel_estudiantil',
-                'type': 'foreingnkey',
-                'query': NivelEstudiantil.objects.all(),
-                'width': '50'
-            },
-            {
-                'name': 'nivel_ts',
-                'type': 'foreingnkey',
-                'query': NivelTS.objects.all(),
-                'width': '50'
-            },
-            {
-                'name': 'representantes',
-                'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Representante.objects.all()],
-                'multiple': True,
-                'width': '50'
-            },
-            {
-                'name': 'alergias',
-                'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Alergia.objects.all()],
-                'multiple': True,
-                'width': '50'
-            },
-            {
-                'name': 'tratamientos',
-                'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Tratamiento.objects.all()],
-                'multiple': True,
-                'width': '50'
-            },
-            {
-                'name': 'programa',
-                'type': 'foreignkey',
-                'options': Programa.objects.all(),
-                'width': '50'
-            },
-            {
-                'name': 'condición especial',
-                'type': 'foreignkey',
-                'options': CondicionEspecial.objects.all(),
-                'width': '50'
-            },
-            {
-                'name': 'quien_retiras',
-                'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in QuienRetira.objects.all()],
-                'multiple': True,
-                'width': '50'
-            },
-        ],
-        'Alumnos',  
-        id  
-    )
+    plantilla = 'administrador/alumno_table.html'
+    turnos = Turno.objects.filter(activo=True)
+    # Gracias cris (te odio)
+    if id:
+        alumno = Alumno.objects.get(id=id)
+        match request.method:
+            case "GET":
+                return render(request, plantilla, {"alumno": alumno, "turnos": turnos})
+            case "POST":
+                return render(request, plantilla, {"alumno": alumno, "turnos": turnos})
+            case "DELETE":
+                return render(request, "administrador/inicio.html")
+            case _:
+                pass
+    else:
+        match request.method:
+            case "GET":
+                return render(request, plantilla, {"turnos": turnos})
+            case "POST":
+                return render(request, plantilla, {"turnos": turnos})
+            case _:
+                pass
+        
 
 def alergias(request, id):
     return viewset(request, 
