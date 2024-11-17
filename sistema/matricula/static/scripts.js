@@ -32,39 +32,46 @@ const editEntry = (id) => {
     window.location.replace(url); 
 };
 const deleteEntry = (id) => {
-
     Swal.fire({
-
-        title: "Estas seguro?",
+        title: "¿Estás seguro?",
         text: "¡No podrás revertir esto!",
         icon: "warning",
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Si, eliminalo!"
+        confirmButtonText: "Sí, elíminalo!"
     }).then((result) => {
         if (result.isConfirmed) {
             Swal.fire({
-            title: "Eliminado!",
-            text: "Tu registro ha sido eliminado",
-            icon: "success"
-        });
-        let parts = window.location.href.toString().split("/"); 
-        let tableName = parts[parts.length-2];
-        let url =`/${tableName}/${id}`;
-        let csrfToken = document.querySelector('#csrf_token').innerHTML; 
-        fetch(url, {
-            method: 'DELETE',
-            headers: {
-                'X-CSRFToken':csrfToken
-            }
-        });
-        
-    }
+                title: "¡Eliminado!",
+                text: "Tu registro ha sido eliminado",
+                icon: "success"
+            });
+            let parts = window.location.href.toString().split("/"); 
+            let tableName = parts[parts.length - 2];  
+            let url = `/${tableName}/${id}`;  
+            let csrfToken = document.querySelector('#csrf_token').innerHTML; 
+            
+            fetch(url, {
+                method: 'DELETE',
+                headers: {
+                    'X-CSRFToken': csrfToken
+                }
+            }).then(response => {
+                if (response.ok) {
+                    document.getElementById(`entry-${id}`).remove();  
+                } else {
+                    Swal.fire({
+                        title: "Error",
+                        text: "Hubo un problema al eliminar el registro",
+                        icon: "error"
+                    });
+                }
+            });
+        }
     });
-    
-    
 };
+
 
 function toggleEditMode() {
     const fields = document.querySelectorAll('.editable');

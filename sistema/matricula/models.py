@@ -128,7 +128,7 @@ class Alumno(models.Model):
 class Instrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     serial = models.CharField(max_length=128, blank=True, null=True)
-    alumno = models.ForeignKey(Alumno, on_delete=models.DO_NOTHING, blank=True, null=True)
+    alumno = models.ForeignKey(Alumno, on_delete=models.SET_NULL, blank=True, null=True,related_name='instrumentos')
     modelo = models.ForeignKey(ModeloInstrumento, null=True, on_delete=models.CASCADE)
     color = models.ForeignKey(Color, null=True, on_delete=models.CASCADE)
     accesorio = models.ForeignKey(Accesorio, null=True, blank=True, on_delete=models.CASCADE)
