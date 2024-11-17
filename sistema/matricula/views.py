@@ -52,27 +52,126 @@ def cards(request):
 def alumnos(request, id):
     plantilla = 'administrador/alumno_table.html'
     turnos = Turno.objects.filter(activo=True)
-    # Gracias cris (te odio)
+    nivel_estudiantiles = NivelEstudiantil.objects.filter(activo=True)
+    nivel_tss = NivelTS.objects.filter(activo=True)
+    alergias = Alergia.objects.filter(activo=True)  # Opciones para alergias
+    representantes = Representante.objects.filter(activo=True)
+    condicion_especiales=CondicionEspecial.objects.filter(activo=True) 
+    tratamientos=Tratamiento.objects.filter(activo=True)  # Opciones para representantes
+    programas=Programa.objects.filter(activo=True)
+    agrupaciones=Agrupacion.objects.filter(activo=True)
+    catedras=Catedra.objects.filter(activo=True)
+    quien_retiras=QuienRetira.objects.filter(activo=True)
+
     if id:
         alumno = Alumno.objects.get(id=id)
         match request.method:
             case "GET":
-                return render(request, plantilla, {"alumno": alumno, "turnos": turnos})
+                return render(request, plantilla, {
+                    "alumno": alumno,
+                    "turnos": turnos,
+                    "nivel_estudiantiles": nivel_estudiantiles,
+                    "nivel_tss": nivel_tss,
+                    "alergias": alergias,
+                    "representantes": representantes,
+                    "condicion_especiales": condicion_especiales,
+                    "tratamientos": tratamientos,
+                    "programas": programas,
+                    "agrupaciones":agrupaciones,
+                    "catedras":catedras,
+                    "quien_retiras":quien_retiras
+                })
             case "POST":
-                return render(request, plantilla, {"alumno": alumno, "turnos": turnos})
+                alergias_seleccionadas = request.POST.getlist('alergias')
+                alergias_ids = Alergia.objects.filter(nombre__in=alergias_seleccionadas).values_list('id', flat=True)
+                alumno.alergias.set(alergias_ids)
+
+                representantes_seleccionados = request.POST.getlist('representantes')
+                representantes_ids = Representante.objects.filter(nombre__in=representantes_seleccionados).values_list('id', flat=True)
+                alumno.representantes.set(representantes_ids)
+
+                tratamientos_seleccionados = request.POST.getlist('tratamientos')
+                tratamientos_ids = Tratamiento.objects.filter(nombre__in=tratamientos_seleccionados).values_list('id', flat=True)
+                alumno.tratamientos.set(tratamientos_ids)
+
+                catedras_seleccionados = request.POST.getlist('catedras')
+                catedras_ids = Catedra.objects.filter(nombre__in=catedras_seleccionados).values_list('id', flat=True)
+                alumno.catedras.set(catedras_ids)
+
+                quien_retiras_seleccionados = request.POST.getlist('quien_retiras')
+                quien_retiras_ids = QuienRetira.objects.filter(nombre__in=quien_retiras_seleccionados).values_list('id', flat=True)
+                alumno.quien_retiras.set(quien_retiras_ids)
+                alumno.save()
+                return render(request, plantilla, {
+                    "alumno": alumno,
+                    "turnos": turnos,
+                    "nivel_estudiantiles": nivel_estudiantiles,
+                    "nivel_tss": nivel_tss,
+                    "alergias": alergias,
+                    "representantes": representantes,
+                    "condicion_especiales": condicion_especiales,
+                    "tratamientos": tratamientos,
+                    "programas": programas,
+                    "agrupaciones":agrupaciones,
+                    "catedras":catedras,
+                    "quien_retiras":quien_retiras
+                })
             case "DELETE":
+                alumno.delete()
                 return render(request, "administrador/inicio.html")
             case _:
                 pass
     else:
         match request.method:
             case "GET":
-                return render(request, plantilla, {"turnos": turnos})
+                return render(request, plantilla, {
+                    "turnos": turnos,
+                    "nivel_estudiantiles": nivel_estudiantiles,
+                    "nivel_tss": nivel_tss,
+                    "alergias": alergias,
+                    "representantes": representantes,
+                    "condicion_especiales": condicion_especiales,
+                    "tratamientos": tratamientos,
+                    "programas": programas,
+                    "agrupaciones":agrupaciones,
+                    "catedras":catedras,
+                    "quien_retiras":quien_retiras
+                })
             case "POST":
-                return render(request, plantilla, {"turnos": turnos})
+                # Crear un nuevo alumno
+                alergias_seleccionadas = request.POST.getlist('alergias')
+                representantes_seleccionados = request.POST.getlist('representantes')
+                tratamientos_seleccionados = request.POST.getlist('tratamientos')
+                catedras_seleccionados = request.POST.getlist('catedras')
+                quien_retiras_seleccionados = request.POST.getlist('quien_retiras')
+
+                nuevo_alumno = Alumno.objects.create(...)
+                alergias_ids = Alergia.objects.filter(nombre__in=alergias_seleccionadas).values_list('id', flat=True)
+                representantes_ids = Representante.objects.filter(nombre__in=representantes_seleccionados).values_list('id', flat=True)
+                tratamientos_ids=Tratamiento.objects.filter(nombre__in=tratamientos_seleccionados).values_list('id', flat=True)
+                
+                nuevo_alumno.alergias.set(alergias_ids)
+                nuevo_alumno.representantes.set(representantes_ids)
+                nuevo_alumno.tratamientos.set(tratamientos_ids)
+                nuevo_alumno.catedras.set(catedras_ids)
+                nuevo_alumno.quien_retiras.set(quien_retiras_ids)
+                nuevo_alumno.save()
+
+                return render(request, plantilla, {
+                    "turnos": turnos,
+                    "nivel_estudiantiles": nivel_estudiantiles,
+                    "nivel_tss": nivel_tss,
+                    "alergias": alergias,
+                    "representantes": representantes,
+                    "condicion_especiales": condicion_especiales,
+                    "tratamientos": tratamientos,
+                    "programas": programas,
+                    "agrupaciones":agrupaciones,
+                    "catedras":catedras,
+                    "quien_retiras":quien_retiras
+                })
             case _:
                 pass
-        
 
 def alergias(request, id):
     return viewset(request, 

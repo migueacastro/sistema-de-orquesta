@@ -33,29 +33,28 @@
                 <select name="{{ field.name }}" id="{{ field.name }}" class="foreignkey-select block w-full border-gray-300 border rounded-md shadow-sm">
                     <option value="">Seleccione una opción</option>
                     {% for option in field.query %}
-                        <option value="{{ option.id }}" {% if field.value == option.id %}selected{% endif %}>{{ option }}</option>
+                        <option value="{{ option.id }}" {% if field.value == option.id %}selected{% endif %}>{{ option.nombre }}</option>
                     {% endfor %}
                 </select>
             </div>
             {% elif field.type == "manytomany" %}
             <div class="mb-4">
-
-                <div class="flex flex-row flex-wrap">
-                    {% for option in field.query %}
-                        
-                    <div class="px-2 py-2 bg-blue-400 m-2 rounded-md">
-                        {{ option.nombre }}
-                    </div>
-             
-                    {% endfor %}
-                </div>
                 <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                <select name="{{ field.name }}" id="manytomany-{{ field.name }}" class="manytomany-select block w-full border-gray-300 border rounded-md shadow-sm" multiple="multiple">
+                <input 
+                    list="{{ field.name }}-list" 
+                    id="{{ field.name }}" 
+                    name="{{ field.name }}" 
+                    class="manytomany-datalist block w-full border-gray-300 border rounded-md shadow-sm"
+                    multiple
+                />
+                <datalist id="{{ field.name }}-list">
                     {% for option in field.query %}
-                        <option value="{{ option.id }}" {% if option.id in field.value %}selected{% endif %}>{{ option.nombre }}</option>
+                        <option value="{{ option.nombre }}" {% if option.id in field.value %}selected{% endif %}>{{ option.nombre }}</option>
                     {% endfor %}
-                </select>
-            </div>
+                </datalist>
+                
+                <p class="text-xs text-gray-500">Escriba para buscar o seleccione de la lista.</p>
+            </div>            
             {% endif %}
         {% endfor %}
 
@@ -98,8 +97,8 @@
                 </tr> 
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
-                {% for entry in entries %}
-                    <tr class="border-b border-gray-200 hover:bg-sky-100" onclick="event.stopPropagation();goToURL(window.location + '{{ entry.id }}');">
+                {% for entry in entries %} 
+                    <tr class="border-b border-gray-200 hover:bg-sky-100" onclick="event.stopPropagation(); goToURL(window.location + '{{ entry.id }}');">
                         {% for field_name, field_value in entry.items %}
                             {% if field_name != "activo" %}
                                 <td class="py-3 px-6 text-left">
@@ -115,7 +114,7 @@
                         {% endfor %}
                         <td class="py-3 px-6 text-left flex flex-row">
                             <i class="fa-solid fa-pen mx-2 text-xl z-10 hover:text-3xl" onclick="editEntry('{{ entry.id }}');"></i>
-                            <i class="fa-solid fa-xmark mx-2 text-xl" onclick="deleteEntry('{{ entry.id }}')"></i>
+                            <i class="fa-solid fa-xmark mx-2 text-xl" onclick="event.stopPropagation(); deleteEntry('{{ entry.id }}')"></i>
                         </td>
                     </tr>
                 {% endfor %}
@@ -152,14 +151,34 @@
             theme: "classic",
             placeholder: "Seleccione una opción"
         });
+        const inputField = document.getElementById("{{ field.name }}");
+        const selectedValuesContainer = document.getElementById("{{ field.name }}-selected-values");
+        const selectedIds = new Set();
 
-        // Inicializa Select2 en los campos ManyToMany con opción de tags
-        $('.manytomany-select').select2({
-            theme: "classic",
-            tags: true,
-            tokenSeparators: [',', ' '],
-            placeholder: "Añadir o seleccionar etiquetas"
+        function updateSelectedValues() {
+            const selectedNames = [...selectedIds].map(id => {
+                const option = [...document.querySelectorAll('#{{ field.name }}-list option')]
+                    .find(option => option.dataset.id == id);
+                return option ? option.value : '';
+            });
+            selectedValuesContainer.textContent = selectedNames.join(', ');
+        }
+
+        inputField.addEventListener('input', function () {
+            const value = inputField.value.trim();
+            if (value) {
+                const matchedOption = [...document.querySelectorAll('#{{ field.name }}-list option')]
+                    .find(option => option.value.toLowerCase() === value.toLowerCase());
+
+                if (matchedOption && !selectedIds.has(matchedOption.dataset.id)) {
+                    selectedIds.add(matchedOption.dataset.id);
+                    updateSelectedValues();
+                    inputField.value = '';  
+                }
+            }
         });
+
+        
     });
     //tags
     

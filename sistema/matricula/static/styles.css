@@ -24,19 +24,3 @@
     animation-name: slidein;
     animation-duration: 0.5s;
 }
-.select2-selection__choice {
-    background-color: #1E3A8A; /* Azul oscuro */
-    color: white;
-    padding: 5px 10px;
-    border-radius: 4px; /* Bordes rectangulares */
-    display: inline-flex;
-    align-items: center;
-    margin: 2px;
-}
-
-.select2-selection__choice__remove {
-    color: white;
-    margin-right: 5px;
-    font-weight: bold;
-    cursor: pointer;
-}
