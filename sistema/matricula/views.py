@@ -122,9 +122,11 @@ def alumnos(request, id):
             case _:
                 pass
     else:
+        alumnos = Alumno.objects.filter(activo=True)
         match request.method:
             case "GET":
                 return render(request, plantilla, {
+                    "alumnos": alumnos,
                     "turnos": turnos,
                     "nivel_estudiantiles": nivel_estudiantiles,
                     "nivel_tss": nivel_tss,
