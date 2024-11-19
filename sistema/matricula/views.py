@@ -82,25 +82,26 @@ def alumnos(request, id):
                     "quien_retiras":quien_retiras
                 })
             case "POST":
-                alergias_seleccionadas = request.POST.getlist('alergias')
-                alergias_ids = Alergia.objects.filter(nombre__in=alergias_seleccionadas).values_list('id', flat=True)
-                alumno.alergias.set(alergias_ids)
+                alergias_seleccionadas = request.POST.get('alergias').split(',')
+                representantes_seleccionados = request.POST.get('representantes').split(',')
+                tratamientos_seleccionados = request.POST.get('tratamientos').split(',')
+                catedras_seleccionados = request.POST.get('catedras').split(',')
+                quien_retiras_seleccionados = request.POST.get('quien_retiras').split(',')
 
-                representantes_seleccionados = request.POST.getlist('representantes')
-                representantes_ids = Representante.objects.filter(nombre__in=representantes_seleccionados).values_list('id', flat=True)
-                alumno.representantes.set(representantes_ids)
+                for id in alergias_seleccionadas:
+                    alumno.alergias.add(Alergia.objects.get(id=id))
+                    
+                for id in representantes_seleccionados:
+                    alumno.representantes.add(Representante.objects.get(id=id))
 
-                tratamientos_seleccionados = request.POST.getlist('tratamientos')
-                tratamientos_ids = Tratamiento.objects.filter(nombre__in=tratamientos_seleccionados).values_list('id', flat=True)
-                alumno.tratamientos.set(tratamientos_ids)
+                for id in tratamientos_seleccionados:
+                    alumno.tratamientos.add(Tratamiento.objects.get(id=id))
 
-                catedras_seleccionados = request.POST.getlist('catedras')
-                catedras_ids = Catedra.objects.filter(nombre__in=catedras_seleccionados).values_list('id', flat=True)
-                alumno.catedras.set(catedras_ids)
+                for id in catedras_seleccionados:
+                    alumno.catedras.add(Catedra.objects.get(id=id))
 
-                quien_retiras_seleccionados = request.POST.getlist('quien_retiras')
-                quien_retiras_ids = QuienRetira.objects.filter(nombre__in=quien_retiras_seleccionados).values_list('id', flat=True)
-                alumno.quien_retiras.set(quien_retiras_ids)
+                for id in quien_retiras_seleccionados:
+                    alumno.quien_retiras.add(QuienRetira.objects.get(id=id))
                 alumno.save()
                 return render(request, plantilla, {
                     "alumno": alumno,
@@ -117,6 +118,7 @@ def alumnos(request, id):
                     "quien_retiras":quien_retiras
                 })
             case "DELETE":
+                
                 alumno.delete()
                 return render(request, "administrador/inicio.html")
             case _:
@@ -141,22 +143,34 @@ def alumnos(request, id):
                 })
             case "POST":
                 # Crear un nuevo alumno
-                alergias_seleccionadas = request.POST.getlist('alergias')
-                representantes_seleccionados = request.POST.getlist('representantes')
-                tratamientos_seleccionados = request.POST.getlist('tratamientos')
-                catedras_seleccionados = request.POST.getlist('catedras')
-                quien_retiras_seleccionados = request.POST.getlist('quien_retiras')
+                alergias_seleccionadas = request.POST.get('alergias').split(',')
+                representantes_seleccionados = request.POST.get('representantes').split(',')
+                tratamientos_seleccionados = request.POST.get('tratamientos').split(',')
+                catedras_seleccionados = request.POST.get('catedras').split(',')
+                quien_retiras_seleccionados = request.POST.get('quien_retiras').split(',')
 
                 nuevo_alumno = Alumno.objects.create(...)
-                alergias_ids = Alergia.objects.filter(nombre__in=alergias_seleccionadas).values_list('id', flat=True)
-                representantes_ids = Representante.objects.filter(nombre__in=representantes_seleccionados).values_list('id', flat=True)
-                tratamientos_ids=Tratamiento.objects.filter(nombre__in=tratamientos_seleccionados).values_list('id', flat=True)
+                for id in alergias_seleccionadas:
+                    nuevo_alumno.alergias.add(Alergia.objects.get(id=id))
+                    
+                for id in representantes_seleccionados:
+                    nuevo_alumno.representantes.add(Representante.objects.get(id=id))
+
+                for id in tratamientos_seleccionados:
+                    nuevo_alumno.tratamientos.add(Tratamiento.objects.get(id=id))
+
+                for id in catedras_seleccionados:
+                    nuevo_alumno.catedras.add(Catedra.objects.get(id=id))
+
+                for id in quien_retiras_seleccionados:
+                    nuevo_alumno.quien_retiras.add(QuienRetira.objects.get(id=id))
                 
-                nuevo_alumno.alergias.set(alergias_ids)
-                nuevo_alumno.representantes.set(representantes_ids)
-                nuevo_alumno.tratamientos.set(tratamientos_ids)
-                nuevo_alumno.catedras.set(catedras_ids)
-                nuevo_alumno.quien_retiras.set(quien_retiras_ids)
+                for i in range(request.POST.get('numero-instrumentos')):
+                    nombre = request.POST.get(f'instrumento-nombre-{i}')
+                    serial = request.POST.get(f'instrumento-serial-{i}')
+                    asignado = request.POST.get(f'instrumento-asignado-{i}')
+                    nuevo_instrumento = Instrumento.objects.create()
+
                 nuevo_alumno.save()
 
                 return render(request, plantilla, {
