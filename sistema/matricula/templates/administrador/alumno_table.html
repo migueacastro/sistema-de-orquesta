@@ -86,20 +86,17 @@
             <div class="flex flex-row items-center">
                 <div class="mb-4 w-1/2 mx-4">
                     <label for="representantes" class="block text-sm font-medium text-gray-700 capitalize">Representantes</label>
-                    <div id="representantes-field" class="flex flex-row flex-wrap items-center"></div>
-                    <flex class="flex flex-row items-center">
-                        <input 
-                            list="representantes-list" 
-                            id="representantes" 
-                            name="representantes" 
-                            class="w-[90%] h-7 block w-full border-gray-300 border rounded-md shadow-sm rounded-r-none"
-                        />
-
-                    </flex>
-                    
+                
+                    <input 
+                        list="representantes-list" 
+                        id="representantes" 
+                        name="representantes" 
+                        class="w-[90%] h-7 block w-full border-gray-300 border rounded-md shadow-sm rounded-r-none"
+                    />
+  
                     <datalist id="representantes-list">
                         {% for representante in representantes %}
-                            <option value="{{ representante.nombre }}"></option>
+                            <option value="{{ representante.nombre }}" data-id="{{ representante.id }}"></option>
                         {% endfor %}
                     </datalist>
                     <p class="text-xs text-gray-500">Escriba para buscar...</p>
@@ -114,7 +111,7 @@
                     />
                     <datalist id="alergias-list">
                         {% for alergia in alergias %}
-                            <option value="{{ alergia.nombre }}"></option>
+                            <option value="{{ alergia.nombre }}" data-id="{{ representante.id }}"></option>
                         {% endfor %}
                     </datalist>
                     <p class="text-xs text-gray-500">Escriba para buscar...</p>
@@ -202,29 +199,33 @@
             <!-- Sección de Instrumentos -->
             <div class="flex flex-col w-full my-6">
                 <h2 class="text-xl font-bold mb-4">Instrumentos</h2>
-                <div class="mb-4 flex flex-row items-center">
-                    <div class="w-1/3 mb-4 mx-4">
-                        <label for="instrumento_nombre" class="block text-sm font-medium text-gray-700 capitalize">Nombre del instrumento</label>
-                        <input type="text" name="instrumento_nombre" id="instrumento_nombre" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" placeholder="Ingrese nombre del instrumento">
-                    </div>
-                    <div class="w-1/3 mb-4 mx-4">
-                        <label for="instrumento_serial" class="block text-sm font-medium text-gray-700 capitalize">Serial del instrumento</label>
-                        <input type="text" name="instrumento_serial" id="instrumento_serial" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" placeholder="Ingrese serial del instrumento">
-                    </div>
-                    <div class="w-1/3 mb-4 mx-4">
-                        <label for="instrumento_asignado" class="block text-sm font-medium text-gray-700 capitalize">Estado</label>
-                        <select name="instrumento_asignado" id="instrumento_asignado" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">
-                            <option value="Asignado">Asignado</option>
-                            <option value="Propio">Propio</option>
-                        </select>
+                <input type="hidden" name="numero-instrumentos" id="numero-instrumentos" value="1">
+                <div id="seccion-instrumentos">
+                    <div class="mb-4 flex flex-row items-center" id="instrumento-1">
+                        <div class="w-1/3 mb-4 mx-4 instrumento">
+                            <label for="instrumento-nombre-1" class="block text-sm font-medium text-gray-700 capitalize">Nombre del instrumento</label>
+                            <input type="text" name="instrumento-nombre-1" id="instrumento_nombre" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" placeholder="Ingrese nombre del instrumento">
+                        </div>
+                        <div class="w-1/3 mb-4 mx-4">
+                            <label for="instrumento-serial-1" class="block text-sm font-medium text-gray-700 capitalize">Serial del instrumento</label>
+                            <input type="text" name="instrumento-serial-1" id="instrumento_serial" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" placeholder="Ingrese serial del instrumento">
+                        </div>
+                        <div class="w-1/3 mb-4 mx-4">
+                            <label for="instrumento-asignado-1" class="block text-sm font-medium text-gray-700 capitalize">Estado</label>
+                            <select name="instrumento-asignado-1" id="instrumento_asignado" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">
+                                <option value="Asignado">Asignado</option>
+                                <option value="Propio">Propio</option>
+                            </select>
+                        </div>
                     </div>
                 </div>
+                
                 <!-- Botón para agregar más instrumentos -->
-                <div class="flex justify-end">
-                    <button type="button" class="bg-gray-800 text-white px-4 py-2 my-2 rounded" id="agregar_instrumento">Agregar otro instrumento</button>
-                </div>
+                
             </div>
-
+            <div class="flex justify-end">
+                <button type="button" class="bg-gray-800 text-white px-4 py-2 my-2 rounded" id="agregar_instrumento">Agregar otro instrumento</button>
+            </div>
             <div class="flex justify-between mt-4">
                 <button type="submit" class="bg-gray-800 text-white px-4 py-2 my-2 rounded">Guardar</button>
                 <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 my-2 rounded">Volver</button>
@@ -472,6 +473,7 @@
     </div>
     
     <script>
+        let instrumentoList = [];
         document.addEventListener('DOMContentLoaded', () => {
             const crearBtn = document.getElementById('crear-btn');
             const formContainer = document.getElementById('section-form');
@@ -496,24 +498,25 @@
                 success
             }
 
-            let representantesField = new ManyToManyField('representantes-field', 'representantes', 'representantes-list')
+            let representantesField = new ManyToManyField('representantes');
         });
         document.getElementById('agregar_instrumento').addEventListener('click', function() {
+                let instrumentoNumber = document.querySelector('#seccion-instrumentos').querySelectorAll('.instrumento').length;
                 var instrumentoForm = document.createElement('div');
+                document.querySelector('#numero-instrumentos').value = instrumentoNumber + 1;
                 instrumentoForm.classList.add('flex', 'flex-row', 'items-center', 'my-4');
-                
                 instrumentoForm.innerHTML = `
                     <div class="w-1/3 mb-4 mx-4">
-                        <label for="instrumento_nombre" class="block text-sm font-medium text-gray-700 capitalize">Nombre del instrumento</label>
-                        <input type="text" name="instrumento_nombre" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" placeholder="Ingrese nombre del instrumento">
+                        <label for="instrumento-nombre-${instrumentoNumber+1}" class="block text-sm font-medium text-gray-700 capitalize">Nombre del instrumento</label>
+                        <input type="text" name="instrumento-nombre-${instrumentoNumber+1}" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" placeholder="Ingrese nombre del instrumento">
                     </div>
                     <div class="w-1/3 mb-4 mx-4">
-                        <label for="instrumento_serial" class="block text-sm font-medium text-gray-700 capitalize">Serial del instrumento</label>
-                        <input type="text" name="instrumento_serial" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" placeholder="Ingrese serial del instrumento">
+                        <label for="instrumento-serial-${instrumentoNumber+1}" class="block text-sm font-medium text-gray-700 capitalize">Serial del instrumento</label>
+                        <input type="text" name="instrumento-serial-${instrumentoNumber+1}" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" placeholder="Ingrese serial del instrumento">
                     </div>
                     <div class="w-1/3 mb-4 mx-4">
-                        <label for="instrumento_asignado" class="block text-sm font-medium text-gray-700 capitalize">Estado</label>
-                        <select name="instrumento_asignado" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">
+                        <label for="instrumento-asignado-${instrumentoNumber+1}" class="block text-sm font-medium text-gray-700 capitalize">Estado</label>
+                        <select name="instrumento-asignado-${instrumentoNumber+1}" class="h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">
                             <option value="Asignado">Asignado</option>
                             <option value="Propio">Propio</option>
                         </select>
