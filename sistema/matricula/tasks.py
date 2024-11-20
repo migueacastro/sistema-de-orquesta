@@ -4,14 +4,14 @@ import pandas as pd
 
 
 ARCHIVO = {
-    "nombre": "matriculas.xlsm",
+    "nombre": "matriculasf.xlsm",
     "rango_columnas": ["A", "AJ"],
     "omitir_filas": 4,
     "tabla": "BD"
 } 
 def leer_db_excel(archivo):
     tabla = pd.read_excel(
-        "matriculas.xlsm", sheet_name="BD", 
+        "matriculasf.xlsm", sheet_name="BD", 
         usecols=f'A:AJ', 
         skiprows=4
     )
