@@ -8,61 +8,62 @@
 <!-- Form -->
 <div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 flex flex-col items-center hidden" id="section-form"> 
     <h2 class="text-4xl text-center my-4 mb-4 capitalize">Agregar</h2>
-    <form class="w-full" method="post">
-        {% csrf_token %}
-        <p id="csrf_token" class="hidden">{{ csrf_token }}</p>
-        {% for field in form %}
-            {% if field.type == "text" %}
-            <div class="mb-4">
-                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                <input type="text" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if field.value %}{{ field.value }}{% endif %}">
-            </div>
-            {% elif field.type == "integer"%}
-            <div class="mb-4">
-                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                <input type="text" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" value="{% if field.value %}{{ field.value }}{% endif %}">
-            </div>
-            {% elif field.type == "textarea" %}
-            <div class="mb-4">
-                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm">{% if field.value %}{{ field.value }}{% endif %}</textarea>
-            </div>
-            {% elif field.type == "foreignkey" %}
-            <div class="mb-4">
-                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                <select name="{{ field.name }}" id="{{ field.name }}" class="foreignkey-select block w-full border-gray-300 border rounded-md shadow-sm">
-                    <option value="">Seleccione una opción</option>
-                    {% for option in field.query %}
-                        <option value="{{ option.id }}" {% if field.value == option.id %}selected{% endif %}>{{ option.nombre }}</option>
-                    {% endfor %}
-                </select>
-            </div>
-            {% elif field.type == "manytomany" %}
-            <div class="mb-4">
-                <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                <input 
-                    list="{{ field.name }}-list" 
-                    id="{{ field.name }}" 
-                    name="{{ field.name }}" 
-                    class="manytomany-datalist block w-full border-gray-300 border rounded-md shadow-sm"
-                    multiple
-                />
-                <datalist id="{{ field.name }}-list">
-                    {% for option in field.query %}
-                        <option value="{{ option.nombre }}" {% if option.id in field.value %}selected{% endif %}>{{ option.nombre }}</option>
-                    {% endfor %}
-                </datalist>
+    <form action="">
+        <div class="grid lg:grid-cols-3">
+            {% for field in model_form %}
+            
+            <div class="flex flex-col mx-4 my-2">
+                <div class="flex flex-row my-1">
+                    <p>{{ field.name|title }}
+                        {% if field.field.widget.input_type == "select" and field.name != "sexo" %}
+                        <button type="button" class="modal-openner ml-4 text-blue-600" id="modal-{{ field.name }}">
+                            Agregar<i class="fas fa-plus ml-2"></i> 
+                        </button>
+                        {% endif %}
+                    </p>
+                    <div id="modal-wrapper-{{ field.name }}" class="fixed z-10 inset-0 hidden">
+                        <div class="flex items-center justify-center min-h-screen bg-gray-800 bg-opacity-75 transition-all ">
+                            <div class="flex flex-col items-center justify-between bg-white p-10 rounded w-2/3">
+                                <h3 class="text-3xl">Agregar {{ field.name|title }}</h3>
+                                <div class="w-full">
+                                    <div class="grid lg:{% if field.name == 'alergias' or field.name == 'condicion_especial' %}grid-cols-1{% else %}grid-cols-3{% endif %}">
+                                        {% for name, form in forms.items %}
+                                            {% if name == field.name %}
+                                                {% for subfield in form %}
+                                                
+                                                <div class="flex flex-col mx-4 my-2">
+                                                    <div class="flex flex-row my-1">
+                                                        <p>{{ subfield.name|title }}  
+                                                        </p>
+                                                    </div>
+                                                    
+                                                    {{ subfield }}
+                                                </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <button type="button" id="close-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded">
+                                        Cerrar
+                                    </button>
+                                    <button type="button" id="save-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded">
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 
-                <p class="text-xs text-gray-500">Escriba para buscar o seleccione de la lista.</p>
-            </div>            
-            {% endif %}
+                {{ field }}
+            </div>
         {% endfor %}
-
-        <div class="flex justify-between mt-4">
-            <button type="submit" class="bg-blue-600 text-white px-4 py-1 rounded text-sm">Guardar</button>
-            <button type="button" id="cancel-button" class="bg-gray-400 text-white px-4 py-1 rounded text-sm">Volver</button>
         </div>
     </form>
+    <div class="flex justify-between mt-4">
+        <button type="submit" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Guardar</button>
+        <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Volver</button>
+    </div>
 </div>
 
 <!-- End Form -->
@@ -147,38 +148,21 @@
         if (checkDeletedEntryByParams()) {
             success
         }
-        $('.foreignkey-select').select2({
-            theme: "classic",
-            placeholder: "Seleccione una opción"
-        });
-        const inputField = document.getElementById("{{ field.name }}");
-        const selectedValuesContainer = document.getElementById("{{ field.name }}-selected-values");
-        const selectedIds = new Set();
 
-        function updateSelectedValues() {
-            const selectedNames = [...selectedIds].map(id => {
-                const option = [...document.querySelectorAll('#{{ field.name }}-list option')]
-                    .find(option => option.dataset.id == id);
-                return option ? option.value : '';
+        document.querySelectorAll('.modal-openner').forEach(element => {
+                let tableName = element.id.toString().split('-').slice(-1)[0];
+                let modal = document.querySelector(`#modal-wrapper-${tableName}`);
+                element.addEventListener('click', () => {
+                    modal.classList.remove('hidden');
+                })
             });
-            selectedValuesContainer.textContent = selectedNames.join(', ');
-        }
-
-        inputField.addEventListener('input', function () {
-            const value = inputField.value.trim();
-            if (value) {
-                const matchedOption = [...document.querySelectorAll('#{{ field.name }}-list option')]
-                    .find(option => option.value.toLowerCase() === value.toLowerCase());
-
-                if (matchedOption && !selectedIds.has(matchedOption.dataset.id)) {
-                    selectedIds.add(matchedOption.dataset.id);
-                    updateSelectedValues();
-                    inputField.value = '';  
-                }
-            }
+        document.querySelectorAll('.modal-close').forEach(element => {
+            let tableName = element.id.toString().split('-').slice(-1)[0];
+            let modal = document.querySelector(`#modal-wrapper-${tableName}`);
+            element.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            })
         });
-
-        
     });
     //tags
     
