@@ -10,7 +10,7 @@ from .helpers import viewset, model_to_dict_better
 def importar_archivo(request):
     if request.method == 'GET':
         ejecutar_importaciones(leer_db_excel({
-            "nombre": "matriculasf.xlsm",
+            "nombre": "matriculas.xlsm",
             "rango_columnas": ["A", "AJ"],
             "omitir_filas": 4,
             "tabla": "BD"

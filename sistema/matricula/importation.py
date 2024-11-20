@@ -17,8 +17,8 @@ LISTA_MODELOS_EXCLUIDOS = ["ESTUDIANTES"]
 def importar_medicamentos(tabla):
     for index, row in tabla.iterrows():
         if row["ALÉRGICO MEDICAMENTO"] not in LISTA_NO:
-            Medicamento.objects.update_or_create(
-                nombre=row["ALÉRGICO MEDICAMENTO"].strip(),
+            Medicamento.objects.update_or_create( 
+                nombre=str(row["ALÉRGICO MEDICAMENTO"]).strip(),
             ) 
     return True
 
@@ -27,7 +27,7 @@ def importar_tratamientos(tabla):
     for index, row in tabla.iterrows():
         if row["TRATAMIENTO"] not in LISTA_NO:
             Tratamiento.objects.update_or_create(
-                nombre=row["TRATAMIENTO"].strip(),
+                nombre=str(row["TRATAMIENTO"]).strip(),
             )
     return True
 
@@ -35,7 +35,7 @@ def importar_condiciones_especiales(tabla):
     for index, row in tabla.iterrows():
         if row["CONDICIÓN ESPECIAL"] not in LISTA_NO:
             CondicionEspecial.objects.update_or_create(
-                nombre=row["CONDICIÓN ESPECIAL"].strip(),
+                nombre=str(row["CONDICIÓN ESPECIAL"]).strip(),
             )
     return True
  
@@ -49,13 +49,11 @@ def importar_alergias(tabla):
                 )
         return True
         
-    
-
 def importar_colores(tabla):
     for index, row in tabla.iterrows():
         if row["COLOR"] not in LISTA_NO:
             Color.objects.update_or_create(
-                nombre=row["COLOR"].strip(),
+                nombre=str(row["COLOR"]).strip(),
             )
     return True
 
@@ -65,7 +63,7 @@ def importar_categorias_instrumentos(tabla):
         for key, col in row.items():
             if "CÁTEDRA" in key and col not in LISTA_CATEDRAS_EXCLUIDAS:
                 CategoriaInstrumento.objects.update_or_create(
-                nombre=col.strip(),
+                nombre=str(col).strip(),
             )
     return True        
 
@@ -75,7 +73,7 @@ def importar_marcas_instrumentos(tabla):
     for index, row in tabla.iterrows():
         if row["MARCA"] not in LISTA_NO:
             MarcaInstrumento.objects.update_or_create(
-                nombre=row["MARCA"].strip(),
+                nombre=str(row["MARCA"]).strip(),
             )
 
     return True
@@ -86,18 +84,18 @@ def importar_modelos_instrumentos(tabla):
             categoria = None
             marca = None
             try:
-                categoria = CategoriaInstrumento.objects.get(nombre=row["CÁTEDRA"].strip())
+                categoria = CategoriaInstrumento.objects.get(nombre=str(row["CÁTEDRA"]).strip())
             except Exception:
                 categoria = None
             
             try:
-                marca = MarcaInstrumento.objects.get(nombre=row["MARCA"].strip())
+                marca = MarcaInstrumento.objects.get(nombre=str(row["MARCA"]).strip())
             except Exception:
                 marca = None
                 
 
             ModeloInstrumento.objects.update_or_create(
-                nombre=row["MODELO"].strip(),
+                nombre=str(row["MODELO"]).strip(),
                 marca=marca,
                 categoria=categoria
             )
@@ -109,7 +107,7 @@ def importar_accesorios(tabla):
     for index, row in tabla.iterrows():
         if row["ACCESORIO"] not in LISTA_NO:
             MarcaInstrumento.objects.update_or_create(
-                nombre=row["ACCESORIO"].strip()
+                nombre=str(row["ACCESORIO"]).strip()
             )
     return True
 
@@ -118,7 +116,7 @@ def importar_agrupaciones(tabla):
     for index, row in tabla.iterrows():
         if row["AGRUPACIÓN"] not in LISTA_NO:
             Agrupacion.objects.update_or_create(
-                nombre=row["AGRUPACIÓN"].strip(),
+                nombre=str(row["AGRUPACIÓN"]).strip(),
             )
 
     return True
@@ -127,7 +125,7 @@ def importar_turnos(tabla):
     for index, row in tabla.iterrows():
         if row["TURNO"] not in LISTA_NO:
             Turno.objects.update_or_create(
-                nombre=row["TURNO"].strip(),
+                nombre=str(row["TURNO"]).strip(),
             )
 
     return True
@@ -136,7 +134,7 @@ def importar_niveles_ts(tabla):
     for index, row in tabla.iterrows():
         if row["NIVEL T.S"] not in LISTA_NO:
             NivelTS.objects.update_or_create(
-                nombre=row["NIVEL T.S"].strip(),
+                nombre=str(row["NIVEL T.S"]).strip(),
             )
 
     return True
@@ -146,7 +144,7 @@ def importar_niveles_estudiantiles(tabla):
     for index, row in tabla.iterrows():
         if row["NIVEL"] not in LISTA_NO:
             NivelEstudiantil.objects.update_or_create(
-                nombre=row["NIVEL"].strip(),
+                nombre=str(row["NIVEL"]).strip(),
             )
 
     return True
@@ -180,7 +178,7 @@ def importar_catedras(tabla):
                     tipo = None
                 
                 Catedra.objects.update_or_create(
-                    nombre=row[key].strip(),
+                    nombre=str(row[key]).strip(),
                     tipo=tipo,
                 )
     
@@ -191,7 +189,7 @@ def importar_programas(tabla):
     for index, row in tabla.iterrows():
         if row["PROGRAMA"] not in LISTA_NO:
             Programa.objects.update_or_create(
-                nombre=row["PROGRAMA"].strip(),
+                nombre=str(row["PROGRAMA"]).strip(),
             )
 
     return True

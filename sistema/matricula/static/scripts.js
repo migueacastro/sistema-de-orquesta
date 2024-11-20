@@ -121,12 +121,8 @@ class ManyToManyField {
         `);
             
         document.querySelector(`#${fieldId}-button`).addEventListener('click', (event) => {
-            const inputField = document.querySelector(`#${fieldId}`);
-            const value = inputField.value.trim(); 
-            if (value) {
-                this.selectElement(value); 
-                inputField.value = ''; 
-            }
+            this.selectElement(document.querySelector(`#${fieldId}`).value);
+            document.querySelector(`#${fieldId}`).value='';
         });
         
     }
@@ -134,34 +130,37 @@ class ManyToManyField {
     selectElement(value) {
         if (this.availableElementsList.includes(value)) {
             this.selectedElementsList.push(value);
-            this.availableElementsList = this.availableElementsList.filter(element => element !== value); 
-            this.updateChips(); 
+            this.availableElementsList = this.availableElementsList.filter(element => element != value);
+            this.updateChips();
+            
         }
     }
     updateChips() {
         let chipsSection = document.querySelector(`#${this.chipsSectionId}`); 
-        chipsSection.innerHTML = ''; 
-
+        chipsSection.innerHTML = '';
         for (let chip of this.selectedElementsList) {
             let chipElement = document.createElement('div');
-            chipElement.className = 'chip flex items-center justify-between px-2 py-1 bg-gray-800 text-white rounded-md shadow-sm border border-gray-700 text-xs';
+            chipElement.className = 'chip w-auto mx-2 h-7 bg-gray-800 text-white px-4 py-2 my-2 rounded flex flex-row items-center justify-center'
             chipElement.innerHTML = `
-                <span class="font-medium">${chip}</span>
-                <button
-                    class="remove flex items-center justify-center w-4 h-4 ml-1 rounded-full hover:bg-gray-600 focus:outline-none"
-                    type="button"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="currentColor" class="w-3 h-3">
-                        <path d="M5.28 4.22a.75.75 0 0 0-1.06 1.06L6.94 8l-2.72 2.72a.75.75 0 1 0 1.06 1.06L8 9.06l2.72 2.72a.75.75 0 1 0 1.06-1.06L9.06 8l2.72-2.72a.75.75 0 0 0-1.06-1.06L8 6.94 5.28 4.22Z" />
-                    </svg>
+                ${chip}
+                <button class="remove" type="button">
+                    <i class="fa-solid  fa-x mx-1"></i>
                 </button>
             `;
-            chipsSection.appendChild(chipElement);
+            chipsSection.insertAdjacentElement('beforeend', chipElement);
+            console.log(chipElement.querySelector('.remove'));
             chipElement.querySelector('.remove').addEventListener('click', () => {
                 this.removeChip(chip);
-            });
+            }); 
+
         }
+        let datalistElement = document.querySelector(`#${this.datalistId}`)
+        for (let option of datalistElement.querySelectorAll('option')) {
+            option.disabled = this.selectedElementsList.includes(option.value);
             
+        }
+        console.log();
+        document.querySelector(`#values-${this.chipsSectionId}`).setAttribute('value', Array.from(datalistElement.querySelectorAll('option')).filter(option => option.disabled == true).map(option => option.dataset.id).toString());
     }
 
     removeChip(value) {
