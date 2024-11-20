@@ -7,67 +7,122 @@ from django.db import models
 class Medicamento(models.Model):
     nombre = models.CharField(max_length=512, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class Tratamiento(models.Model):
     nombre = models.CharField(max_length=512, blank=True, null=True)
     description = models.TextField(blank=True, null=True)
     medicamentos = models.ManyToManyField(Medicamento, blank=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class CondicionEspecial(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     tratamiento = models.ManyToManyField(Tratamiento, blank=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 
 class Alergia(models.Model):
     nombre = models.CharField(max_length=512)
     descripcion = models.TextField(blank=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class Color(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class CategoriaInstrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class MarcaInstrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class ModeloInstrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     marca = models.ForeignKey(MarcaInstrumento, null=True, on_delete=models.CASCADE)
     categoria = models.ForeignKey(CategoriaInstrumento, null=True, on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class Accesorio(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
-
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 
 class Agrupacion(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class Turno (models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class NivelTS (models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class NivelEstudiantil (models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class TipoBeca(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 
 class Representante(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
@@ -77,28 +132,40 @@ class Representante(models.Model):
     parentesco = models.CharField(max_length=128, blank=True, null=True)
     activo = models.BooleanField(default=True)
     def __str__(self):
-        return self.nombre 
+        return self.nombre + " " + self.cedula 
+    def __unicode__(self):
+        return self.nombre + " " + self.cedula
 
 class Programa(models.Model):
     nombre = models.CharField(max_length=128)
     #agrupacion = models.ForeignKey(Agrupacion, blank=True, on_delete=models.CASCADE, null=True)
     activo = models.BooleanField(default=True)
-
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 class QuienRetira(models.Model):  
     nombre = models.CharField(blank=True, null=True, max_length=64)
     activo = models.BooleanField(default=True)
     def __str__(self):
         return self.nombre 
+    def __unicode__(self):
+        return self.nombre
 class TipoCatedra(models.Model):
     nombre = models.CharField(max_length=128)
     activo = models.BooleanField(default=True)
-
+    def __unicode__(self):
+        return self.nombre
+    def __str__(self):
+        return self.nombre
 class Catedra(models.Model):
     nombre = models.CharField(max_length=128)
     tipo = models.ForeignKey(TipoCatedra, blank=True, null=True, on_delete=models.DO_NOTHING)
     activo = models.BooleanField(default=True)
     def __str__(self):
         return self.nombre 
+    def __unicode__(self):
+        return self.nombre
 class Alumno(models.Model):
     nombre = models.CharField(max_length=128) 
     apellido = models.CharField(max_length=128) 
@@ -106,9 +173,9 @@ class Alumno(models.Model):
     edad = models.IntegerField()
     turno = models.ForeignKey(Turno, blank=True, on_delete=models.DO_NOTHING, null=True) 
     sexo = models.CharField(max_length=32, choices=( 
-        ('Masculino', 'masculino'),
-        ('Femenino', 'femenino'),
-        ('Otro', 'otro'),
+        ('Masculino', 'Masculino'),
+        ('Femenino', 'Femenino'),
+        ('Otro', 'Otro'),
     ))
     telefono = models.CharField(max_length=128) 
     fecha_nacimiento = models.DateField(max_length=128, null=True, blank=True) 
@@ -124,7 +191,10 @@ class Alumno(models.Model):
     activo = models.BooleanField(default=True) 
     catedras = models.ManyToManyField(Catedra, blank=True)
     agrupacion = models.ForeignKey(Agrupacion, on_delete=models.DO_NOTHING, blank=True, null=True)
-
+    def __unicode__(self):
+        return self.nombre + " " + self.apellido + " " + self.cedula if self.cedula else self.nombre + " " + self.apellido
+    def __str__(self):
+        return self.nombre + " " + self.apellido + " " + self.cedula if self.cedula else self.nombre + " " + self.apellido
 class Instrumento(models.Model):
     nombre = models.CharField(max_length=128, blank=True, null=True)
     serial = models.CharField(max_length=128, blank=True, null=True)
@@ -133,21 +203,30 @@ class Instrumento(models.Model):
     color = models.ForeignKey(Color, null=True, on_delete=models.CASCADE)
     accesorio = models.ForeignKey(Accesorio, null=True, blank=True, on_delete=models.CASCADE)
     asignado = models.CharField(max_length=128, blank=True, null=True, choices=(
-        ('Asignado', 'asignado'),
-        ('Propio', 'propio')
+        ('Asignado', 'Asignado'),
+        ('Propio', 'Propio')
     ))
     activo = models.BooleanField(default=True)
     def __str__(self):
-        return self.nombre 
+        return self.nombre + " " + self.serial 
+    def __unicode__(self):
+        return self.nombre + " " + self.serial
 
 class Becado(models.Model):
     alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
     tipo = models.ForeignKey(TipoBeca, blank=True, null=True, on_delete=models.CASCADE)
     activo = models.BooleanField(default=True)
-
+    def __unicode__(self):
+        return self.alumno + " - " + self.tipo
+    def __str__(self):
+        return self.alumno + " - " + self.tipo
 class Inscripcion(models.Model):
     alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
     fecha_inscripcion = models.DateField(max_length=128, null=True, blank=True)
     turno = models.ForeignKey(Turno, blank=True, null=True, on_delete=models.DO_NOTHING)
     activo = models.BooleanField(default=True)
 
+    def __unicode__(self):
+        return self.alumno + " - " + self.turno + " - " + str(self.fecha_inscripcion)
+    def __str__(self):
+        return self.alumno + " - " + self.turno + " - " + str(self.fecha_inscripcion)

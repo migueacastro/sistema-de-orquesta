@@ -2,32 +2,65 @@
 
 {% block body %}
 <div class="container mx-auto p-4">
-    <h1 class="text-2xl font-bold mb-4">{{ title }} #{{ entry.id }}</h1>
-    <form method="POST" >
-        {% csrf_token %}
-        {% for field in form %}
-            {% if field.type == "text" %}
-                <div class="mb-4">
-                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{% if field.value %}{{ field.value }}{% endif %}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
+    <h1 class="text-2xl font-bold mb-4 text-center">{{ title }} #{{ entry.id }}</h1>
+    <form action="">
+        <div class="grid lg:grid-cols-3">
+            {% for field in model_form %}
+            
+            <div class="flex flex-col mx-4 my-2">
+                <div class="flex flex-row my-1">
+                    <p>{{ field.name|title }}
+                        {% if field.field.widget.input_type == "select" and field.name != "sexo" %}
+                        <button type="button" class="modal-openner ml-4 text-blue-600" id="modal-{{ field.name }}">
+                            Agregar<i class="fas fa-plus ml-2"></i> 
+                        </button>
+                        {% endif %}
+                    </p>
+                    <div id="modal-wrapper-{{ field.name }}" class="fixed z-10 inset-0 hidden">
+                        <div class="flex items-center justify-center min-h-screen bg-gray-800 bg-opacity-75 transition-all ">
+                            <div class="flex flex-col items-center justify-between bg-white p-10 rounded w-2/3">
+                                <h3 class="text-3xl">Agregar {{ field.name|title }}</h3>
+                                <div class="w-full">
+                                    <div class="grid lg:{% if field.name == 'alergias' or field.name == 'condicion_especial' %}grid-cols-1{% else %}grid-cols-3{% endif %}">
+                                        {% for name, form in forms.items %}
+                                            {% if name == field.name %}
+                                                {% for subfield in form %}
+                                                
+                                                <div class="flex flex-col mx-4 my-2">
+                                                    <div class="flex flex-row my-1">
+                                                        <p>{{ subfield.name|title }}  
+                                                        </p>
+                                                    </div>
+                                                    
+                                                    {{ subfield }}
+                                                </div>
+                                                {% endfor %}
+                                            {% endif %}
+                                        {% endfor %}
+                                    </div>
+                                    <button type="button" id="close-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded">
+                                        Cerrar
+                                    </button>
+                                    <button type="button" id="save-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded">
+                                        Guardar
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-            {% elif field.type == "integer" %}
-                <div class="mb-4">
-                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                    <input type="text" name="{{ field.name }}" id="{{ field.name }}" value="{% if field.value %}{{ field.value }}{% endif %}" class="editable indent-1.5 h-8 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>
-                </div>
-            {% elif field.type == "textarea" %}
-                <div class="mb-4">
-                    <label for="{{ field.name }}" class="block text-sm font-medium text-gray-700 capitalize">{{ field.name }}</label>
-                    <textarea rows="4" name="{{ field.name }}" id="{{ field.name }}" class="editable indent-1.5 mt-1 block w-full border-gray-300 border rounded-md shadow-sm" disabled>{% if field.value %}{{ field.value }}{% endif %}</textarea>
-                </div>
-            {% endif %}
+                
+                {{ field }}
+            </div>
         {% endfor %}
-        <div class="mb-4">
-            <button type="button" onclick="toggleEditMode()" class="bg-blue-500 text-white px-4 py-2 rounded-md">Editar</button>
-            <button type="submit" id="saveButton" class="bg-green-500 text-white px-4 py-2 rounded-md hidden">Guardar</button>
+        </div>
+        <div class="flex justify-start mt-4">
+            <button type="submit" id="crear-btn" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Guardar</button>
+            <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Volver</button>
+            <button type="button" id="cancel-button" class="bg-red-600 text-white px-4 py-2 m-4 rounded">Eliminar</button>
         </div>
     </form>
+    
 </div>
 
 <script>
@@ -35,7 +68,35 @@
         if (checkFormVisibilityByParams()) {
             toggleEditMode();
         };
+        const crearBtn = document.getElementById('crear-btn');
+        const cancelButton = document.getElementById('cancel-button');
+        crearBtn.addEventListener('click', (event) => {
+            event.preventDefault(); 
+            formContainer.classList.remove('hidden'); 
+            tableContainer.classList.add('hidden'); 
+        });
+
+        cancelButton.addEventListener('click', () => {
+            formContainer.classList.add('hidden');
+            tableContainer.classList.remove('hidden'); 
+        });
+        document.querySelectorAll('.modal-openner').forEach(element => {
+                let tableName = element.id.toString().split('-').slice(-1)[0];
+                let modal = document.querySelector(`#modal-wrapper-${tableName}`);
+                element.addEventListener('click', () => {
+                    modal.classList.remove('hidden');
+            })
+        });
+        document.querySelectorAll('.modal-close').forEach(element => {
+            let tableName = element.id.toString().split('-').slice(-1)[0];
+            let modal = document.querySelector(`#modal-wrapper-${tableName}`);
+            element.addEventListener('click', () => {
+                modal.classList.add('hidden');
+            })
+        });
+
     });
+    
     
 </script>
 {% endblock %}

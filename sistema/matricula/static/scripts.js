@@ -178,3 +178,7 @@ class ManyToManyField {
     }
 
 }
+
+const saveEntry = (formObject, endpoint) => {
+
+}

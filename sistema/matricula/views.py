@@ -1,11 +1,14 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse
 from .models import *
+from .forms import *
 from matricula.tasks import ejecutar_importaciones, ARCHIVO, leer_db_excel
 from django.contrib import messages
 from matricula.tasks import ejecutar_importaciones, ARCHIVO, leer_db_excel
 from django.forms.models import model_to_dict
+from django.http import JsonResponse
 from .helpers import viewset, model_to_dict_better
+
 
 def importar_archivo(request):
     if request.method == 'GET':
@@ -50,130 +53,123 @@ def cards(request):
     return render(request, 'administrador/cards.html', {'title': 'Tablas', 'vistas': vistas})
 
 def alumnos(request, id):
-    plantilla = 'administrador/alumno_table.html'
-    turnos = Turno.objects.filter(activo=True)
-    nivel_estudiantiles = NivelEstudiantil.objects.filter(activo=True)
-    nivel_tss = NivelTS.objects.filter(activo=True)
-    alergias = Alergia.objects.filter(activo=True)  # Opciones para alergias
-    representantes = Representante.objects.filter(activo=True)
-    condicion_especiales=CondicionEspecial.objects.filter(activo=True) 
-    tratamientos=Tratamiento.objects.filter(activo=True)  # Opciones para representantes
-    programas=Programa.objects.filter(activo=True)
-    agrupaciones=Agrupacion.objects.filter(activo=True)
-    catedras=Catedra.objects.filter(activo=True)
-    quien_retiras=QuienRetira.objects.filter(activo=True)
-
-    if id:
-        alumno = Alumno.objects.get(id=id)
-        match request.method:
-            case "GET":
-                return render(request, plantilla, {
-                    "alumno": alumno,
-                    "turnos": turnos,
-                    "nivel_estudiantiles": nivel_estudiantiles,
-                    "nivel_tss": nivel_tss,
-                    "alergias": alergias,
-                    "representantes": representantes,
-                    "condicion_especiales": condicion_especiales,
-                    "tratamientos": tratamientos,
-                    "programas": programas,
-                    "agrupaciones":agrupaciones,
-                    "catedras":catedras,
-                    "quien_retiras":quien_retiras
-                })
-            case "POST":
-                alergias_seleccionadas = request.POST.getlist('alergias')
-                alergias_ids = Alergia.objects.filter(nombre__in=alergias_seleccionadas).values_list('id', flat=True)
-                alumno.alergias.set(alergias_ids)
-
-                representantes_seleccionados = request.POST.getlist('representantes')
-                representantes_ids = Representante.objects.filter(nombre__in=representantes_seleccionados).values_list('id', flat=True)
-                alumno.representantes.set(representantes_ids)
-
-                tratamientos_seleccionados = request.POST.getlist('tratamientos')
-                tratamientos_ids = Tratamiento.objects.filter(nombre__in=tratamientos_seleccionados).values_list('id', flat=True)
-                alumno.tratamientos.set(tratamientos_ids)
-
-                catedras_seleccionados = request.POST.getlist('catedras')
-                catedras_ids = Catedra.objects.filter(nombre__in=catedras_seleccionados).values_list('id', flat=True)
-                alumno.catedras.set(catedras_ids)
-
-                quien_retiras_seleccionados = request.POST.getlist('quien_retiras')
-                quien_retiras_ids = QuienRetira.objects.filter(nombre__in=quien_retiras_seleccionados).values_list('id', flat=True)
-                alumno.quien_retiras.set(quien_retiras_ids)
-                alumno.save()
-                return render(request, plantilla, {
-                    "alumno": alumno,
-                    "turnos": turnos,
-                    "nivel_estudiantiles": nivel_estudiantiles,
-                    "nivel_tss": nivel_tss,
-                    "alergias": alergias,
-                    "representantes": representantes,
-                    "condicion_especiales": condicion_especiales,
-                    "tratamientos": tratamientos,
-                    "programas": programas,
-                    "agrupaciones":agrupaciones,
-                    "catedras":catedras,
-                    "quien_retiras":quien_retiras
-                })
-            case "DELETE":
-                alumno.delete()
-                return render(request, "administrador/inicio.html")
-            case _:
-                pass
-    else:
-        alumnos = Alumno.objects.filter(activo=True)
-        match request.method:
-            case "GET":
-                return render(request, plantilla, {
-                    "alumnos": alumnos,
-                    "turnos": turnos,
-                    "nivel_estudiantiles": nivel_estudiantiles,
-                    "nivel_tss": nivel_tss,
-                    "alergias": alergias,
-                    "representantes": representantes,
-                    "condicion_especiales": condicion_especiales,
-                    "tratamientos": tratamientos,
-                    "programas": programas,
-                    "agrupaciones":agrupaciones,
-                    "catedras":catedras,
-                    "quien_retiras":quien_retiras
-                })
-            case "POST":
-                # Crear un nuevo alumno
-                alergias_seleccionadas = request.POST.getlist('alergias')
-                representantes_seleccionados = request.POST.getlist('representantes')
-                tratamientos_seleccionados = request.POST.getlist('tratamientos')
-                catedras_seleccionados = request.POST.getlist('catedras')
-                quien_retiras_seleccionados = request.POST.getlist('quien_retiras')
-
-                nuevo_alumno = Alumno.objects.create(...)
-                alergias_ids = Alergia.objects.filter(nombre__in=alergias_seleccionadas).values_list('id', flat=True)
-                representantes_ids = Representante.objects.filter(nombre__in=representantes_seleccionados).values_list('id', flat=True)
-                tratamientos_ids=Tratamiento.objects.filter(nombre__in=tratamientos_seleccionados).values_list('id', flat=True)
-                
-                nuevo_alumno.alergias.set(alergias_ids)
-                nuevo_alumno.representantes.set(representantes_ids)
-                nuevo_alumno.tratamientos.set(tratamientos_ids)
-                nuevo_alumno.catedras.set(catedras_ids)
-                nuevo_alumno.quien_retiras.set(quien_retiras_ids)
-                nuevo_alumno.save()
-
-                return render(request, plantilla, {
-                    "turnos": turnos,
-                    "nivel_estudiantiles": nivel_estudiantiles,
-                    "nivel_tss": nivel_tss,
-                    "alergias": alergias,
-                    "representantes": representantes,
-                    "condicion_especiales": condicion_especiales,
-                    "tratamientos": tratamientos,
-                    "programas": programas,
-                    "agrupaciones":agrupaciones,
-                    "catedras":catedras,
-                    "quien_retiras":quien_retiras
-                })
-            case _:
-                pass
+        return viewset(request, 
+        Alumno,  
+        [
+            {
+                'name': 'nombre',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'apellido',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'cedula',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'edad',
+                'type': 'integer',
+                'width': '20'
+            },
+            {
+                'name': 'turno',
+                'type': 'foreingnkey', 
+                'query': Turno.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'instrumentos',
+                'type': 'manytomany', 
+                'query': [model_to_dict(i) for i in Instrumento.objects.all()],
+                'multiple': True,
+                'width': '50'
+            },
+            {
+                'name': 'sexo',
+                'type': 'select',
+                'query': [
+                    {'value': 'Masculino', 'label': 'Masculino'},
+                    {'value': 'Femenino', 'label': 'Femenino'},
+                ],
+                'width': '50'
+            },
+            {
+                'name': 'telefono',
+                'type': 'text',
+                'width': '50'
+            },
+            {
+                'name': 'fecha_nacimiento',
+                'type': 'date',
+                'width': '50'
+            },
+            {
+                'name': 'direccion',
+                'type': 'textarea',
+                'width': '50'
+            },
+            {
+                'name': 'nivel_estudiantil',
+                'type': 'foreingnkey',
+                'query': NivelEstudiantil.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'nivel_ts',
+                'type': 'foreingnkey',
+                'query': NivelTS.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'representantes',
+                'type': 'manytomany', 
+                'query': [model_to_dict(i) for i in Representante.objects.all()],
+                'multiple': True,
+                'width': '50'
+            },
+            {
+                'name': 'alergias',
+                'type': 'manytomany', 
+                'query': [model_to_dict(i) for i in Alergia.objects.all()],
+                'multiple': True,
+                'width': '50'
+            },
+            {
+                'name': 'tratamientos',
+                'type': 'manytomany', 
+                'query': [model_to_dict(i) for i in Tratamiento.objects.all()],
+                'multiple': True,
+                'width': '50'
+            },
+            {
+                'name': 'programa',
+                'type': 'foreignkey',
+                'options': Programa.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'condición especial',
+                'type': 'foreignkey',
+                'options': CondicionEspecial.objects.all(),
+                'width': '50'
+            },
+            {
+                'name': 'quien_retiras',
+                'type': 'manytomany', 
+                'query': [model_to_dict(i) for i in QuienRetira.objects.all()],
+                'multiple': True,
+                'width': '50'
+            },
+        ],
+        'Alumnos',
+        AlumnoForm,  
+        id  
+    )
 
 def alergias(request, id):
     return viewset(request, 
@@ -190,7 +186,8 @@ def alergias(request, id):
                 'width': '50'
             },
         ],
-        'Alergias', 
+        'Alergias',
+        AlergiaForm, 
         id
     )
 
@@ -217,6 +214,7 @@ def tratamientos(request, id):
             },
         ],
         'Tratamientos', 
+        TratamientoForm,
         id
     )
 
@@ -231,6 +229,7 @@ def medicamentos(request, id):
             },
         ],
         'Medicamentos', 
+        MedicamentoForm,
         id
     )
 
@@ -252,6 +251,7 @@ def condiciones_especiales(request, id):
             },
         ],
         'Condiciones Especiales', 
+        CondicionEspecialForm,
         id
     )
 
@@ -266,6 +266,7 @@ def colores(request, id):
             },
         ],
         'Colores', 
+        ColorForm,
         id
     )
 
@@ -280,6 +281,7 @@ def categorias_instrumentos(request, id):
             },
         ],
         'Categorías de Instrumentos', 
+        CategoriaInstrumentoForm,
         id
     )
 
@@ -294,6 +296,7 @@ def marcas_instrumentos(request, id):
             },
         ],
         'Marcas de Instrumentos', 
+        MarcaInstrumentoForm,
         id
     )
 
@@ -320,6 +323,7 @@ def modelos_instrumentos(request, id):
             },
         ],
         'Modelos de Instrumentos', 
+        ModeloInstrumentoForm,
         id
     )
 
@@ -334,6 +338,7 @@ def accesorios(request, id):
             },
         ],
         'Accesorios', 
+        AccesorioForm,
         id
     )
 
@@ -380,6 +385,7 @@ def instrumentos(request, id):
             },
         ],
         'Instrumentos', 
+        InstrumentoForm,
         id
     )
 
@@ -401,6 +407,7 @@ def agrupaciones(request, id):
             },
         ],
         'Agrupaciones', 
+        AgrupacionForm,
         id
     )
 
@@ -415,6 +422,7 @@ def niveles_estudiantiles(request,id):
             },
         ],
         'Niveles Estudiantiles',
+        NivelEstudiantilForm,
         id
     )
 
@@ -429,6 +437,7 @@ def nivelests(request,id):
             },
         ],
         'Niveles TS',
+        NivelTSForm,
         id
     )
 
@@ -443,6 +452,7 @@ def turnos(request,id):
             },
         ],
         'Turnos',
+        TurnoForm,
         id
     )
 
@@ -457,6 +467,7 @@ def tipos_becas(request,id):
             },
         ],
         'Tipos de Beca',
+        TipoBecaForm,
         id
     )
 
@@ -491,6 +502,7 @@ def representantes(request,id):
             },
         ],
         'Representantes',
+        RepresentanteForm,
         id
     )
 
@@ -511,6 +523,7 @@ def programas(request,id):
             },
         ],
         'Programas',
+        ProgramaForm,
         id
     )
 
@@ -525,6 +538,7 @@ def quienes_retiran(request,id):
             },
         ],
         'Quien Retira',
+        QuienRetiraForm,
         id
     )
 def becados(request, id):
@@ -543,6 +557,7 @@ def becados(request, id):
             },
         ],
         'Becados', 
+        BecadoForm,
         id
     )
 def inscripciones(request,id):
@@ -568,6 +583,7 @@ def inscripciones(request,id):
             },
         ],
         'Inscripciones',
+        InscripcionForm,
         id
     )
 def tipos_catedras(request, id):
@@ -585,7 +601,8 @@ def tipos_catedras(request, id):
                 'width': '50'
             },
         ],
-        'Tipos de Cátedra', 
+        'Tipos de Cátedra',
+        TipoCatedraForm, 
         id
     )
 
@@ -612,5 +629,6 @@ def catedras(request,id):
             },
         ],
         'Cátedras',
+        CatedraForm,
         id
     )
