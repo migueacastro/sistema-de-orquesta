@@ -8,7 +8,10 @@
 <!-- Form -->
 <div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 flex flex-col items-center hidden" id="section-form"> 
     <h2 class="text-4xl text-center my-4 mb-4 capitalize">Agregar</h2>
-    <form action="">
+    <p class="hidden" id="csrf_token">
+        {{ csrf_token }}
+    </p>
+    <form action="" id="main-form">
         <div class="grid lg:grid-cols-3">
             {% for field in model_form %}
             
@@ -23,7 +26,7 @@
                     </p>
                     <div id="modal-wrapper-{{ field.name }}" class="fixed z-10 inset-0 hidden">
                         <div class="flex items-center justify-center min-h-screen bg-gray-800 bg-opacity-75 transition-all ">
-                            <div class="flex flex-col items-center justify-between bg-white p-10 rounded w-2/3">
+                            <form class="flex flex-col items-center justify-between bg-white p-10 rounded w-2/3" id="form-{{ field.name }}">
                                 <h3 class="text-3xl">Agregar {{ field.name|title }}</h3>
                                 <div class="w-full">
                                     <div class="grid lg:{% if field.name == 'alergias' or field.name == 'condicion_especial' %}grid-cols-1{% else %}grid-cols-3{% endif %}">
@@ -46,11 +49,11 @@
                                     <button type="button" id="close-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded">
                                         Cerrar
                                     </button>
-                                    <button type="button" id="save-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded">
+                                    <button type="button" id="save-modal-btn-{{ field.name }}" class="modal-save save bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEntry('form-{{ field.name }}')">
                                         Guardar
                                     </button>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </div>
                 </div>
@@ -59,11 +62,12 @@
             </div>
         {% endfor %}
         </div>
+        <div class="flex justify-between mt-4">
+            <button type="button" id="save-button" class="save bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEntry('main-form', 'save-button')">Guardar</button>
+            <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Volver</button>
+        </div>
     </form>
-    <div class="flex justify-between mt-4">
-        <button type="submit" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Guardar</button>
-        <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Volver</button>
-    </div>
+    
 </div>
 
 <!-- End Form -->
@@ -163,10 +167,12 @@
                 modal.classList.add('hidden');
             })
         });
+
     });
     //tags
     
     //Para modificar la tabla 
+    
     
     let table = new DataTable('#entry-table');
 

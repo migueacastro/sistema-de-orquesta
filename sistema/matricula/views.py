@@ -79,14 +79,13 @@ def alumnos(request, id):
             {
                 'name': 'turno',
                 'type': 'foreingnkey', 
-                'query': Turno.objects.all(),
+                'endpoint': 'turnos',
                 'width': '50'
             },
             {
                 'name': 'instrumentos',
                 'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Instrumento.objects.all()],
-                'multiple': True,
+                'endpoint': 'instrumentos',
                 'width': '50'
             },
             {
@@ -116,46 +115,45 @@ def alumnos(request, id):
             {
                 'name': 'nivel_estudiantil',
                 'type': 'foreingnkey',
-                'query': NivelEstudiantil.objects.all(),
+                'endpoint': 'niveles-estudiantiles',
                 'width': '50'
             },
             {
                 'name': 'nivel_ts',
                 'type': 'foreingnkey',
-                'query': NivelTS.objects.all(),
+                'endpoint': 'niveles-ts',
                 'width': '50'
             },
             {
                 'name': 'representantes',
                 'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Representante.objects.all()],
+                'endpoint': 'representantes',
                 'multiple': True,
                 'width': '50'
             },
             {
                 'name': 'alergias',
                 'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Alergia.objects.all()],
+                'endpoint': 'alergias',
                 'multiple': True,
                 'width': '50'
             },
             {
                 'name': 'tratamientos',
                 'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Tratamiento.objects.all()],
-                'multiple': True,
+                'endpoint': 'tratamientos',
                 'width': '50'
             },
             {
                 'name': 'programa',
                 'type': 'foreignkey',
-                'options': Programa.objects.all(),
+                'endpoint': 'programas',
                 'width': '50'
             },
             {
                 'name': 'condición especial',
                 'type': 'foreignkey',
-                'options': CondicionEspecial.objects.all(),
+                'endpoint': 'condiciones-especiales',
                 'width': '50'
             },
             {

@@ -52,6 +52,7 @@ const deleteEntry = (id) => {
             let url = `/${tableName}/${id}`;  
             let csrfToken = document.querySelector('#csrf_token').innerHTML; 
             
+            
             fetch(url, {
                 method: 'DELETE',
                 headers: {
@@ -59,7 +60,12 @@ const deleteEntry = (id) => {
                 }
             }).then(response => {
                 if (response.ok) {
-                    document.getElementById(`entry-${id}`).remove();  
+                    if (!isNaN(window.location.href.split('/').slice(-1)[0])) {
+                        window.location.href = window.location.href.split('/').slice(0,-1).join('/');
+                    } else {
+                        document.getElementById(`entry-${id}`).remove();  
+                    }
+                    
                 } else {
                     Swal.fire({
                         title: "Error",
@@ -67,6 +73,7 @@ const deleteEntry = (id) => {
                         icon: "error"
                     });
                 }
+                
             });
         }
     });
@@ -179,6 +186,94 @@ class ManyToManyField {
 
 }
 
-const saveEntry = (formObject, endpoint) => {
+const saveEntry = (formId, buttonId) => {
+    let formData = new FormData(document.querySelector(`#${formId}`));
+    let innerFormNames = new Set();
+    document.querySelector(`#${formId}`).querySelectorAll('form').forEach(form => {
+        for (const element of form.elements) { 
+            innerFormNames.add(element.name);
+        }
+    })
+    for (const [name, value] of formData) { 
+        if (innerFormNames.has(name)) { 
+            formData.delete(name); 
+        } 
+    }
+    if (buttonId && buttonId === "save-button") {
+        window.location.href = window.location.href.split('?').slice(0,-1)[0];
+        console.log(newUrl);
+    } else {
+        if (!checkFormVisibilityByParams()) {
+        
+            window.location.href = window.location.href + '?form_state=open'; 
+        }
+        else {
+            window.location.reload();
+        }
+    }
+    
 
+    /*
+    fetch(window.location.href.split('/').slice(0,-1).join('/') + endpoint, { // BUSCAR ENDPOINT
+        method: 'POST', 
+        body: formData, 
+        headers: { 
+            'X-CSRFToken': document.querySelector('#csrf_token').innerHTML,
+        }
+    }).then(response => response.json()).then(data => { 
+        // Finishing 
+        if (data.success === true) {
+            Swal.fire({
+                title: "¡Agregado!",
+                text: "Tu registro ha sido agregado",
+                icon: "success",
+                timer: 2000,
+                timerProgressBar: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    timerInterval = setInterval(() => {
+                    timer.textContent = `${Swal.getTimerLeft()}`;
+                    }, 100);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            }).then((result) => {
+                if (buttonId && buttonId === "save-button") {
+                    window.location.href = window.location.href.split('?').slice(0,-1)[0];
+                    console.log(newUrl);
+                } else {
+                    if (!checkFormVisibilityByParams()) {
+                    
+                        window.location.href = window.location.href + '?form_state=open'; 
+                    }
+                    else {
+                        window.location.reload();
+                    }
+                } 
+            });
+        } else {
+            Swal.fire({
+                title: "¡Error!",
+                text: `${data.errors.join(', ')}`,
+                icon: "error",
+                timer: 2000,
+                timerProgressBar: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    timerInterval = setInterval(() => {
+                    timer.textContent = `${Swal.getTimerLeft()}`;
+                    }, 100);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            });
+        }
+       
+    
+
+    });*/
 }
