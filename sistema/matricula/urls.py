@@ -13,7 +13,7 @@ urlpatterns = [
     
     path('alumnos/<nullable_int:id>', alumnos, name='alumnos'),
     path('alergias/<nullable_int:id>', alergias, name='alergias'),
-    path('agrupaciones/', agrupaciones, name='agrupaciones'),
+    path('agrupaciones/<nullable_int:id>', agrupaciones, name='agrupaciones'),
     path('accesorios/<nullable_int:id>', accesorios, name='accesorios'),
     path('becados/<nullable_int:id>', becados, name='becados'),
     path('colores/<nullable_int:id>', colores, name='colores'),

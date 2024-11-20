@@ -5,8 +5,34 @@ from itertools import chain
 from django.urls.resolvers import URLPattern
 from django.utils.translation import gettext_lazy as _
 from django.contrib import messages 
+from .forms import *
 from django.apps import apps
 
+DICCIONARIO_FORMULARIOS = {
+    'medicamento': MedicamentoForm(),
+    'tratamiento': TratamientoForm(),
+    'condicion_especial': CondicionEspecialForm(),
+    'alergias': AlergiaForm(),
+    'color': ColorForm(),
+    'categoria_instrumento': CategoriaInstrumentoForm(),
+    'marca_instrumento': MarcaInstrumentoForm(),
+    'modelo_instrumento': ModeloInstrumentoForm(),
+    'accesorio': AccesorioForm(),
+    'agrupacion': AgrupacionForm(),
+    'turno': TurnoForm(),
+    'nivel_ts': NivelTSForm(),
+    'nivel_estudiantil': NivelEstudiantilForm(),
+    'tipo_beca': TipoBecaForm(),
+    'representantes': RepresentanteForm(),
+    'programa': ProgramaForm(),
+    'quien_retira': QuienRetiraForm(),
+    'tipo_catedra': TipoCatedraForm(),
+    'catedras': CatedraForm(),
+    'alumno': AlumnoForm(),
+    'instrumentos': InstrumentoForm(),
+    'becado': BecadoForm(),
+    'inscripcion': InscripcionForm(),
+}
 
 def model_to_dict_better(instance, fields=None, exclude=None):
     opts = instance._meta
@@ -50,7 +76,7 @@ class NullableIntConverter:
         return str(value) if value is not None else ''
     
 
-def viewset(request, model, field_list, title, id=None):
+def viewset(request, model, field_list, title, model_form, id=None):
     if id is None:
         match request.method:
             case 'GET':
@@ -61,39 +87,18 @@ def viewset(request, model, field_list, title, id=None):
                     'title': title, 
                     'entries': entries, 
                     'first_entry': entries[0] if len(entries) > 0 else None, 
-                    'form':field_list
+                    'forms':DICCIONARIO_FORMULARIOS,
+                    'model_form':model_form()
                     })
                 
             case 'POST':
                 # TODO: Crear forma de repetir formularios
-                new_object = {}
-                many_to_many_fields = {}
-                for field in field_list:
-                    data = request.POST.get(field['name'])
-                    if data == 'None' or data == '' or data == ' ':
-                        data = None
-                    if field['type'] == 'manytomany' and data:
-                        many_to_many_fields[field['name']] = data.split(",")
-                    else:
-                        if data:
-                            new_object[field['name']] = data
-                    
-                new_instance, created = model.objects.get_or_create(**new_object)
-                if created:
-                    for key, value in many_to_many_fields.items():
-                        many_to_many_setter = getattr(new_instance, key)
-                        many_to_many_setter.set(value)
-                        
-                    messages.add_message(request, messages.SUCCESS, 'Registro agregado exitosamente.')
-                else:
-                    messages.add_message(request, messages.ERROR, 'Error al crear registro.')
-                entries = [model_to_dict(i) for i in model.objects.all()]
-                return render(request, 'administrador/table.html', {
-                    'title': title, 
-                    'entries': entries, 
-                    'first_entry': entries[0] if len(entries) > 0 else None, 
-                    'form':field_list
-                    })
+                form = model_form(request.POST) 
+                if form.is_valid(): 
+                    form.save() 
+                    return JsonResponse({'success': True}) 
+                else: 
+                    return JsonResponse({'success': False, 'errors': form.errors})
                 
     else:
         entry = model.objects.get(id=id)
@@ -101,34 +106,14 @@ def viewset(request, model, field_list, title, id=None):
             case 'GET':
                 for field in field_list:
                     field["value"] = model_to_dict(entry).get(field["name"])
-                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
-            case 'POST':
-                
-                instance_to_change = model.objects.get(id=id)
-                try:
-
-                    for field in field_list:
-                        data = request.POST.get(field['name'])
-                        if data == 'None' or data == '' or data == ' ':
-                            data = None
-                            
-                        if field['type'] == 'manytomany' and data:
-                            many_to_many_setter = getattr(instance_to_change, field['name'])
-                            many_to_many_setter.clear()
-                            many_to_many_setter.set(data.split(","))
-                                
-                        else:     
-                            if data:
-                                setattr(instance_to_change, field['name'], data)
-                    instance_to_change.save()
-                    messages.add_message(request, messages.SUCCESS, 'Registro actualizado exitosamente.')
-                except Exception:
-                    messages.add_message(request, messages.ERROR, 'Error al actualizar registro.')
-                
-                entry = instance_to_change
-                for field in field_list:
-                    field["value"] = model_to_dict(entry).get(field["name"])
-                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'form':field_list})
+                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'forms':DICCIONARIO_FORMULARIOS, 'model_form':model_form(instance=entry)})
+            case 'POST':  
+                form = model_form(request.POST) 
+                if form.is_valid(): 
+                    form.save() 
+                    return JsonResponse({'success': True}) 
+                else: 
+                    return JsonResponse({'success': False, 'errors': form.errors})
             case 'DELETE':
                 
                 model_to_delete = model.objects.get(id=id)
