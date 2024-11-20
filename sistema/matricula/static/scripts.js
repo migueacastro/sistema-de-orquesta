@@ -186,6 +186,44 @@ class ManyToManyField {
 
 }
 
+const saveFormData = () => {
+    localStorage.removeItem('formData');
+    let formData = new FormData(document.querySelector(`#${formId}`));
+    let innerFormNames = new Set();
+    document.querySelector(`#${formId}`).querySelectorAll('form').forEach(form => {
+        for (const element of form.elements) { 
+            innerFormNames.add(element.name);
+        }
+    })
+    for (const [name, value] of formData) { 
+        if (innerFormNames.has(name)) { 
+            formData.delete(name); 
+        } 
+    }
+    let data = {};
+
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+
+    localStorage.setItem('formData', JSON.stringify(data));
+}
+
+const loadFormData = () => {
+    let data = localStorage.getItem('formData');
+    if (data) {
+        let formData = JSON.parse(data);
+        for (let key in formData) {
+            if (formData.hasOwnProperty(key)) {
+                let field = document.querySelector(`[name=${key}]`);
+                if (field) {
+                    field.value = formData[key];
+                }     
+            }
+        }
+    }
+}
+
 const saveEntry = (formId, buttonId) => {
     let formData = new FormData(document.querySelector(`#${formId}`));
     let innerFormNames = new Set();
@@ -200,6 +238,7 @@ const saveEntry = (formId, buttonId) => {
         } 
     }
     if (buttonId && buttonId === "save-button") {
+        localStorage.removeItem('formData');
         window.location.href = window.location.href.split('?').slice(0,-1)[0];
         console.log(newUrl);
     } else {

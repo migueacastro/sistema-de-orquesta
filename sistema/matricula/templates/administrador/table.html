@@ -18,18 +18,18 @@
             <div class="flex flex-col mx-4 my-2">
                 <div class="flex flex-row my-1">
                     <p>{{ field.name|title }}
-                        {% if field.field.widget.input_type == "select" and field.name != "sexo" %}
+                        {% if field.field.widget.input_type == "select" and field.name != "sexo" and field.name != "asignado" %}
                         <button type="button" class="modal-openner ml-4 text-blue-600" id="modal-{{ field.name }}">
                             Agregar<i class="fas fa-plus ml-2"></i> 
                         </button>
                         {% endif %}
                     </p>
-                    <div id="modal-wrapper-{{ field.name }}" class="fixed z-10 inset-0 hidden">
-                        <div class="flex items-center justify-center min-h-screen bg-gray-800 bg-opacity-75 transition-all ">
+                    <div id="modal-wrapper-{{ field.name }}" class="fixed z-10 inset-0 hidden overflow-y-scroll">
+                        <div class="flex  items-center justify-center min-h-screen bg-gray-800 bg-opacity-75 transition-all ">
                             <form class="flex flex-col items-center justify-between bg-white p-10 rounded w-2/3" id="form-{{ field.name }}">
                                 <h3 class="text-3xl">Agregar {{ field.name|title }}</h3>
                                 <div class="w-full">
-                                    <div class="grid lg:{% if field.name == 'alergias' or field.name == 'condicion_especial' %}grid-cols-1{% else %}grid-cols-3{% endif %}">
+                                    <div class="  grid lg:{% if field.name == 'alergias' or field.name == 'condicion_especial' %}grid-cols-1{% else %}grid-cols-3{% endif %}">
                                         {% for name, form in forms.items %}
                                             {% if name == field.name %}
                                                 {% for subfield in form %}
@@ -138,7 +138,7 @@
         crearBtn.addEventListener('click', (event) => {
             event.preventDefault(); 
             formContainer.classList.remove('hidden'); 
-            tableContainer.classList.add('hidden'); 
+            tableContainer.classList.add('hidden');
         });
 
         cancelButton.addEventListener('click', () => {
@@ -182,6 +182,10 @@
         tablemodi.clone().appendTo('#anotherDiv');
     $('#parentOfOldElement #yourElement').remove();
     });*/
+
+    window.addEventListener('load', () => loadFormData());
+    window.addEventListener('beforeunload', () => saveFormData());
+
 </script>
 {% endblock %}
 
