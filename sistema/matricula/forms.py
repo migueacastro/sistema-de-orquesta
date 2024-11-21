@@ -38,17 +38,17 @@ class CustomClassForm(forms.ModelForm):
                 if field.widget.input_type != 'select':
                     # Text, Number
                     field.widget.attrs.update({
-                        'class': 'bg-gray-100 rounded-md indent-2 p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                        'class': 'bg-gray-100 disabled:bg-gray-300 rounded-md indent-2 p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
                     })
                 else:
                     # Select
                     field.widget.attrs.update({
-                        'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                        'class': 'bg-gray-100 disabled:bg-gray-300 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
                     })
             except AttributeError:
                 # Textarea
                 field.widget.attrs.update({
-                    'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                    'class': 'bg-gray-100 disabled:bg-gray-300 rounded-md p-2 shadow-md focus:border-gray-700  focus:outline-none focus:ring'
                 })
 
 

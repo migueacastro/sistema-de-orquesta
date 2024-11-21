@@ -3,11 +3,11 @@
 {% block body %}
 <h1 class="text-4xl flex items-center font-bold mb-4 justify-center h-[5rem]">{{ title }} #{{ entry.id }}</h1>
 <div class="w-full bg-white">
-    
+    <p class="hidden" id="csrf_token">
+        {{ csrf_token }}
+    </p>
     <form id="main-form">
-        <p class="hidden" id="csrf_token">
-            {{ csrf_token }}
-        </p>
+
         <div class="grid lg:grid-cols-3">
             {% for field in model_form %}
             
@@ -45,7 +45,7 @@
                                     <button type="button" id="close-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded">
                                         Cerrar
                                     </button>
-                                    <button type="button" id="save-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEntry('form-{{ field.name }}')">
+                                    <button type="button" id="save-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveCreateEntry('form-{{ field.name }}', null, )">
                                         Guardar
                                     </button>
                                 </div>
@@ -60,7 +60,8 @@
         </div>
         <div class="flex justify-start mt-4">
             <button type="submit" id="save-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEditEntry('{{ main_endpoint }}/{{ entry.id }}')">Guardar</button>
-            <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Volver</button>
+            <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="localStorage.removeItem('formData'); removeFormParams()">Cancelar</button>
+            <button type="button" id="edit-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded hidden" onclick="setFormParams()">Editar</button>
             <button type="button" id="delete-button" class="bg-red-600 text-white px-4 py-2 m-4 rounded" onclick="deleteEntry('{{ entry.id }}');">Eliminar</button>
         </div>
     </form>
@@ -69,9 +70,11 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        toggleEditMode();
         if (checkFormVisibilityByParams()) {
             toggleEditMode();
         };
+        
        
         const cancelButton = document.getElementById('cancel-button');
     
