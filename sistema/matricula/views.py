@@ -166,6 +166,7 @@ def alumnos(request, id):
         ],
         'Alumnos',
         AlumnoForm,  
+        'alumnos',
         id  
     )
 
@@ -384,6 +385,7 @@ def instrumentos(request, id):
         ],
         'Instrumentos', 
         InstrumentoForm,
+        'alumnos',
         id
     )
 
@@ -406,6 +408,7 @@ def agrupaciones(request, id):
         ],
         'Agrupaciones', 
         AgrupacionForm,
+        'agrupaciones',
         id
     )
 
@@ -421,6 +424,7 @@ def niveles_estudiantiles(request,id):
         ],
         'Niveles Estudiantiles',
         NivelEstudiantilForm,
+        'niveles-estudiantiles',
         id
     )
 
@@ -436,6 +440,7 @@ def nivelests(request,id):
         ],
         'Niveles TS',
         NivelTSForm,
+        'niveles-ts',
         id
     )
 
@@ -451,6 +456,7 @@ def turnos(request,id):
         ],
         'Turnos',
         TurnoForm,
+        'turnos',
         id
     )
 
@@ -466,6 +472,7 @@ def tipos_becas(request,id):
         ],
         'Tipos de Beca',
         TipoBecaForm,
+        'tipos-becas',
         id
     )
 
@@ -501,6 +508,7 @@ def representantes(request,id):
         ],
         'Representantes',
         RepresentanteForm,
+        'representantes',
         id
     )
 
@@ -522,6 +530,7 @@ def programas(request,id):
         ],
         'Programas',
         ProgramaForm,
+        'programas',
         id
     )
 
@@ -537,6 +546,7 @@ def quienes_retiran(request,id):
         ],
         'Quien Retira',
         QuienRetiraForm,
+        'quienes-retiran',
         id
     )
 def becados(request, id):
@@ -556,6 +566,7 @@ def becados(request, id):
         ],
         'Becados', 
         BecadoForm,
+        'becados',
         id
     )
 def inscripciones(request,id):
@@ -582,6 +593,7 @@ def inscripciones(request,id):
         ],
         'Inscripciones',
         InscripcionForm,
+        'inscripciones',
         id
     )
 def tipos_catedras(request, id):
@@ -601,6 +613,7 @@ def tipos_catedras(request, id):
         ],
         'Tipos de Cátedra',
         TipoCatedraForm, 
+        'tipos-catedras',
         id
     )
 
@@ -628,5 +641,6 @@ def catedras(request,id):
         ],
         'Cátedras',
         CatedraForm,
+        'catedras',
         id
     )

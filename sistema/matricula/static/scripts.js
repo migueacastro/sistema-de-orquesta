@@ -224,7 +224,7 @@ const loadFormData = () => {
     }
 }
 
-const saveEntry = (formId, buttonId) => {
+const saveEntry = (formId, buttonId, endpoint) => {
     let formData = new FormData(document.querySelector(`#${formId}`));
     let innerFormNames = new Set();
     document.querySelector(`#${formId}`).querySelectorAll('form').forEach(form => {
@@ -237,6 +237,7 @@ const saveEntry = (formId, buttonId) => {
             formData.delete(name); 
         } 
     }
+    /*
     if (buttonId && buttonId === "save-button") {
         localStorage.removeItem('formData');
         window.location.href = window.location.href.split('?').slice(0,-1)[0];
@@ -249,11 +250,9 @@ const saveEntry = (formId, buttonId) => {
         else {
             window.location.reload();
         }
-    }
+    }*/
     
-
-    /*
-    fetch(window.location.href.split('/').slice(0,-1).join('/') + endpoint, { // BUSCAR ENDPOINT
+    fetch(window.location.href.split('/').slice(0,-2).join('/') + '/' + endpoint + '/', { // BUSCAR ENDPOINT
         method: 'POST', 
         body: formData, 
         headers: { 
@@ -295,24 +294,12 @@ const saveEntry = (formId, buttonId) => {
         } else {
             Swal.fire({
                 title: "¡Error!",
-                text: `${data.errors.join(', ')}`,
+                text: `${Array.from(Object.keys(data.errors).map(key => `Campo ${key}: ` + data.errors[key])).join('\n')}`,
                 icon: "error",
-                timer: 2000,
-                timerProgressBar: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                    const timer = Swal.getPopup().querySelector("b");
-                    timerInterval = setInterval(() => {
-                    timer.textContent = `${Swal.getTimerLeft()}`;
-                    }, 100);
-                },
-                willClose: () => {
-                    clearInterval(timerInterval);
-                }
             });
         }
        
     
 
-    });*/
+    });
 }

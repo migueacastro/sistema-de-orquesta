@@ -18,7 +18,7 @@ class CustomClassForm(forms.ModelForm):
                 # Textarea
                 self.fields[field].widget.attrs.update({'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'})
 class AlumnoForm(CustomClassForm):
-    instrumentos = forms.ModelMultipleChoiceField(queryset=Instrumento.objects.filter(activo=True))
+    instrumentos = forms.ModelMultipleChoiceField(queryset=Instrumento.objects.filter(activo=True, alumno = None))
     class Meta:
         model = Alumno
         exclude = ('activo',)
@@ -92,7 +92,7 @@ class QuienRetiraForm(CustomClassForm):
         fields = '__all__'
 
 class InstrumentoForm(CustomClassForm,):
-    alumno = forms.ModelChoiceField(queryset=Alumno.objects.all())
+    alumno = forms.ModelChoiceField(queryset=Alumno.objects.filter(activo=True), required=False)
     class Meta:
         
         model = Instrumento

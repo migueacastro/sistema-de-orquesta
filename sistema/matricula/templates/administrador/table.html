@@ -49,7 +49,7 @@
                                     <button type="button" id="close-modal-btn-{{ field.name }}" class="modal-close bg-gray-800 text-white px-4 py-2 m-4 rounded">
                                         Cerrar
                                     </button>
-                                    <button type="button" id="save-modal-btn-{{ field.name }}" class="modal-save save bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEntry('form-{{ field.name }}')">
+                                    <button type="button" id="save-modal-btn-{{ field.name }}" class="modal-save save bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEntry('form-{{ field.name }}', null, '{% for endpoint_name, endpoint in endpoints.items %}{% if endpoint_name == field.name %}{{ endpoint}}{%endif %}{% endfor %}')">
                                         Guardar
                                     </button>
                                 </div>
@@ -63,7 +63,7 @@
         {% endfor %}
         </div>
         <div class="flex justify-between mt-4">
-            <button type="button" id="save-button" class="save bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEntry('main-form', 'save-button')">Guardar</button>
+            <button type="button" id="save-button" class="save bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEntry('main-form', 'save-button',  '{{ main_endpoint }}')">Guardar</button>
             <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded">Volver</button>
         </div>
     </form>

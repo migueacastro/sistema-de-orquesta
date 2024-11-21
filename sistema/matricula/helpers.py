@@ -33,6 +33,31 @@ DICCIONARIO_FORMULARIOS = {
     'becado': BecadoForm(),
     'inscripcion': InscripcionForm(),
 }
+DICCIONARIO_ENDPOINTS = {
+    'medicamento': 'medicamentos',
+    'tratamiento': 'tratamientos',
+    'condicion_especial': 'condiciones-especiales',
+    'alergias': 'alergias',
+    'color': 'colores',
+    'categoria': 'categorias-instrumentos',
+    'marca': 'marcas-instrumentos',
+    'modelo': 'modelos-instrumentos',
+    'accesorio': 'accesorios',
+    'agrupacion': 'agrupaciones',
+    'turno': 'turnos',
+    'nivel_ts': 'niveles-ts',
+    'nivel_estudiantil': 'niveles-estudiantiles',
+    'tipo_beca': 'tipos-becas',
+    'representantes': 'representantes',
+    'programa': 'programas',
+    'quien_retira': 'quienes-retiran',
+    'tipo_catedra': 'tipos-catedras',
+    'catedras': 'catedras',
+    'alumno': 'alumnos',
+    'instrumentos': 'instrumentos',
+    'becado': 'becados',
+    'inscripcion': 'inscripciones',
+}
 
 def model_to_dict_better(instance, fields=None, exclude=None):
     opts = instance._meta
@@ -76,7 +101,7 @@ class NullableIntConverter:
         return str(value) if value is not None else ''
     
 
-def viewset(request, model, field_list, title, model_form, id=None):
+def viewset(request, model, field_list, title, model_form, main_endpoint, id=None):
     if id is None:
         match request.method:
             case 'GET':
@@ -88,7 +113,9 @@ def viewset(request, model, field_list, title, model_form, id=None):
                     'entries': entries, 
                     'first_entry': entries[0] if len(entries) > 0 else None, 
                     'forms':DICCIONARIO_FORMULARIOS,
-                    'model_form':model_form()
+                    'model_form':model_form(),
+                    'endpoints': DICCIONARIO_ENDPOINTS,
+                    'main_endpoint': main_endpoint
                     })
                 
             case 'POST':
@@ -106,7 +133,7 @@ def viewset(request, model, field_list, title, model_form, id=None):
             case 'GET':
                 for field in field_list:
                     field["value"] = model_to_dict(entry).get(field["name"])
-                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'forms':DICCIONARIO_FORMULARIOS, 'model_form':model_form(instance=entry)})
+                return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'forms':DICCIONARIO_FORMULARIOS, 'model_form':model_form(instance=entry), 'endpoints': DICCIONARIO_ENDPOINTS, 'main_endpoint': main_endpoint})
             case 'POST':  
                 form = model_form(request.POST) 
                 if form.is_valid(): 
