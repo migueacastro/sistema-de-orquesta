@@ -135,7 +135,8 @@ def viewset(request, model, field_list, title, model_form, main_endpoint, id=Non
                     field["value"] = model_to_dict(entry).get(field["name"])
                 return render(request, 'administrador/details.html', {'entry':entry, 'title':title[:-1], 'forms':DICCIONARIO_FORMULARIOS, 'model_form':model_form(instance=entry), 'endpoints': DICCIONARIO_ENDPOINTS, 'main_endpoint': main_endpoint})
             case 'POST':  
-                form = model_form(request.POST) 
+                form = model_form(request.POST, instance = entry)
+                print(request.POST) 
                 if form.is_valid(): 
                     form.save() 
                     return JsonResponse({'success': True}) 

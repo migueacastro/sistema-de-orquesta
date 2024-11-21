@@ -187,6 +187,7 @@ def alergias(request, id):
         ],
         'Alergias',
         AlergiaForm, 
+        'alergias',
         id
     )
 
@@ -214,6 +215,7 @@ def tratamientos(request, id):
         ],
         'Tratamientos', 
         TratamientoForm,
+        'tratamientos',
         id
     )
 
@@ -229,6 +231,7 @@ def medicamentos(request, id):
         ],
         'Medicamentos', 
         MedicamentoForm,
+        'medicamentos',
         id
     )
 
@@ -251,6 +254,7 @@ def condiciones_especiales(request, id):
         ],
         'Condiciones Especiales', 
         CondicionEspecialForm,
+        'condiciones-especiales',
         id
     )
 
@@ -266,6 +270,7 @@ def colores(request, id):
         ],
         'Colores', 
         ColorForm,
+        'colores',
         id
     )
 
@@ -281,6 +286,7 @@ def categorias_instrumentos(request, id):
         ],
         'Categorías de Instrumentos', 
         CategoriaInstrumentoForm,
+        'categorias-instrumentos',
         id
     )
 
@@ -296,6 +302,7 @@ def marcas_instrumentos(request, id):
         ],
         'Marcas de Instrumentos', 
         MarcaInstrumentoForm,
+        'marcas-instrumentos',
         id
     )
 
@@ -323,6 +330,7 @@ def modelos_instrumentos(request, id):
         ],
         'Modelos de Instrumentos', 
         ModeloInstrumentoForm,
+        'modelos-instrumentos',
         id
     )
 
@@ -338,6 +346,7 @@ def accesorios(request, id):
         ],
         'Accesorios', 
         AccesorioForm,
+        'accesorios',
         id
     )
 
@@ -385,7 +394,7 @@ def instrumentos(request, id):
         ],
         'Instrumentos', 
         InstrumentoForm,
-        'alumnos',
+        'instrumentos',
         id
     )
 
