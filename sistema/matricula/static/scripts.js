@@ -52,6 +52,7 @@ const deleteEntry = (id) => {
             let url = `/${tableName}/${id}`;  
             let csrfToken = document.querySelector('#csrf_token').innerHTML; 
             
+            
             fetch(url, {
                 method: 'DELETE',
                 headers: {
@@ -59,7 +60,12 @@ const deleteEntry = (id) => {
                 }
             }).then(response => {
                 if (response.ok) {
-                    document.getElementById(`entry-${id}`).remove();  
+                    if (!isNaN(window.location.href.split('/').slice(-1)[0])) {
+                        window.location.href = window.location.href.split('/').slice(0,-1).join('/');
+                    } else {
+                        document.getElementById(`entry-${id}`).remove();  
+                    }
+                    
                 } else {
                     Swal.fire({
                         title: "Error",
@@ -67,10 +73,27 @@ const deleteEntry = (id) => {
                         icon: "error"
                     });
                 }
+                
             });
         }
     });
 };
+
+function setFormParams() {
+    let url = new URL(window.location.href);
+    if (!url.searchParams.has('form_state')) {
+        url.searchParams.set('form_state', 'open');
+        window.location.href = url.href;
+    }
+}
+
+function removeFormParams() {
+    let url = new URL(window.location.href);
+    if (url.searchParams.has('form_state')) {
+        url.searchParams.delete('form_state');
+        window.location.href = url.href;
+    }
+}
 
 
 function toggleEditMode() {
@@ -80,6 +103,7 @@ function toggleEditMode() {
         field.disabled = !field.disabled;
     });
     saveButton.classList.toggle('hidden');
+    
 }
 
 class ManyToManyField {
@@ -179,6 +203,175 @@ class ManyToManyField {
 
 }
 
-const saveEntry = (formObject, endpoint) => {
+const saveFormData = () => {
+    localStorage.removeItem('formData');
+    let formData = new FormData(document.querySelector('#main-form'));
+    let innerFormNames = new Set();
+    document.querySelector(`#main-form`).querySelectorAll('form').forEach(form => {
+        for (const element of form.elements) { 
+            innerFormNames.add(element.name);
+        }
+    })
+    for (const [name, value] of formData) { 
+        if (innerFormNames.has(name)) { 
+            formData.delete(name); 
+        } 
+    }
+    let data = {};
 
+    formData.forEach((value, key) => {
+        data[key] = value;
+    });
+    localStorage.setItem('formData', JSON.stringify(data));
+}
+
+const loadFormData = () => {
+    let data = localStorage.getItem('formData');
+    if (data) {
+        let formData = JSON.parse(data);
+        for (let key in formData) {
+            if (formData.hasOwnProperty(key)) {
+                let field = document.querySelector(`[name=${key}]`);
+                if (field) {
+                    field.value = formData[key];
+                }     
+            }
+        }
+    }
+}
+
+const saveCreateEntry = (formId, buttonId, endpoint) => {
+    localStorage.removeItem('formData');
+    let formData = new FormData();
+    let formElements;
+    if (buttonId) {
+        formElements = document.querySelector(`#${formId}`).querySelectorAll(':scope > div > div > input, :scope > div > div > select, :scope > div > div > textarea');
+        formElements.forEach(element => { 
+            if (element.name && element.value) { 
+                formData.append(element.name, element.value); 
+            } 
+        });
+    } else {
+        formData = new FormData(document.querySelector(`#${formId}`));
+    }
+    
+    // Optionally log the form data to verify 
+    for (let [name, value] of formData.entries()) { 
+        console.log(name, value); 
+    }
+    
+    fetch(window.location.href.split('/').slice(0,-2).join('/') + '/' + endpoint + '/', { // BUSCAR ENDPOINT
+        method: 'POST', 
+        body: formData, 
+        headers: { 
+            'X-CSRFToken': document.querySelector('#csrf_token').innerHTML,
+        }
+    }).then(response => response.json()).then(data => { 
+        // Finishing 
+        if (data.success === true) {
+            Swal.fire({
+                title: "¡Agregado!",
+                text: "Tu registro ha sido agregado",
+                icon: "success",
+                timer: 2000,
+                timerProgressBar: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    timerInterval = setInterval(() => {
+                    timer.textContent = `${Swal.getTimerLeft()}`;
+                    }, 100);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            }).then((result) => {
+                if (buttonId && buttonId === "save-button") {
+                    window.location.href = window.location.href.split('?').slice(0,-1)[0];
+                    console.log(newUrl);
+                } else {
+                    if (!checkFormVisibilityByParams()) {
+                    
+                        window.location.href = window.location.href + '?form_state=open'; 
+                    }
+                    else {
+                        window.location.reload();
+                    }
+                } 
+            });
+        } else {
+            Swal.fire({
+                title: "¡Error!",
+                text: `${Array.from(Object.keys(data.errors).map(key => `Campo ${key}: ` + data.errors[key])).join('\n')}`,
+                icon: "error",
+            });
+        }
+       
+    
+
+    });
+}
+
+const saveEditEntry = (endpoint) => {
+    localStorage.removeItem('formData');
+    let formData = new FormData();
+    let formElements = document.querySelector('#main-form').querySelectorAll(':scope > div > div > input, :scope > div > div > select, :scope > div > div > textarea');
+    formElements.forEach(element => { 
+        if (element.name && element.value) { 
+            formData.append(element.name, element.value); 
+        } 
+    });
+    // Optionally log the form data to verify 
+    for (let [name, value] of formData.entries()) { 
+        console.log(name, value); 
+    }
+
+    let url;
+    if (window.location.href.split('?').length > 1) {
+        url = window.location.href.split('/').slice(0,-3).join('/') + '/' + endpoint;
+    } else {
+        url = window.location.href.split('/').slice(0,-2).join('/') + '/' + endpoint;
+    }
+    let newUrl = url.split('/').slice(0,-1).join('/');
+   
+
+    fetch(url, { // BUSCAR ENDPOINT
+        method: 'POST', 
+        body: formData, 
+        headers: { 
+            'X-CSRFToken': document.querySelector('#csrf_token').innerHTML,
+        }
+    }).then(response => response.json()).then(data => { 
+        // Finishing 
+        if (data.success === true) {
+            Swal.fire({
+                title: "¡Editado!",
+                text: "Tu registro ha sido editado",
+                icon: "success",
+                timer: 2000,
+                timerProgressBar: false,
+                didOpen: () => {
+                    Swal.showLoading();
+                    const timer = Swal.getPopup().querySelector("b");
+                    timerInterval = setInterval(() => {
+                    timer.textContent = `${Swal.getTimerLeft()}`;
+                    }, 100);
+                },
+                willClose: () => {
+                    clearInterval(timerInterval);
+                }
+            }).then((result) => {
+                window.location.href = newUrl;
+            });
+        } else {
+            Swal.fire({
+                title: "¡Error!",
+                text: `${Array.from(Object.keys(data.errors).map(key => `Campo ${key}: ` + data.errors[key])).join('\n')}`,
+                icon: "error",
+            });
+        }
+       
+    
+
+    });
 }

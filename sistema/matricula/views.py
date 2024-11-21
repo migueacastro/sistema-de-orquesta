@@ -79,14 +79,13 @@ def alumnos(request, id):
             {
                 'name': 'turno',
                 'type': 'foreingnkey', 
-                'query': Turno.objects.all(),
+                'endpoint': 'turnos',
                 'width': '50'
             },
             {
                 'name': 'instrumentos',
                 'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Instrumento.objects.all()],
-                'multiple': True,
+                'endpoint': 'instrumentos',
                 'width': '50'
             },
             {
@@ -116,46 +115,45 @@ def alumnos(request, id):
             {
                 'name': 'nivel_estudiantil',
                 'type': 'foreingnkey',
-                'query': NivelEstudiantil.objects.all(),
+                'endpoint': 'niveles-estudiantiles',
                 'width': '50'
             },
             {
                 'name': 'nivel_ts',
                 'type': 'foreingnkey',
-                'query': NivelTS.objects.all(),
+                'endpoint': 'niveles-ts',
                 'width': '50'
             },
             {
                 'name': 'representantes',
                 'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Representante.objects.all()],
+                'endpoint': 'representantes',
                 'multiple': True,
                 'width': '50'
             },
             {
                 'name': 'alergias',
                 'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Alergia.objects.all()],
+                'endpoint': 'alergias',
                 'multiple': True,
                 'width': '50'
             },
             {
                 'name': 'tratamientos',
                 'type': 'manytomany', 
-                'query': [model_to_dict(i) for i in Tratamiento.objects.all()],
-                'multiple': True,
+                'endpoint': 'tratamientos',
                 'width': '50'
             },
             {
                 'name': 'programa',
                 'type': 'foreignkey',
-                'options': Programa.objects.all(),
+                'endpoint': 'programas',
                 'width': '50'
             },
             {
                 'name': 'condición especial',
                 'type': 'foreignkey',
-                'options': CondicionEspecial.objects.all(),
+                'endpoint': 'condiciones-especiales',
                 'width': '50'
             },
             {
@@ -168,6 +166,7 @@ def alumnos(request, id):
         ],
         'Alumnos',
         AlumnoForm,  
+        'alumnos',
         id  
     )
 
@@ -188,6 +187,7 @@ def alergias(request, id):
         ],
         'Alergias',
         AlergiaForm, 
+        'alergias',
         id
     )
 
@@ -215,6 +215,7 @@ def tratamientos(request, id):
         ],
         'Tratamientos', 
         TratamientoForm,
+        'tratamientos',
         id
     )
 
@@ -230,6 +231,7 @@ def medicamentos(request, id):
         ],
         'Medicamentos', 
         MedicamentoForm,
+        'medicamentos',
         id
     )
 
@@ -252,6 +254,7 @@ def condiciones_especiales(request, id):
         ],
         'Condiciones Especiales', 
         CondicionEspecialForm,
+        'condiciones-especiales',
         id
     )
 
@@ -267,6 +270,7 @@ def colores(request, id):
         ],
         'Colores', 
         ColorForm,
+        'colores',
         id
     )
 
@@ -282,6 +286,7 @@ def categorias_instrumentos(request, id):
         ],
         'Categorías de Instrumentos', 
         CategoriaInstrumentoForm,
+        'categorias-instrumentos',
         id
     )
 
@@ -297,6 +302,7 @@ def marcas_instrumentos(request, id):
         ],
         'Marcas de Instrumentos', 
         MarcaInstrumentoForm,
+        'marcas-instrumentos',
         id
     )
 
@@ -324,6 +330,7 @@ def modelos_instrumentos(request, id):
         ],
         'Modelos de Instrumentos', 
         ModeloInstrumentoForm,
+        'modelos-instrumentos',
         id
     )
 
@@ -339,6 +346,7 @@ def accesorios(request, id):
         ],
         'Accesorios', 
         AccesorioForm,
+        'accesorios',
         id
     )
 
@@ -386,6 +394,7 @@ def instrumentos(request, id):
         ],
         'Instrumentos', 
         InstrumentoForm,
+        'instrumentos',
         id
     )
 
@@ -408,6 +417,7 @@ def agrupaciones(request, id):
         ],
         'Agrupaciones', 
         AgrupacionForm,
+        'agrupaciones',
         id
     )
 
@@ -423,6 +433,7 @@ def niveles_estudiantiles(request,id):
         ],
         'Niveles Estudiantiles',
         NivelEstudiantilForm,
+        'niveles-estudiantiles',
         id
     )
 
@@ -438,6 +449,7 @@ def nivelests(request,id):
         ],
         'Niveles TS',
         NivelTSForm,
+        'niveles-ts',
         id
     )
 
@@ -453,6 +465,7 @@ def turnos(request,id):
         ],
         'Turnos',
         TurnoForm,
+        'turnos',
         id
     )
 
@@ -468,6 +481,7 @@ def tipos_becas(request,id):
         ],
         'Tipos de Beca',
         TipoBecaForm,
+        'tipos-becas',
         id
     )
 
@@ -503,6 +517,7 @@ def representantes(request,id):
         ],
         'Representantes',
         RepresentanteForm,
+        'representantes',
         id
     )
 
@@ -524,6 +539,7 @@ def programas(request,id):
         ],
         'Programas',
         ProgramaForm,
+        'programas',
         id
     )
 
@@ -539,6 +555,7 @@ def quienes_retiran(request,id):
         ],
         'Quien Retira',
         QuienRetiraForm,
+        'quienes-retiran',
         id
     )
 def becados(request, id):
@@ -558,6 +575,7 @@ def becados(request, id):
         ],
         'Becados', 
         BecadoForm,
+        'becados',
         id
     )
 def inscripciones(request,id):
@@ -584,6 +602,7 @@ def inscripciones(request,id):
         ],
         'Inscripciones',
         InscripcionForm,
+        'inscripciones',
         id
     )
 def tipos_catedras(request, id):
@@ -603,6 +622,7 @@ def tipos_catedras(request, id):
         ],
         'Tipos de Cátedra',
         TipoCatedraForm, 
+        'tipos-catedras',
         id
     )
 
@@ -630,5 +650,6 @@ def catedras(request,id):
         ],
         'Cátedras',
         CatedraForm,
+        'catedras',
         id
     )
