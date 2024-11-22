@@ -672,30 +672,33 @@ def generar_pdf(request):
                'Dirección', 'Nivel Estudiantil', 'Condición Especial', 'Programa', 'Agrupación',
                'Representantes', 'Alergias', 'Tratamientos', '¿Quién Retira?', 'Catedras']
 
-
     data = [headers]
+
+    def validacion(valor):
+        return valor if valor not in [None, "", " "] else "Ninguno"
 
     for alumno in alumnos:
         representantes_texto = ", ".join([rep.nombre for rep in alumno.representantes.all()]) if alumno.representantes.exists() else "Ninguno"
         alergias_texto = ", ".join([alergia.descripcion for alergia in alumno.alergias.all()]) if alumno.alergias.exists() else "Ninguno"
         tratamientos_texto = ", ".join([tratamiento.descripcion for tratamiento in alumno.tratamientos.all()]) if alumno.tratamientos.exists() else "Ninguno"
-        quienretira_texto=", ".join([quienretira.nombre for quienretira in alumno.quien_retiras.all()]) if alumno.quien_retiras.exists() else "Ninguno"
+        quienretira_texto = ", ".join([quienretira.nombre for quienretira in alumno.quien_retiras.all()]) if alumno.quien_retiras.exists() else "Ninguno"
         catedras_texto = ", ".join([catedra.nombre for catedra in alumno.catedras.all()]) if alumno.catedras.exists() else "Ninguno"
+
         row = [
             alumno.id,
-            alumno.nombre,
-            alumno.apellido,
-            alumno.cedula,
-            alumno.edad,
-            alumno.turno,
-            alumno.sexo,
-            alumno.telefono,
-            alumno.fecha_nacimiento,
-            alumno.direccion,
-            alumno.nivel_estudiantil,
-            alumno.condicion_especial,
-            alumno.programa,
-            alumno.agrupacion,
+            validacion(alumno.nombre),
+            validacion(alumno.apellido),
+            validacion(alumno.cedula),
+            validacion(alumno.edad),
+            validacion(alumno.turno),
+            validacion(alumno.sexo),
+            validacion(alumno.telefono),
+            validacion(alumno.fecha_nacimiento),
+            validacion(alumno.direccion),
+            validacion(alumno.nivel_estudiantil),
+            validacion(alumno.condicion_especial),
+            validacion(alumno.programa),
+            validacion(alumno.agrupacion),
             representantes_texto,
             alergias_texto,
             tratamientos_texto,
@@ -715,19 +718,18 @@ def generar_pdf(request):
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  
         ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  
         ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
-        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  # Fuente negrita para encabezados
-        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  # Fuente normal para los datos
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  
         ('FONTSIZE', (0, 0), (-1, -1), 10),  
         ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  
         ('TOPPADDING', (0, 1), (-1, -1), 6),  
         ('BOTTOMPADDING', (0, 1), (-1, -1), 6),  
-        ('GRID', (0, 0), (-1, -1), 1, colors.black),  # Bordes de la tabla
-        ('LINEABOVE', (0, 0), (-1, 0), 2, colors.black),  # Línea gruesa arriba de la tabla
-        ('LINEBELOW', (0, -1), (-1, -1), 2, colors.black),  # Línea gruesa debajo de la tabla
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  
+        ('LINEABOVE', (0, 0), (-1, 0), 2, colors.black),  
+        ('LINEBELOW', (0, -1), (-1, -1), 2, colors.black),  
     ])
     table.setStyle(style)
 
-    # Numero máximo de filas por página
     max_rows_per_page = 50
     elements = [title] 
 
@@ -742,4 +744,4 @@ def generar_pdf(request):
 
     doc.build(elements)
 
-    return response 
+    return response
