@@ -55,7 +55,7 @@ def importar_colores(tabla):
     for index, row in tabla.iterrows():
         if row["COLOR"] not in LISTA_NO:
             Color.objects.update_or_create(
-                nombre=row["COLOR"].strip(),
+                nombre=str(row["COLOR"]).strip(),
             )
     return True
 
@@ -65,7 +65,7 @@ def importar_categorias_instrumentos(tabla):
         for key, col in row.items():
             if "CÁTEDRA" in key and col not in LISTA_CATEDRAS_EXCLUIDAS:
                 CategoriaInstrumento.objects.update_or_create(
-                nombre=col.strip(),
+                nombre=str(col).strip(),
             )
     return True        
 
@@ -97,7 +97,7 @@ def importar_modelos_instrumentos(tabla):
                 
 
             ModeloInstrumento.objects.update_or_create(
-                nombre=row["MODELO"].strip(),
+                nombre=str(row["MODELO"]).strip(),
                 marca=marca,
                 categoria=categoria
             )
@@ -180,7 +180,7 @@ def importar_catedras(tabla):
                     tipo = None
                 
                 Catedra.objects.update_or_create(
-                    nombre=row[key].strip(),
+                    nombre=str(row[key]).strip(),
                     tipo=tipo,
                 )
     
@@ -199,11 +199,11 @@ def importar_programas(tabla):
 def importar_representantes(tabla):
     for index, row in tabla.iterrows():
         if row["CÉDULA4"] not in LISTA_NO:
-            cedula = row["CÉDULA4"].strip() if row["CÉDULA4"] not in LISTA_NO else None
-            nombre = row["NOMBRES2"].strip() if row["NOMBRES2"] not in LISTA_NO else None
-            telefono = row["TELÉFONO5"].strip() if row["TELÉFONO5"] not in LISTA_NO else None
-            parentesco = row["PARENTESCO"].strip() if row["PARENTESCO"] not in LISTA_NO else None
-            email = row["E-MAIL"].strip() if row["E-MAIL"] not in LISTA_NO else None
+            cedula = str(row["CÉDULA4"]).strip() if row["CÉDULA4"] not in LISTA_NO else None
+            nombre = str(row["NOMBRES2"]).strip() if row["NOMBRES2"] not in LISTA_NO else None
+            telefono = str(row["TELÉFONO5"]).strip() if row["TELÉFONO5"] not in LISTA_NO else None
+            parentesco = str(row["PARENTESCO"]).strip() if row["PARENTESCO"] not in LISTA_NO else None
+            email = str(row["E-MAIL"]).strip() if row["E-MAIL"] not in LISTA_NO else None
             
 
             Representante.objects.update_or_create(
@@ -227,7 +227,7 @@ def importar_quienretira(tabla):
         elif " Y " in lista_quien_retira:
             lista_quien_retira = lista_quien_retira.split(" Y ")
         
-        if len(lista_quien_retira.split(" ")) > 1:
+        if len(str(lista_quien_retira).split(" ")) > 1:
             for nombre in lista_quien_retira:
                 if nombre not in LISTA_NO:
                     QuienRetira.objects.update_or_create(nombre=nombre)
@@ -249,13 +249,16 @@ def importar_alumnos(tabla):
 
         fecha_nacimiento = row["FECHA DE NACIMIENTO"]
         try:
-            datetime.datetime.strptime(str(fecha_nacimiento), "%d/%m/%Y")
+            fecha_nacimiento = datetime.datetime.strptime(str(fecha_nacimiento), "%d/%m/%Y")
         except Exception as e:
             
             try:
                 fecha_nacimiento = datetime.datetime.strptime(str(fecha_nacimiento), "%Y-%m-%d")
             except Exception as e:
-                fecha_nacimiento = datetime.datetime.strptime(str(fecha_nacimiento), "%Y-%m-%d %H:%M:%S")
+                try:
+                    fecha_nacimiento = datetime.datetime.strptime(str(fecha_nacimiento), "%Y-%m-%d %H:%M:%S")
+                except Exception as e:
+                    fecha_nacimiento = None
         
 
         turno = None
@@ -346,7 +349,7 @@ def importar_alumnos(tabla):
         elif " Y " in lista_quien_retira:
             lista_quien_retira = lista_quien_retira.split(" Y ")
         
-        if len(lista_quien_retira.split(" ")) > 1: 
+        if len(str(lista_quien_retira).split(" ")) > 1: 
             for nombre in lista_quien_retira:
                 if nombre not in LISTA_NO:
                     try:
@@ -364,7 +367,7 @@ def importar_alumnos(tabla):
         
         for key, col in row.items():
             if "CÁTEDRA" in key:
-                nombre_catedra = row[key].strip()
+                nombre_catedra = str(row[key]).strip()
                 try:
                     catedra = Catedra.objects.get(nombre=nombre_catedra)
                 except Exception:
@@ -459,11 +462,13 @@ def importar_inscripciones(tabla):
         try:
             fecha_inscripcion = datetime.datetime.strptime(str(fecha_inscripcion), "%d/%m/%Y")
         except Exception as e:
-            try: 
+            try:
                 fecha_inscripcion = datetime.datetime.strptime(str(fecha_inscripcion), "%Y-%m-%d")
             except Exception as e:
-                fecha_inscripcion = datetime.datetime.strptime(str(fecha_inscripcion), "%Y-%m-%d %H:%M:%S")
-            print(fecha_inscripcion)
+                try:
+                    fecha_inscripcion = datetime.datetime.strptime(str(fecha_inscripcion), "%Y-%m-%d %H:%M:%S")
+                except Exception as e:
+                    fecha_inscripcion = None
 
         Inscripcion.objects.update_or_create(
             alumno=alumno,

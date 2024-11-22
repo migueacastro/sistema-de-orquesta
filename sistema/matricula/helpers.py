@@ -84,7 +84,9 @@ def model_to_dict_better(instance, fields=None, exclude=None):
                 data[f.name] = None 
         else: 
             data[f.name] = value
-    
+    if isinstance(instance, apps.get_model('matricula', 'Alumno')): 
+        instrumentos = instance.instrumentos.all() 
+        data['instrumentos'] = ", ".join([str(instrumento.serial) for instrumento in instrumentos])
     return data
 
 class NullableIntConverter:

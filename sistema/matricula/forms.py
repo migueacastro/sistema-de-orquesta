@@ -38,17 +38,17 @@ class CustomClassForm(forms.ModelForm):
                 if field.widget.input_type != 'select':
                     # Text, Number
                     field.widget.attrs.update({
-                        'class': 'bg-gray-100 rounded-md indent-2 p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                        'class': 'bg-gray-100 disabled:bg-gray-300 rounded-md indent-2 p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
                     })
                 else:
                     # Select
                     field.widget.attrs.update({
-                        'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                        'class': 'bg-gray-100 disabled:bg-gray-300 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
                     })
             except AttributeError:
                 # Textarea
                 field.widget.attrs.update({
-                    'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                    'class': 'bg-gray-100 disabled:bg-gray-300 rounded-md p-2 shadow-md focus:border-gray-700  focus:outline-none focus:ring'
                 })
 
 
@@ -62,6 +62,21 @@ class AlumnoForm(CustomClassForm):
         exclude = ('activo',)
         fields = ['nombre', 'apellido', 'cedula', 'edad', 'telefono', 'fecha_nacimiento', 'direccion', 'turno', 'sexo', 'nivel_estudiantil', 'nivel_ts', 'condicion_especial', 'programa', 'agrupacion', 'representantes', 'alergias', 'catedras', 'instrumentos']
     
+    def save(self, commit=True): 
+        instance = super().save(commit=False) 
+        instance.save() 
+        self.save_m2m() 
+        self.cleaned_data['instrumentos'].update(alumno=instance) 
+        return instance
+    
+    def __init__(self, *args, **kwargs): 
+        super().__init__(*args, **kwargs) 
+        instance = kwargs.get('instance') 
+        if instance: 
+            self.fields['instrumentos'].queryset = Instrumento.objects.filter( activo=True ).filter( models.Q(alumno__isnull=True) | models.Q(alumno=instance) ) 
+            self.fields['instrumentos'].initial = instance.instrumentos.all() 
+        else: 
+            self.fields['instrumentos'].queryset = Instrumento.objects.filter(activo=True, alumno=None)
 
 class TurnoForm(CustomClassForm):
     class Meta:
