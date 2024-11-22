@@ -103,7 +103,7 @@
             </thead>
             <tbody class="text-gray-600 text-sm font-light">
                 {% for entry in entries %} 
-                    <tr class="border-b border-gray-200 hover:bg-sky-100" onclick="event.stopPropagation(); goToURL(window.location + '{{ entry.id }}?form_state=open');">
+                    <tr class="border-b border-gray-200 hover:bg-sky-100" onclick="event.stopPropagation(); goToURL(window.location + '{{ entry.id }}');">
                         {% for field_name, field_value in entry.items %}
                             {% if field_name != "activo" %}
                                 <td class="py-3 px-6 text-left">

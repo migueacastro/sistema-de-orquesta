@@ -28,7 +28,7 @@ const checkDeletedEntryByParams = () => {
 
 const editEntry = (id) => {
     let url = window.location.href; 
-    url = url + `${id}?form_state=open`; 
+    url = url + id;
     window.location.replace(url); 
 };
 const deleteEntry = (id) => {

@@ -62,6 +62,21 @@ class AlumnoForm(CustomClassForm):
         exclude = ('activo',)
         fields = ['nombre', 'apellido', 'cedula', 'edad', 'telefono', 'fecha_nacimiento', 'direccion', 'turno', 'sexo', 'nivel_estudiantil', 'nivel_ts', 'condicion_especial', 'programa', 'agrupacion', 'representantes', 'alergias', 'catedras', 'instrumentos']
     
+    def save(self, commit=True): 
+        instance = super().save(commit=False) 
+        instance.save() 
+        self.save_m2m() 
+        self.cleaned_data['instrumentos'].update(alumno=instance) 
+        return instance
+    
+    def __init__(self, *args, **kwargs): 
+        super().__init__(*args, **kwargs) 
+        instance = kwargs.get('instance') 
+        if instance: 
+            self.fields['instrumentos'].queryset = Instrumento.objects.filter( activo=True ).filter( models.Q(alumno__isnull=True) | models.Q(alumno=instance) ) 
+            self.fields['instrumentos'].initial = instance.instrumentos.all() 
+        else: 
+            self.fields['instrumentos'].queryset = Instrumento.objects.filter(activo=True, alumno=None)
 
 class TurnoForm(CustomClassForm):
     class Meta:

@@ -2,7 +2,8 @@
 
 {% block body %}
 <h1 class="text-4xl flex items-center font-bold mb-4 justify-center h-[5rem]">{{ title }} #{{ entry.id }}</h1>
-<div class="w-full bg-white">
+<div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 flex flex-col items-center">
+    <h2 class="text-4xl text-center my-4 mb-4 capitalize">Editar</h2>
     <p class="hidden" id="csrf_token">
         {{ csrf_token }}
     </p>
@@ -59,6 +60,7 @@
         {% endfor %}
         </div>
         <div class="flex justify-start mt-4">
+            <button type="button" id="back-buton" class="bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="goToURL(window.location.href.split('/').slice(0, -1).join('/'))">Volver</button>
             <button type="submit" id="save-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="saveEditEntry('{{ main_endpoint }}/{{ entry.id }}')">Guardar</button>
             <button type="button" id="cancel-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded" onclick="localStorage.removeItem('formData'); removeFormParams()">Cancelar</button>
             <button type="button" id="edit-button" class="bg-gray-800 text-white px-4 py-2 m-4 rounded hidden" onclick="setFormParams()">Editar</button>
