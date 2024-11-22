@@ -177,9 +177,9 @@ class Alumno(models.Model):
         ('Femenino', 'Femenino'),
         ('Otro', 'Otro'),
     ))
-    telefono = models.CharField(max_length=128) 
+    telefono = models.CharField(max_length=128, null=True, blank=True) 
     fecha_nacimiento = models.DateField(max_length=128, null=True, blank=True) 
-    direccion = models.CharField(max_length=256) 
+    direccion = models.CharField(max_length=256, null=True, blank=True) 
     nivel_estudiantil = models.ForeignKey(NivelEstudiantil, blank=True, null=True, on_delete=models.DO_NOTHING)
     nivel_ts = models.ForeignKey(NivelTS, blank=True, on_delete=models.DO_NOTHING, null=True) 
     representantes = models.ManyToManyField(Representante, blank=True) 
@@ -208,9 +208,9 @@ class Instrumento(models.Model):
     ))
     activo = models.BooleanField(default=True)
     def __str__(self):
-        return self.nombre + " " + self.serial 
+        return self.serial 
     def __unicode__(self):
-        return self.nombre + " " + self.serial
+        return self.serial
 
 class Becado(models.Model):
     alumno = models.ForeignKey(Alumno, blank=True, null=True, on_delete=models.CASCADE)
