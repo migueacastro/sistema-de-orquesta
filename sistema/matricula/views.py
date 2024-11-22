@@ -21,8 +21,12 @@ def importar_archivo(request):
     return redirect('/')
 
 def inicio(request):
-    alumnos = Alumno.objects.all()
-    return render(request, 'administrador/home.html', {'title': 'Inicio', 'alumnos':alumnos})
+    alumnos = Alumno.objects.filter(activo=True)
+    query = alumnos
+    entries = [model_to_dict_better(i) for i in query]
+    return render(request, 'administrador/home.html', {'title': 'Inicio', 'alumnos':alumnos, 'entries': entries, 
+                    'first_entry': entries[0] if len(entries) > 0 else None, })
+
 
 def cards(request):
     vistas = [
