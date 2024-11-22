@@ -28,7 +28,7 @@ const checkDeletedEntryByParams = () => {
 
 const editEntry = (id) => {
     let url = window.location.href; 
-    url = url + `${id}?form_state=open`; 
+    url = url + id;
     window.location.replace(url); 
 };
 const deleteEntry = (id) => {
@@ -97,13 +97,20 @@ function removeFormParams() {
 
 
 function toggleEditMode() {
-    const fields = document.querySelectorAll('.editable');
-    const saveButton = document.getElementById('saveButton');
+    const fields = document.querySelectorAll('input, select, textarea');
+    const saveButton = document.getElementById('save-button');
+    const cancelButton = document.getElementById('cancel-button');
+    const editButton = document.getElementById('edit-button');
     fields.forEach(field => {
         field.disabled = !field.disabled;
     });
     saveButton.classList.toggle('hidden');
-    
+    cancelButton.classList.toggle('hidden');
+    editButton.classList.toggle('hidden');
+
+    document.querySelectorAll('.modal-openner').forEach(element => {
+        element.classList.toggle('hidden');
+    })
 }
 
 class ManyToManyField {
@@ -312,7 +319,7 @@ const saveCreateEntry = (formId, buttonId, endpoint) => {
     });
 }
 
-const saveEditEntry = (endpoint) => {
+const saveEditEntry = () => {
     localStorage.removeItem('formData');
     let formData = new FormData();
     let formElements = document.querySelector('#main-form').querySelectorAll(':scope > div > div > input, :scope > div > div > select, :scope > div > div > textarea');
@@ -327,12 +334,7 @@ const saveEditEntry = (endpoint) => {
     }
 
     let url;
-    if (window.location.href.split('?').length > 1) {
-        url = window.location.href.split('/').slice(0,-3).join('/') + '/' + endpoint;
-    } else {
-        url = window.location.href.split('/').slice(0,-2).join('/') + '/' + endpoint;
-    }
-    let newUrl = url.split('/').slice(0,-1).join('/');
+    url = window.location.href.split('?')[0];
    
 
     fetch(url, { // BUSCAR ENDPOINT
@@ -361,7 +363,7 @@ const saveEditEntry = (endpoint) => {
                     clearInterval(timerInterval);
                 }
             }).then((result) => {
-                window.location.href = newUrl;
+                window.location.href = url;
             });
         } else {
             Swal.fire({
