@@ -8,6 +8,11 @@ from matricula.tasks import ejecutar_importaciones, ARCHIVO, leer_db_excel
 from django.forms.models import model_to_dict
 from django.http import JsonResponse
 from .helpers import viewset, model_to_dict_better
+from django.http import HttpResponse
+from reportlab.lib.pagesizes import letter, landscape
+from reportlab.lib import colors
+from reportlab.platypus import SimpleDocTemplate, Table, TableStyle, PageBreak, Paragraph
+from reportlab.lib.styles import getSampleStyleSheet
 
 
 def importar_archivo(request):
@@ -657,3 +662,90 @@ def catedras(request,id):
         'catedras',
         id
     )
+def generar_pdf(request):
+    response = HttpResponse(content_type='application/pdf')
+    response['Content-Disposition'] = 'attachment; filename="matricula_alumnos.pdf"'
+
+    ancho = 2500  
+    alto = 850  
+    doc = SimpleDocTemplate(response, pagesize=(ancho, alto))
+
+    alumnos = Alumno.objects.all()
+
+    headers = ['ID', 'Nombre', 'Apellido', 'Cédula', 'Edad', 'Turno', 'Sexo', 'Teléfono', 'Fecha Nacimiento',
+               'Dirección', 'Nivel Estudiantil', 'Condición Especial', 'Programa', 'Agrupación',
+               'Representantes', 'Alergias', 'Tratamientos', '¿Quién Retira?', 'Catedras']
+
+    data = [headers]
+
+    def validacion(valor):
+        return valor if valor not in [None, "", " "] else "Ninguno"
+
+    for alumno in alumnos:
+        representantes_texto = ", ".join([rep.nombre for rep in alumno.representantes.all()]) if alumno.representantes.exists() else "Ninguno"
+        alergias_texto = ", ".join([alergia.descripcion for alergia in alumno.alergias.all()]) if alumno.alergias.exists() else "Ninguno"
+        tratamientos_texto = ", ".join([tratamiento.descripcion for tratamiento in alumno.tratamientos.all()]) if alumno.tratamientos.exists() else "Ninguno"
+        quienretira_texto = ", ".join([quienretira.nombre for quienretira in alumno.quien_retiras.all()]) if alumno.quien_retiras.exists() else "Ninguno"
+        catedras_texto = ", ".join([catedra.nombre for catedra in alumno.catedras.all()]) if alumno.catedras.exists() else "Ninguno"
+
+        row = [
+            alumno.id,
+            validacion(alumno.nombre),
+            validacion(alumno.apellido),
+            validacion(alumno.cedula),
+            validacion(alumno.edad),
+            validacion(alumno.turno),
+            validacion(alumno.sexo),
+            validacion(alumno.telefono),
+            validacion(alumno.fecha_nacimiento),
+            validacion(alumno.direccion),
+            validacion(alumno.nivel_estudiantil),
+            validacion(alumno.condicion_especial),
+            validacion(alumno.programa),
+            validacion(alumno.agrupacion),
+            representantes_texto,
+            alergias_texto,
+            tratamientos_texto,
+            quienretira_texto,
+            catedras_texto
+        ]
+        data.append(row)
+
+    styles = getSampleStyleSheet()
+    title_style = styles['Title']  
+
+    title = Paragraph("Matrícula de El Sistema Orquesta - Sede Carabobo", title_style)
+
+    table = Table(data, colWidths=[50, 120, 120, 90, 40, 60, 60, 80, 90, 350, 90, 100, 150, 220, 150, 150, 150, 150, 150])
+
+    style = TableStyle([
+        ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  
+        ('TEXTCOLOR', (0, 0), (-1, 0), colors.whitesmoke),  
+        ('ALIGN', (0, 0), (-1, -1), 'CENTER'),
+        ('FONTNAME', (0, 0), (-1, 0), 'Helvetica-Bold'),  
+        ('FONTNAME', (0, 1), (-1, -1), 'Helvetica'),  
+        ('FONTSIZE', (0, 0), (-1, -1), 10),  
+        ('BOTTOMPADDING', (0, 0), (-1, 0), 12),  
+        ('TOPPADDING', (0, 1), (-1, -1), 6),  
+        ('BOTTOMPADDING', (0, 1), (-1, -1), 6),  
+        ('GRID', (0, 0), (-1, -1), 1, colors.black),  
+        ('LINEABOVE', (0, 0), (-1, 0), 2, colors.black),  
+        ('LINEBELOW', (0, -1), (-1, -1), 2, colors.black),  
+    ])
+    table.setStyle(style)
+
+    max_rows_per_page = 50
+    elements = [title] 
+
+    for i in range(0, len(data), max_rows_per_page):
+        page_data = data[i:i + max_rows_per_page]
+        page_table = Table(page_data, colWidths=[50, 120, 120, 90, 40, 60, 60, 80, 90, 350, 90, 100, 150, 220, 150, 150, 150, 150, 150])
+        page_table.setStyle(style)
+        elements.append(page_table)
+        
+        if i + max_rows_per_page < len(data):
+            elements.append(PageBreak())
+
+    doc.build(elements)
+
+    return response

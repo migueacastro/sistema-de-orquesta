@@ -9,6 +9,7 @@ urlpatterns = [
     path('', inicio, name='inicio'),
     path('alumnos/<nullable_int:id>', alumnos, name='alumnos'),
     path('cards/', cards, name='cards'),
+    path('exportar_pdf/', generar_pdf, name='exportar_pdf'), 
 
     
     path('alumnos/<nullable_int:id>', alumnos, name='alumnos'),

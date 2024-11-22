@@ -477,5 +477,3 @@ def importar_inscripciones(tabla):
         )
 
     return True
-
-
