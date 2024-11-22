@@ -1,24 +1,62 @@
 from django import forms
 from .models import *
 
-
 class CustomClassForm(forms.ModelForm):
-    def __init__(self, *args, **kwargs): 
-        super(forms.ModelForm, self).__init__(*args, **kwargs) 
-        for field in self.fields: 
-            
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        # Define the fields that require filtering with activo=True
+        active_fields = {
+            'instrumentos': Instrumento.objects.filter(activo=True, alumno=None),
+            'representantes': Representante.objects.filter(activo=True),
+            'alergias': Alergia.objects.filter(activo=True),
+            'condicion_especial': CondicionEspecial.objects.filter(activo=True),
+            'nivel_estudiantil': NivelEstudiantil.objects.filter(activo=True),
+            'nivel_ts': NivelTS.objects.filter(activo=True),
+            'catedras': Catedra.objects.filter(activo=True),
+            'modelo': ModeloInstrumento.objects.filter(activo=True),
+            'agrupacion': Agrupacion.objects.filter(activo=True),
+            'programa': Programa.objects.filter(activo=True),
+            'tipo_beca': TipoBeca.objects.filter(activo=True),
+            'turno': Turno.objects.filter(activo=True),
+            'tipo_catedra': TipoCatedra.objects.filter(activo=True),
+            'medicamento': Medicamento.objects.filter(activo=True),
+            'tratamiento': Tratamiento.objects.filter(activo=True),
+            'color': Color.objects.filter(activo=True),
+            'categoria': CategoriaInstrumento.objects.filter(activo=True),
+            'marca': MarcaInstrumento.objects.filter(activo=True),
+        }
+
+        # Set queryset for active fields
+        for field_name, queryset in active_fields.items():
+            if field_name in self.fields:
+                self.fields[field_name].queryset = queryset
+        
+        # Customize widget attributes
+        for field_name, field in self.fields.items():
             try:
-                if self.fields[field].widget.input_type != 'select':
+                if field.widget.input_type != 'select':
                     # Text, Number
-                    self.fields[field].widget.attrs.update({'class': 'bg-gray-100 rounded-md indent-2 p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'})
+                    field.widget.attrs.update({
+                        'class': 'bg-gray-100 rounded-md indent-2 p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                    })
                 else:
                     # Select
-                    self.fields[field].widget.attrs.update({'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'})
-            except Exception:
+                    field.widget.attrs.update({
+                        'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                    })
+            except AttributeError:
                 # Textarea
-                self.fields[field].widget.attrs.update({'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'})
+                field.widget.attrs.update({
+                    'class': 'bg-gray-100 rounded-md p-2 shadow-md focus:border-gray-700 focus:outline-none focus:ring'
+                })
+
+
 class AlumnoForm(CustomClassForm):
-    instrumentos = forms.ModelMultipleChoiceField(queryset=Instrumento.objects.filter(activo=True))
+    instrumentos = forms.ModelMultipleChoiceField(queryset=Instrumento.objects.filter(activo=True, alumno = None), required=False)
+    representantes = forms.ModelMultipleChoiceField(queryset=Representante.objects.filter(activo=True), required=False)
+    alergias = forms.ModelMultipleChoiceField(queryset=Alergia.objects.filter(activo=True), required=False)
+    condicion_especial = forms.ModelChoiceField(queryset=CondicionEspecial.objects.filter(activo=True), required=False)
     class Meta:
         model = Alumno
         exclude = ('activo',)
@@ -92,7 +130,7 @@ class QuienRetiraForm(CustomClassForm):
         fields = '__all__'
 
 class InstrumentoForm(CustomClassForm,):
-    alumno = forms.ModelChoiceField(queryset=Alumno.objects.all())
+    alumno = forms.ModelChoiceField(queryset=Alumno.objects.filter(activo=True), required=False)
     class Meta:
         
         model = Instrumento
