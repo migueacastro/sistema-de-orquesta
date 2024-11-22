@@ -676,11 +676,11 @@ def generar_pdf(request):
     data = [headers]
 
     for alumno in alumnos:
-        representantes_texto = ", ".join([rep.nombre for rep in alumno.representantes.all()]) if alumno.representantes.exists() else ""
-        alergias_texto = ", ".join([alergia.descripcion for alergia in alumno.alergias.all()]) if alumno.alergias.exists() else ""
-        tratamientos_texto = ", ".join([tratamiento.descripcion for tratamiento in alumno.tratamientos.all()]) if alumno.tratamientos.exists() else ""
-        quienretira_texto=", ".join([quienretira.nombre for quienretira in alumno.quien_retiras.all()]) if alumno.quien_retiras.exists() else ""
-        catedras_texto = ", ".join([catedra.nombre for catedra in alumno.catedras.all()]) if alumno.catedras.exists() else ""
+        representantes_texto = ", ".join([rep.nombre for rep in alumno.representantes.all()]) if alumno.representantes.exists() else "Ninguno"
+        alergias_texto = ", ".join([alergia.descripcion for alergia in alumno.alergias.all()]) if alumno.alergias.exists() else "Ninguno"
+        tratamientos_texto = ", ".join([tratamiento.descripcion for tratamiento in alumno.tratamientos.all()]) if alumno.tratamientos.exists() else "Ninguno"
+        quienretira_texto=", ".join([quienretira.nombre for quienretira in alumno.quien_retiras.all()]) if alumno.quien_retiras.exists() else "Ninguno"
+        catedras_texto = ", ".join([catedra.nombre for catedra in alumno.catedras.all()]) if alumno.catedras.exists() else "Ninguno"
         row = [
             alumno.id,
             alumno.nombre,
