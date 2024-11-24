@@ -221,18 +221,15 @@ def importar_representantes(tabla):
 def importar_quienretira(tabla):
     for index, row in tabla.iterrows():
         lista_quien_retira = row["QUIEN RETIRA"].strip()
-
-        if " O " in lista_quien_retira:
-            lista_quien_retira = lista_quien_retira.split(" O ")
-        elif " Y " in lista_quien_retira:
-            lista_quien_retira = lista_quien_retira.split(" Y ")
+        lista_quien_retira = lista_quien_retira.replace(" O ", " ").replace(" Y ", " ")
+        lista_quien_retira = lista_quien_retira.split(" ")
         
-        if len(str(lista_quien_retira).split(" ")) > 1:
+        if len(lista_quien_retira) > 1:
             for nombre in lista_quien_retira:
                 if nombre not in LISTA_NO:
                     QuienRetira.objects.update_or_create(nombre=nombre)
         else:
-            QuienRetira.objects.update_or_create(nombre=lista_quien_retira)
+            QuienRetira.objects.update_or_create(nombre=lista_quien_retira[0])
 
     return True
 
@@ -343,13 +340,11 @@ def importar_alumnos(tabla):
             tratamiento = None
 
         lista_quien_retira = row["QUIEN RETIRA"].strip()
-
-        if " O " in lista_quien_retira:
-            lista_quien_retira = lista_quien_retira.split(" O ")
-        elif " Y " in lista_quien_retira:
-            lista_quien_retira = lista_quien_retira.split(" Y ")
+        lista_quien_retira = row["QUIEN RETIRA"].strip()
+        lista_quien_retira = lista_quien_retira.replace(" O ", " ").replace(" Y ", " ")
+        lista_quien_retira = lista_quien_retira.split(" ")
         
-        if len(str(lista_quien_retira).split(" ")) > 1: 
+        if len(lista_quien_retira) > 1: 
             for nombre in lista_quien_retira:
                 if nombre not in LISTA_NO:
                     try:
@@ -359,7 +354,7 @@ def importar_alumnos(tabla):
                         print(e)
         else:
             try:
-                nuevo_quien_retira = QuienRetira.objects.get(nombre=lista_quien_retira.strip())
+                nuevo_quien_retira = QuienRetira.objects.get(nombre=lista_quien_retira[0].strip())
                 alumno.quien_retiras.add(nuevo_quien_retira)
             except Exception as e:
                 print(e)

@@ -74,9 +74,9 @@
 
 <!-- Data Table -->
 <div class="bg-white shadow-md rounded-lg p-6 m-3 mb-9 " id="section-table">
-    <a id="crear-btn" class="bg-gray-800 text-white px-4 py-2 my-2 rounded" href="#">
+    <button type="button" id="crear-btn" class="bg-gray-800 text-white px-4 py-2 my-2 rounded" >
         Crear
-    </a>
+    </button>
     <div class="overflow-x-auto">
         <table class="min-w-full table-auto" id="entry-table">
             <thead>
@@ -118,7 +118,7 @@
                             <td class="py-3 px-6 text-left">Sin registros</td>
                         {% endfor %}
                         <td class="py-3 px-6 text-left flex flex-row">
-                            <i class="fa-solid fa-pen mx-2 text-xl z-10 hover:text-3xl" onclick="editEntry('{{ entry.id }}');"></i>
+                            <i class="fa-solid fa-pen mx-2 text-xl z-10 hover:text-3xl" onclick="editEntry('{{ entry.id }}'); setFormParams()"></i>
                             <i class="fa-solid fa-xmark mx-2 text-xl" onclick="event.stopPropagation(); deleteEntry('{{ entry.id }}')"></i>
                         </td>
                     </tr>
