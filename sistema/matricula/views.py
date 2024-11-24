@@ -670,10 +670,10 @@ def generar_pdf(request):
     alto = 850  
     doc = SimpleDocTemplate(response, pagesize=(ancho, alto))
 
-    alumnos = Alumno.objects.all()
+    alumnos = Alumno.objects.filter(activo=True).order_by('id')
 
     headers = ['ID', 'Nombre', 'Apellido', 'Cédula', 'Edad', 'Turno', 'Sexo', 'Teléfono', 'Fecha Nacimiento',
-               'Dirección', 'Nivel Estudiantil', 'Condición Especial', 'Programa', 'Agrupación',
+               'Fecha Inscripción', 'Dirección', 'Nivel Estudiantil', 'Condición Especial', 'Programa', 'Agrupación',
                'Representantes', 'Alergias', 'Tratamientos', '¿Quién Retira?', 'Catedras']
 
     data = [headers]
@@ -684,30 +684,31 @@ def generar_pdf(request):
     for alumno in alumnos:
         representantes_texto = ", ".join([rep.nombre for rep in alumno.representantes.all()]) if alumno.representantes.exists() else "Ninguno"
         alergias_texto = ", ".join([alergia.descripcion for alergia in alumno.alergias.all()]) if alumno.alergias.exists() else "Ninguno"
-        tratamientos_texto = ", ".join([tratamiento.descripcion for tratamiento in alumno.tratamientos.all()]) if alumno.tratamientos.exists() else "Ninguno"
+        tratamientos_texto = ", ".join([tratamiento.nombre for tratamiento in alumno.tratamientos.all()]) if alumno.tratamientos.exists() else "Ninguno"
         quienretira_texto = ", ".join([quienretira.nombre for quienretira in alumno.quien_retiras.all()]) if alumno.quien_retiras.exists() else "Ninguno"
         catedras_texto = ", ".join([catedra.nombre for catedra in alumno.catedras.all()]) if alumno.catedras.exists() else "Ninguno"
-
+        fecha_inscripcion = alumno.inscripcion_set.first().fecha_inscripcion if alumno.inscripcion_set.exists() else "Ninguno"
         row = [
             alumno.id,
-            validacion(alumno.nombre),
-            validacion(alumno.apellido),
-            validacion(alumno.cedula),
-            validacion(alumno.edad),
-            validacion(alumno.turno),
-            validacion(alumno.sexo),
-            validacion(alumno.telefono),
-            validacion(alumno.fecha_nacimiento),
-            validacion(alumno.direccion),
-            validacion(alumno.nivel_estudiantil),
-            validacion(alumno.condicion_especial),
-            validacion(alumno.programa),
-            validacion(alumno.agrupacion),
-            representantes_texto,
-            alergias_texto,
-            tratamientos_texto,
-            quienretira_texto,
-            catedras_texto
+            Paragraph(str(validacion(alumno.nombre))),
+            Paragraph(str(validacion(alumno.apellido))),
+            Paragraph(str(validacion(alumno.cedula))),
+            Paragraph(str(validacion(alumno.edad))),
+            Paragraph(str(validacion(alumno.turno))),
+            Paragraph(str(validacion(alumno.sexo))),
+            Paragraph(str(validacion(alumno.telefono))),
+            Paragraph(str(validacion(alumno.fecha_nacimiento))),
+            Paragraph(str(validacion(fecha_inscripcion))),
+            Paragraph(str(validacion(alumno.direccion))),
+            Paragraph(str(validacion(alumno.nivel_estudiantil))),
+            Paragraph(str(validacion(alumno.condicion_especial))),
+            Paragraph(str(validacion(alumno.programa))),
+            Paragraph(str(validacion(alumno.agrupacion))),
+            Paragraph(str(representantes_texto)),
+            Paragraph(str(alergias_texto)),
+            Paragraph(str(tratamientos_texto)),
+            Paragraph(str(quienretira_texto)),
+            Paragraph(str(catedras_texto))
         ]
         data.append(row)
 
@@ -716,7 +717,7 @@ def generar_pdf(request):
 
     title = Paragraph("Matrícula de El Sistema Orquesta - Sede Carabobo", title_style)
 
-    table = Table(data, colWidths=[50, 120, 120, 90, 40, 60, 60, 80, 90, 350, 90, 100, 150, 220, 150, 150, 150, 150, 150])
+    table = Table(data, colWidths=[50, 120, 120, 90, 40, 60, 60, 90, 90, 245, 95, 100, 150, 220, 150, 150, 150, 150, 150])
 
     style = TableStyle([
         ('BACKGROUND', (0, 0), (-1, 0), colors.grey),  
@@ -731,20 +732,17 @@ def generar_pdf(request):
         ('GRID', (0, 0), (-1, -1), 1, colors.black),  
         ('LINEABOVE', (0, 0), (-1, 0), 2, colors.black),  
         ('LINEBELOW', (0, -1), (-1, -1), 2, colors.black),  
+        ('SPLITLONGWORDS', (0, 1), (-1, -1), True),  # Allow text to wrap to the next line
+        ('KEEPWITHNEXT', (0, 1), (-1, -1), True),  
     ])
     table.setStyle(style)
 
-    max_rows_per_page = 50
     elements = [title] 
 
-    for i in range(0, len(data), max_rows_per_page):
-        page_data = data[i:i + max_rows_per_page]
-        page_table = Table(page_data, colWidths=[50, 120, 120, 90, 40, 60, 60, 80, 90, 350, 90, 100, 150, 220, 150, 150, 150, 150, 150])
-        page_table.setStyle(style)
-        elements.append(page_table)
-        
-        if i + max_rows_per_page < len(data):
-            elements.append(PageBreak())
+
+    page_table = Table(data, colWidths=[50, 120, 120, 90, 40, 60, 60, 80, 90, 90, 245, 95, 100, 150, 220, 150, 150, 150, 150, 150])
+    page_table.setStyle(style)
+    elements.append(page_table)
 
     doc.build(elements)
 
