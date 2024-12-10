@@ -1,4 +1,5 @@
 from django import forms
+from sistema.settings import DATE_INPUT_FORMATS
 from .models import *
 
 class CustomClassForm(forms.ModelForm):
@@ -56,11 +57,15 @@ class AlumnoForm(CustomClassForm):
     instrumentos = forms.ModelMultipleChoiceField(queryset=Instrumento.objects.filter(activo=True, alumno = None), required=False)
     representantes = forms.ModelMultipleChoiceField(queryset=Representante.objects.filter(activo=True), required=False)
     alergias = forms.ModelMultipleChoiceField(queryset=Alergia.objects.filter(activo=True), required=False)
+    quien_retira = forms.ModelMultipleChoiceField(queryset=QuienRetira.objects.filter(activo=True), required=False)
     condicion_especial = forms.ModelChoiceField(queryset=CondicionEspecial.objects.filter(activo=True), required=False)
+    fecha_nacimiento = forms.DateField(localize=True, input_formats=DATE_INPUT_FORMATS, widget=forms.DateInput(format = '%d-%m-%Y',attrs={'type': 'date', "placeholder":"dd-mm-yyyy", 
+           "min":"1997-01-01", "max":"2120-12-31"}),
+)
     class Meta:
         model = Alumno
         exclude = ('activo',)
-        fields = ['nombre', 'apellido', 'cedula', 'edad', 'telefono', 'fecha_nacimiento', 'direccion', 'turno', 'sexo', 'nivel_estudiantil', 'nivel_ts', 'condicion_especial', 'programa', 'agrupacion', 'representantes', 'alergias', 'catedras', 'instrumentos']
+        fields = ['nombre', 'apellido', 'cedula', 'edad', 'telefono', 'fecha_nacimiento', 'direccion', 'turno', 'sexo', 'nivel_estudiantil', 'nivel_ts', 'condicion_especial', 'programa', 'agrupacion', 'representantes', 'alergias', 'catedras', 'instrumentos', 'quien_retira']
     
     def save(self, commit=True): 
         instance = super().save(commit=False) 

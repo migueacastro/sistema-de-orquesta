@@ -135,3 +135,6 @@ MESSAGE_TAGS = {
     messages.WARNING: 'bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded relative',
     messages.ERROR: 'bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative',
 }
+
+DATE_INPUT_FORMATS = ('%d-%m-%Y')
+USE_L10N = False # Here
