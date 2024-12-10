@@ -1,0 +1,27 @@
+@keyframes slidein {
+    from {
+        width: 5%;
+    }
+  
+    to {
+        width: 10%;
+        
+    }
+  }
+
+@keyframes slideout {
+    from {
+        width: 10%;
+    }
+  
+    to {
+        width: 5%;
+        
+    }
+  }
+
+.introducir {
+    animation-name: slidein;
+    animation-duration: 0.5s;
+}
+
