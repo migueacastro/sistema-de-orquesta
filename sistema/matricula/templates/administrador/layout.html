@@ -14,12 +14,12 @@
     <script src="{% static 'sweetalert2@11.js' %}"></script>
     <script src="{% static 'scripts.js' %}"></script>
     <script
-        src="https://code.jquery.com/jquery-3.7.1.js"
+        src="{% static 'jquery.js' %}"
         integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4="
         crossorigin="anonymous">
     </script>
-    <link rel="stylesheet" href="https://cdn.datatables.net/2.1.8/css/dataTables.dataTables.css" />
-    <script src="https://cdn.datatables.net/2.1.8/js/dataTables.js"></script>
+    <link rel="stylesheet" href="{% static 'dataTables.dataTables.min.css' %}" />
+    <script src="{% static 'dataTables.min.js' %}"></script>
 </head>
 <body class="flex flex-col relative">
     <div class="relative w-full bg-white shadow-md" style="height: 5rem;"> 
